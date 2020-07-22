@@ -41,6 +41,7 @@ dependencies {
     api("javax.validation:validation-api:${property("validationApiVersion")}")
     api("commons-io:commons-io:${property("commonIoVersion")}")
     api("com.googlecode.log4jdbc:log4jdbc:${property("log4jdbcVersion")}")
+    api("com.squareup.okhttp3:okhttp:4.7.2")
 
     api("org.slf4j:slf4j-api:${property("slf4jApiVersion")}")
 }

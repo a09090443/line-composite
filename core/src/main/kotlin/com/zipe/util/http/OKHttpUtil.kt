@@ -1,4 +1,4 @@
-package com.zipe.util
+package com.zipe.util.http
 
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType

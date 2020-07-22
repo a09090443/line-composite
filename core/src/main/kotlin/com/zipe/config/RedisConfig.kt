@@ -21,7 +21,6 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import java.time.Duration
 
-
 @Configuration
 @EnableConfigurationProperties(CacheProperties::class)
 @EnableCaching

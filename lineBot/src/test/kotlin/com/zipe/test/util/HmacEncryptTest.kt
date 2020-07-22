@@ -7,6 +7,7 @@ import com.zipe.model.*
 import com.zipe.service.impl.LINE_PAYMENT_URI
 import com.zipe.test.base.TestBase
 import com.zipe.util.*
+import com.zipe.util.http.OkHttpUtil
 import okhttp3.Response
 import org.junit.Ignore
 import org.junit.Test

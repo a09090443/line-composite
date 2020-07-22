@@ -9,7 +9,6 @@ import com.linecorp.bot.model.message.template.ButtonsTemplate
 import com.linecorp.bot.model.message.template.CarouselColumn
 import com.linecorp.bot.model.message.template.CarouselTemplate
 import com.zipe.enum.MessageType
-import com.zipe.util.OkHttpUtil
 import okhttp3.*
 import org.apache.commons.lang3.StringUtils
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
