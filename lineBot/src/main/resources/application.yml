@@ -1,0 +1,75 @@
+server:
+  port: 8080
+
+line.bot:
+  channel-token: D7YFymbHjichf2vTlzSCoTdcJtQjA/BeqmaphMKr+1VJs0y6OEDl3BILKtegGjlwWIuy8Xe9OonY6eq3+j+XlB7Pum5VMVqXpEsyz9W2JEpNvGKERTkXkZgoSYF5YmWbNaBytbFHJtdTswbYGrk6VQdB04t89/1O/w1cDnyilFU=
+  channel-secret: 703c0f44af4957ab84b0e59b344dc26e
+  handler.path: /callback
+
+hibernate:
+  dialect: org.hibernate.dialect.MySQL5Dialect
+  show_sql: false
+  format_sql: false
+  factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+  use_second_level_cache: true
+  use_query_cache: true
+  use_minimal_puts: true
+  hbm2ddl_auto: none
+
+#logging:
+#  file: /tmp/logs/${properties.project}-${properties.env}.log
+#  pattern:
+#    console: "%d %-5level %logger : %msg%n"
+#    file: "%d %-5level [%thread] %logger : %msg%n"
+#  level:
+#    root: ${properties.log-level}
+#    org.springframework.security: ${properties.log-level}
+#    org.springframework.web: ${properties.log-level}
+#    guru.springframework.controllers: ${properties.log-level}
+#    org.hibernate: ${properties.log-level}
+
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  datasource:
+    primary:
+      type: com.zaxxer.hikari.HikariDataSource
+      jdbc-url: jdbc:log4jdbc:mysql://192.168.1.151:3306/dev?characterEncoding=UTF-8&autoReconnect=true
+      username: dev
+      password: 1qaz@WSX
+      driver-class-name: net.sf.log4jdbc.DriverSpy
+
+    hikari:
+      minimumIdle: 5
+      maximumPoolSize: 20
+      idleTimeout: 30000
+      poolName: SpringBootJPAHikariCP
+      maxLifetime: 2000000
+      connectionTimeout: 30000
+      autoCommit: true
+      connectionTestQuery: SELECT 1
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password:
+    lettuce:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-wait: -1ms
+        max-active: 8
+      shutdown-timeout: 100
+    timeout: 5000
+
+eureka:
+  client:
+    enabled: false
+
+application:
+  cache:
+    enable: true
+    key:
+      demoCache: PT5M
+      userCache: PT5M
