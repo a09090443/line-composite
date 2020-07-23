@@ -1,7 +1,7 @@
 package com.zipe.jdbc.criteria
 
 import com.zipe.enum.ResourceEnum
-import com.zipe.util.FileUtil
+import com.zipe.util.file.FileUtil
 
 /**
  * 實現伺服器端分頁的資料物件<br></br>

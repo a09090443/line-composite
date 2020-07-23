@@ -3,13 +3,12 @@ package com.zipe.jdbc
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.criteria.Conditions
 import com.zipe.jdbc.criteria.Paging
-import com.zipe.util.FileUtil
+import com.zipe.util.file.FileUtil
 import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
-import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.dao.IncorrectResultSizeDataAccessException
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -17,8 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport
 import org.springframework.stereotype.Repository
-import org.springframework.util.ResourceUtils
-import java.io.File
 
 
 /**

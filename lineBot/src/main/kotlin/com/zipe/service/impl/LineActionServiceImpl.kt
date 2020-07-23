@@ -23,6 +23,7 @@ import com.zipe.model.*
 import com.zipe.repository.*
 import com.zipe.service.ILineActionService
 import com.zipe.util.*
+import com.zipe.util.crypto.HmacEncryptUtil
 import com.zipe.util.http.OkHttpUtil
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.apache.commons.lang3.StringUtils

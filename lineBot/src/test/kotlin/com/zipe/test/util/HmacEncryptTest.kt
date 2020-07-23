@@ -1,12 +1,11 @@
 package com.zipe.test.util
 
 import com.google.common.net.HttpHeaders
-import com.google.gson.Gson
-import com.zipe.entity.Product
-import com.zipe.model.*
-import com.zipe.service.impl.LINE_PAYMENT_URI
 import com.zipe.test.base.TestBase
-import com.zipe.util.*
+import com.zipe.util.AUTHORIZATION
+import com.zipe.util.CHANNEL_ID
+import com.zipe.util.NONCE
+import com.zipe.util.crypto.HmacEncryptUtil
 import com.zipe.util.http.OkHttpUtil
 import okhttp3.Response
 import org.junit.Ignore
@@ -14,7 +13,6 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import java.io.IOException
-import java.math.BigDecimal
 import java.util.*
 
 class HmacEncryptTest : TestBase() {

@@ -1,4 +1,4 @@
-package com.zipe.util
+package com.zipe.util.crypto
 
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.codec.digest.HmacAlgorithms
