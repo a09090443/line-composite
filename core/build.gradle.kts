@@ -26,7 +26,7 @@ dependencies {
     api("org.springframework.security:spring-security-config")
     api("org.springframework.security:spring-security-web")
 
-    api("org.springframework.hateoas:spring-hateoas:1.1.0.RELEASE")
+    api("org.springframework.hateoas:${property("hateoasVersion")}")
 
     api("com.graphql-java:graphql-spring-boot-starter:${property("graphqlVersion")}")
     api("com.graphql-java:graphiql-spring-boot-starter:${property("graphqlVersion")}")
@@ -35,13 +35,14 @@ dependencies {
 
     api("com.zaxxer:HikariCP")
     api("org.hibernate:hibernate-ehcache")
-    api("org.hibernate:hibernate-validator:6.1.5.Final")
+    api("org.hibernate:hibernate-validator:${property("hibernateValidatorVersion")}")
     api("mysql:mysql-connector-java")
     api("com.thedeanda:lorem:${property("loremVersion")}")
     api("javax.validation:validation-api:${property("validationApiVersion")}")
     api("commons-io:commons-io:${property("commonIoVersion")}")
     api("com.googlecode.log4jdbc:log4jdbc:${property("log4jdbcVersion")}")
-    api("com.squareup.okhttp3:okhttp:4.7.2")
+    api("com.squareup.okhttp3:okhttp:${property("okhttpVersion")}")
+    api("org.quartz-scheduler:quartz:${property("quartzVersion")}")
 
     api("org.slf4j:slf4j-api:${property("slf4jApiVersion")}")
 }

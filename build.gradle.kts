@@ -20,6 +20,10 @@ extra["graphqlJavaVersion"] = "5.2.4"
 extra["graphqlVersion"] = "5.0.2"
 extra["commonIoVersion"] = "2.6"
 extra["fastjsonVersion"] = "1.2.68"
+extra["quartzVersion"] = "2.3.2"
+extra["okhttpVersion"] = "4.7.2"
+extra["hateoasVersion"] = "1.1.0.RELEASE"
+extra["hibernateValidatorVersion"] = "6.1.5.Final"
 
 allprojects {
     group = "com.zipe"
