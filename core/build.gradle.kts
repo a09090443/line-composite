@@ -26,7 +26,7 @@ dependencies {
     api("org.springframework.security:spring-security-config")
     api("org.springframework.security:spring-security-web")
 
-    api("org.springframework.hateoas:${property("hateoasVersion")}")
+    api("org.springframework.hateoas:spring-hateoas:${property("hateoasVersion")}")
 
     api("com.graphql-java:graphql-spring-boot-starter:${property("graphqlVersion")}")
     api("com.graphql-java:graphiql-spring-boot-starter:${property("graphqlVersion")}")

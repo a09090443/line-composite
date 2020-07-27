@@ -1,6 +1,5 @@
 package com.zipe.controller
 
-
 import com.zipe.enum.SheduleJobStatusEmun
 import com.zipe.job.AbstractJob
 import com.zipe.model.ScheduleJob
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController
 import java.text.ParseException
 import javax.validation.Valid
 
-
 @RestController
 class ScheduleJobController : AbstractJob() {
     @Autowired
@@ -25,14 +23,12 @@ class ScheduleJobController : AbstractJob() {
 
     @PostMapping("/register")
     @Throws(Exception::class)
-    fun register(@RequestBody scheduleJobDetail: @Valid ScheduleJobDetail?): ResponseEntity<ScheduleJobDetail> {
+    fun register(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
         var scheduleJobDetail = scheduleJobDetail
         try {
             scheduleJobDetail = saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.START.status)
             result = createJobProcess(scheduleJobDetail!!)
-            return if (null == result!!.errorMessage) {
-                ResponseEntity.ok(result!!)
-            } else {
+            return run {
                 logger.error(result!!.errorMessage)
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(result)
@@ -51,7 +47,7 @@ class ScheduleJobController : AbstractJob() {
 
     @PostMapping("/delete")
     @Throws(Exception::class)
-    fun delete(@RequestBody scheduleJobDetail: @Valid ScheduleJobDetail?): ResponseEntity<ScheduleJobDetail> {
+    fun delete(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
         var scheduleJobDetail = scheduleJobDetail
         scheduleJobDetail = try {
             saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.DELETE.status)
@@ -60,9 +56,7 @@ class ScheduleJobController : AbstractJob() {
                 .body(result)
         }
         result = deleteJobProcess(scheduleJobDetail!!)
-        return if (null == result!!.errorMessage) {
-            ResponseEntity.ok(result!!)
-        } else {
+        return run {
             logger.error(result!!.errorMessage)
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(result)
@@ -71,7 +65,7 @@ class ScheduleJobController : AbstractJob() {
 
     @PostMapping("/stop")
     @Throws(Exception::class)
-    fun stop(@RequestBody scheduleJobDetail: @Valid ScheduleJobDetail?): ResponseEntity<ScheduleJobDetail> {
+    fun stop(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
         var scheduleJobDetail = scheduleJobDetail
         scheduleJobDetail = try {
             saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.SUSPEND.status)
@@ -80,9 +74,7 @@ class ScheduleJobController : AbstractJob() {
                 .body(result)
         }
         result = suspendJobProcess(scheduleJobDetail!!)
-        return if (null == result!!.errorMessage) {
-            ResponseEntity.ok(result!!)
-        } else {
+        return run {
             logger.error(result!!.errorMessage)
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(result)
@@ -91,7 +83,7 @@ class ScheduleJobController : AbstractJob() {
 
     @PostMapping("/start")
     @Throws(Exception::class)
-    fun start(@RequestBody scheduleJobDetail: @Valid ScheduleJobDetail?): ResponseEntity<ScheduleJobDetail> {
+    fun start(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
         var scheduleJobDetail = scheduleJobDetail
         scheduleJobDetail = try {
             saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.START.status)
@@ -99,10 +91,8 @@ class ScheduleJobController : AbstractJob() {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(result)
         }
-        result = resumeJobProcess(scheduleJobDetail!!)
-        return if (null == result!!.errorMessage) {
-            ResponseEntity.ok(result!!)
-        } else {
+        result = resumeJobProcess(scheduleJobDetail)
+        return run {
             logger.error(result!!.errorMessage)
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(result)
@@ -110,18 +100,14 @@ class ScheduleJobController : AbstractJob() {
     }
 
     @Throws(Exception::class)
-    private fun saveOrUpdateScheduleJobStatus(scheduleJobDetail: ScheduleJobDetail?, status: Int): ScheduleJobDetail? {
-        scheduleJobDetail?.status = status
+    private fun saveOrUpdateScheduleJobStatus(scheduleJobDetail: ScheduleJobDetail, status: Int): ScheduleJobDetail {
+        scheduleJobDetail.status = status
         try {
-            val scheduleJobEntity: ScheduleJob? = scheduleJobService?.findByJobName(scheduleJobDetail!!.jobName)
+            val scheduleJobEntity: ScheduleJob? = scheduleJobService?.findByJobName(scheduleJobDetail.jobName)
             if (null != scheduleJobEntity) {
-                if (scheduleJobService != null) {
-                    scheduleJobService.delete(scheduleJobEntity)
-                }
+                scheduleJobService?.delete(scheduleJobEntity)
             }
-            if (scheduleJobService != null) {
-                scheduleJobService.saveOrUpdate(scheduleJobDetail)
-            }
+            scheduleJobService?.saveOrUpdate(scheduleJobDetail)
         } catch (e: Exception) {
             logger.error(e.message)
             throw e

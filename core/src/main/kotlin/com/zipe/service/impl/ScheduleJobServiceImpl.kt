@@ -13,15 +13,13 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service("scheduleJobService")
 class ScheduleJobServiceImpl : IScheduleJobService {
+
     @Autowired
-    private val scheduleJobEntityRepository: IScheduleJobEntityRepository? = null
+    private lateinit var scheduleJobEntityRepository: IScheduleJobEntityRepository
 
     @Throws(Exception::class)
     override fun findAllJobs(): List<ScheduleJob?>? {
-        if (scheduleJobEntityRepository != null) {
-            return scheduleJobEntityRepository.findAll()
-        }
-        return listOf()
+        return scheduleJobEntityRepository.findAll()
     }
 
     @Throws(Exception::class)
@@ -34,27 +32,26 @@ class ScheduleJobServiceImpl : IScheduleJobService {
 
     @Throws(Exception::class)
     override fun findByJobName(jobName: String?): ScheduleJob? {
-        if (scheduleJobEntityRepository != null) {
-            return scheduleJobEntityRepository.findByJobName(jobName)
-        }
+        return scheduleJobEntityRepository.findByJobName(jobName)
         return ScheduleJob()
     }
 
     override fun saveOrUpdate(scheduleJobDetail: ScheduleJobDetail?) {
-        val scheduleJob = ScheduleJob()
-        scheduleJob.jobClass = scheduleJobDetail!!.classPath
-        scheduleJob.jobName = scheduleJobDetail.jobName
-        scheduleJob.jobGroup = scheduleJobDetail.group
-        scheduleJob.jobDescription = scheduleJobDetail.description
-        scheduleJob.startTime = scheduleJobDetail.startDate + " " + scheduleJobDetail.time
-        scheduleJob.endTime = scheduleJobDetail.endDate + " " + scheduleJobDetail.time
-        scheduleJob.status = scheduleJobDetail.status
-        scheduleJob.executeTimes = scheduleJobDetail.repeatTimes
-        scheduleJob.timeUnit = scheduleJobDetail.timeUnit
-        scheduleJob.repeatInterval = scheduleJobDetail.interval
-        if (scheduleJobEntityRepository != null) {
-            scheduleJobEntityRepository.save(scheduleJob)
+
+        val scheduleJob = ScheduleJob().apply {
+            this.jobClass = scheduleJobDetail!!.classPath
+            this.jobName = scheduleJobDetail!!.jobName
+            this.jobGroup = scheduleJobDetail!!.group
+            this.jobDescription = scheduleJobDetail!!.description
+            this.startTime = "${scheduleJobDetail.startDate}  ${scheduleJobDetail.time}"
+            this.endTime = "${scheduleJobDetail.endDate} ${scheduleJobDetail.time}"
+            this.status = scheduleJobDetail!!.status
+            this.executeTimes = scheduleJobDetail!!.repeatTimes
+            this.timeUnit = scheduleJobDetail!!.timeUnit
+            this.repeatInterval = scheduleJobDetail!!.interval
         }
+
+        scheduleJobEntityRepository.save(scheduleJob)
     }
 
     @Throws(Exception::class)
@@ -62,9 +59,5 @@ class ScheduleJobServiceImpl : IScheduleJobService {
         if (scheduleJobEntityRepository != null) {
 //            scheduleJobEntityRepository.delete(scheduleJobEntity)
         }
-    }
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(ScheduleJobServiceImpl::class.java)
     }
 }

@@ -22,9 +22,9 @@ abstract class AbstractJob {
     fun executeJobProcess(scheduleJobDetail: ScheduleJobDetail): ScheduleJobDetail {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val startTime =
-            sdf.parse(scheduleJobDetail.startDate + " " + scheduleJobDetail.time)
+            sdf.parse("${scheduleJobDetail.startDate} ${scheduleJobDetail.time}")
         val endTime =
-            sdf.parse(scheduleJobDetail.endDate + " " + scheduleJobDetail.time)
+            sdf.parse("${scheduleJobDetail.endDate} ${scheduleJobDetail.time}")
         try {
             val jobDetail = buildJobDetail(scheduleJobDetail)
             val trigger = buildJobTrigger(jobDetail, startTime, endTime, scheduleJobDetail)
@@ -124,7 +124,7 @@ abstract class AbstractJob {
             }
         } catch (e: SchedulerException) {
             e.printStackTrace()
-            scheduleJobDetail.errorMessage = "Schedule job : " + scheduleJobDetail.jobName + " error."
+            scheduleJobDetail.errorMessage = "Schedule job : ${scheduleJobDetail.jobName} error."
         }
         return scheduleJobDetail
     }
