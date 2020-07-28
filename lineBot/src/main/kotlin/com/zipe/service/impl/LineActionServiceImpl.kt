@@ -25,6 +25,7 @@ import com.zipe.service.ILineActionService
 import com.zipe.util.*
 import com.zipe.util.crypto.HmacEncryptUtil
 import com.zipe.util.http.OkHttpUtil
+import com.zipe.util.log.logger
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,6 +55,8 @@ const val LINE_REQUEST_SUCCESS_CODE = "0000"
 
 @Service("lineActionService")
 class LineActionServiceImpl : ILineActionService {
+
+    val logger = logger()
 
     @Autowired
     private lateinit var lineMessagingClient: LineMessagingClient
@@ -176,8 +179,8 @@ class LineActionServiceImpl : ILineActionService {
             sha256HMAC.init(secretKey)
             val headerSignature = Base64.getDecoder().decode(signature)
             val bodySignature = sha256HMAC.doFinal(body)
-//            logger.info("headerSignature = $headerSignature")
-//            logger.info("bodySignature = $bodySignature")
+            logger.info("headerSignature = $headerSignature")
+            logger.info("bodySignature = $bodySignature")
             result = MessageDigest.isEqual(headerSignature, bodySignature)
         } catch (e: Exception) {
 //            logger.error(e)
@@ -288,7 +291,7 @@ class LineActionServiceImpl : ILineActionService {
                     //Step3
                     val order = ProductOrder().apply {
                         this.amount = productPackageForm.amount
-                        this.channelId = channel.channelId ?: ""
+                        this.channelId = channel.channelId
                         this.lineId = userId
                         this.quantity = paymentProduct.quantity
                         this.status = OrderStatus.PENDING.name
