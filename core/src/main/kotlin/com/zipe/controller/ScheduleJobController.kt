@@ -2,7 +2,7 @@ package com.zipe.controller
 
 import com.zipe.enum.SheduleJobStatusEmun
 import com.zipe.job.AbstractJob
-import com.zipe.model.ScheduleJob
+import com.zipe.entity.ScheduleJob
 import com.zipe.payload.ScheduleJobDetail
 import com.zipe.service.IScheduleJobService
 import org.quartz.SchedulerException
@@ -12,11 +12,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.text.ParseException
-import javax.validation.Valid
 
 @RestController
+@RequestMapping("/job")
 class ScheduleJobController : AbstractJob() {
     @Autowired
     private val scheduleJobService: IScheduleJobService? = null

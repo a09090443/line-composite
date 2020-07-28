@@ -11,5 +11,8 @@ class TestController {
     val logger = logger()
 
     @GetMapping(value = ["/test"])
-    fun test() = "test"
+    fun test(): String {
+        val test = "TEST"
+        return test
+    }
 }

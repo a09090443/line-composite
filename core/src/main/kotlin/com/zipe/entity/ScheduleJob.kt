@@ -1,5 +1,7 @@
-package com.zipe.model
+package com.zipe.entity
 
+import com.zipe.entity.base.BaseEntity
+import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -31,4 +33,4 @@ data class ScheduleJob(
     var startTime: String = "",
     @Column(name = "end_time")
     var endTime: String = ""
-)
+) : Serializable, BaseEntity()

@@ -1,6 +1,6 @@
 package com.zipe.service
 
-import com.zipe.model.ScheduleJob
+import com.zipe.entity.ScheduleJob
 import com.zipe.payload.ScheduleJobDetail
 
 

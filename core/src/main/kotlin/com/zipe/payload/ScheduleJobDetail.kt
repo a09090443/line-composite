@@ -14,6 +14,6 @@ data class ScheduleJobDetail(
     val interval: Int = 0,
     val repeatTimes: Int = 0,
     val timeUnit: Int = 0,
-    val jobDataMap: JobDataMap = JobDataMap(),
+    val jobDataMap: JobDataMap? = JobDataMap(),
     var errorMessage: String = ""
 )
