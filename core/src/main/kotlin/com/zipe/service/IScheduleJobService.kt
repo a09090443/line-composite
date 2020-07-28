@@ -18,5 +18,5 @@ interface IScheduleJobService {
     fun saveOrUpdate(scheduleJobDetail: ScheduleJobDetail)
 
     @Throws(Exception::class)
-    fun delete(scheduleJob: ScheduleJob)
+    fun delete(jobName: String)
 }

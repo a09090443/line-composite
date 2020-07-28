@@ -26,13 +26,11 @@ class ScheduleJobServiceImpl : IScheduleJobService {
     @Throws(Exception::class)
     override fun findById(id: Int): ScheduleJob? {
         return scheduleJobRepository.findById(id)
-//        return ScheduleJob()
     }
 
     @Throws(Exception::class)
     override fun findByJobName(jobName: String?): ScheduleJob? {
         return scheduleJobRepository.findByJobName(jobName)
-//        return ScheduleJob()
     }
 
     override fun saveOrUpdate(scheduleJobDetail: ScheduleJobDetail) {
@@ -62,9 +60,7 @@ class ScheduleJobServiceImpl : IScheduleJobService {
     }
 
     @Throws(Exception::class)
-    override fun delete(scheduleJobEntity: ScheduleJob) {
-        if (scheduleJobRepository != null) {
-//            scheduleJobEntityRepository.delete(scheduleJobEntity)
-        }
+    override fun delete(jobName: String) {
+        scheduleJobRepository.deleteByJobName(jobName)
     }
 }

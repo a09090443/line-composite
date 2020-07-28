@@ -4,6 +4,7 @@ import com.zipe.enum.SheduleJobStatusEmun
 import com.zipe.job.AbstractJob
 import com.zipe.payload.ScheduleJobDetail
 import com.zipe.service.IScheduleJobService
+import com.zipe.util.log.logger
 import org.quartz.SchedulerException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +16,8 @@ import java.text.ParseException
 @RestController
 @RequestMapping("/job")
 class ScheduleJobController : AbstractJob() {
+
+    val logger= logger()
 
     @Autowired
     private lateinit var scheduleJobService: IScheduleJobService
@@ -46,7 +49,7 @@ class ScheduleJobController : AbstractJob() {
     @Throws(Exception::class)
     fun delete(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
         try {
-            saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.DELETE.status)
+            scheduleJobService.delete(scheduleJobDetail.jobName)
         } catch (e: Exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(result)
@@ -95,19 +98,17 @@ class ScheduleJobController : AbstractJob() {
 
     @Throws(Exception::class)
     private fun saveOrUpdateScheduleJobStatus(scheduleJobDetail: ScheduleJobDetail, status: Int): ScheduleJobDetail {
-        scheduleJobDetail.status = status
+        with(scheduleJobDetail){
+            this.status = status
+        }
         try {
             scheduleJobService.findByJobName(scheduleJobDetail.jobName)?.let {
-                scheduleJobService.delete(it)
+//                scheduleJobService.delete(it)
             } ?: scheduleJobService.saveOrUpdate(scheduleJobDetail)
         } catch (e: Exception) {
             logger.error(e.message)
             throw e
         }
         return scheduleJobDetail
-    }
-
-    companion object {
-        private val logger = LoggerFactory.getLogger(ScheduleJobController::class.java)
     }
 }
