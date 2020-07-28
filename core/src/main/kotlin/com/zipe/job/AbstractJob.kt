@@ -37,30 +37,22 @@ abstract class AbstractJob {
 
     @Throws(SchedulerException::class, ParseException::class, ClassNotFoundException::class)
     fun deleteJobProcess(scheduleJobDetail: ScheduleJobDetail): ScheduleJobDetail {
-        var scheduleJobDetail: ScheduleJobDetail = scheduleJobDetail
-        scheduleJobDetail = scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.DELETE)
-        return scheduleJobDetail
+        return scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.DELETE)
     }
 
     @Throws(SchedulerException::class, ParseException::class, ClassNotFoundException::class)
     fun suspendJobProcess(scheduleJobDetail: ScheduleJobDetail): ScheduleJobDetail {
-        var scheduleJobDetail: ScheduleJobDetail = scheduleJobDetail
-        scheduleJobDetail = scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.SUSPEND)
-        return scheduleJobDetail
+        return scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.SUSPEND)
     }
 
     @Throws(SchedulerException::class, ParseException::class, ClassNotFoundException::class)
     fun resumeJobProcess(scheduleJobDetail: ScheduleJobDetail): ScheduleJobDetail {
-        var scheduleJobDetail: ScheduleJobDetail = scheduleJobDetail
-        scheduleJobDetail = scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.RESUME)
-        return scheduleJobDetail
+        return scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.RESUME)
     }
 
     @Throws(SchedulerException::class, ParseException::class, ClassNotFoundException::class)
     fun createJobProcess(scheduleJobDetail: ScheduleJobDetail): ScheduleJobDetail {
-        var scheduleJobDetail: ScheduleJobDetail = scheduleJobDetail
-        scheduleJobDetail = scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.CREATE)
-        return scheduleJobDetail
+        return scheduleJobStatusProcess(scheduleJobDetail, SheduleJobStatusEmun.CREATE)
     }
 
     @Suppress("UNCHECKED_CAST")

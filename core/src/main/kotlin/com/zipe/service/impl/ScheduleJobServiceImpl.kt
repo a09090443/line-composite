@@ -7,6 +7,8 @@ import com.zipe.service.IScheduleJobService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Transactional
@@ -40,8 +42,16 @@ class ScheduleJobServiceImpl : IScheduleJobService {
             this.jobName = scheduleJobDetail.jobName
             this.jobGroup = scheduleJobDetail.group
             this.jobDescription = scheduleJobDetail.description
-            this.startTime = "${scheduleJobDetail.startDate}  ${scheduleJobDetail.time}"
-            this.endTime = "${scheduleJobDetail.endDate} ${scheduleJobDetail.time}"
+
+            this.startTime = LocalDateTime.parse(
+                "${scheduleJobDetail.startDate} ${scheduleJobDetail.time}",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            )
+            this.endTime = LocalDateTime.parse(
+                "${scheduleJobDetail.endDate} ${scheduleJobDetail.time}",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            )
+
             this.status = scheduleJobDetail.status
             this.executeTimes = scheduleJobDetail.repeatTimes
             this.timeUnit = scheduleJobDetail.timeUnit

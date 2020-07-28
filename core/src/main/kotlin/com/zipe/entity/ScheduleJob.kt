@@ -2,6 +2,7 @@ package com.zipe.entity
 
 import com.zipe.entity.base.BaseEntity
 import java.io.Serializable
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -30,7 +31,7 @@ data class ScheduleJob(
     @Column(name = "execute_times")
     var executeTimes: Int = 0,
     @Column(name = "start_time")
-    var startTime: String = "",
+    var startTime: LocalDateTime? = null,
     @Column(name = "end_time")
-    var endTime: String = ""
+    var endTime: LocalDateTime? = null
 ) : Serializable, BaseEntity()

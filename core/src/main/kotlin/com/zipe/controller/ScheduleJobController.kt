@@ -1,6 +1,5 @@
 package com.zipe.controller
 
-import com.zipe.entity.ScheduleJob
 import com.zipe.enum.SheduleJobStatusEmun
 import com.zipe.job.AbstractJob
 import com.zipe.payload.ScheduleJobDetail
@@ -26,10 +25,9 @@ class ScheduleJobController : AbstractJob() {
     @PostMapping("/register")
     @Throws(Exception::class)
     fun register(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
-        var scheduleJobDetail = scheduleJobDetail
         try {
-            scheduleJobDetail = saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.START.status)
-            result = createJobProcess(scheduleJobDetail!!)
+            saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.START.status)
+            result = createJobProcess(scheduleJobDetail)
             return run {
                 logger.error(result!!.errorMessage)
                 ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -75,7 +73,7 @@ class ScheduleJobController : AbstractJob() {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(result)
         }
-        result = suspendJobProcess(scheduleJobDetail!!)
+        result = suspendJobProcess(scheduleJobDetail)
         return run {
             logger.error(result!!.errorMessage)
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
