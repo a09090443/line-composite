@@ -8,27 +8,33 @@ import org.apache.commons.lang.StringUtils
 import org.quartz.*
 import org.springframework.beans.factory.annotation.Autowired
 import java.text.ParseException
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 
-
 abstract class AbstractJob {
+
     @Autowired
-    private val scheduler: Scheduler? = null
+    private lateinit var scheduler: Scheduler
 
     protected var result: ScheduleJobDetail? = null
 
     @Throws(ClassNotFoundException::class, ParseException::class, SchedulerException::class)
     fun executeJobProcess(scheduleJobDetail: ScheduleJobDetail): ScheduleJobDetail {
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val startTime =
-            sdf.parse("${scheduleJobDetail.startDate} ${scheduleJobDetail.time}")
-        val endTime =
-            sdf.parse("${scheduleJobDetail.endDate} ${scheduleJobDetail.time}")
+        val dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val startTime = LocalDateTime.parse(
+            "${scheduleJobDetail.startDate} ${scheduleJobDetail.time}",
+            dtf
+        )
+        val endTime = LocalDateTime.parse(
+            "${scheduleJobDetail.endDate} ${scheduleJobDetail.time}",
+            dtf
+        )
         try {
             val jobDetail = buildJobDetail(scheduleJobDetail)
             val trigger = buildJobTrigger(jobDetail, startTime, endTime, scheduleJobDetail)
-            scheduler!!.scheduleJob(jobDetail, trigger)
+            scheduler.scheduleJob(jobDetail, trigger)
         } catch (e: SchedulerException) {
             throw e
         }
@@ -72,16 +78,16 @@ abstract class AbstractJob {
 
     fun buildJobTrigger(
         jobDetail: JobDetail,
-        startTime: Date?,
-        endTime: Date?,
+        startTime: LocalDateTime?,
+        endTime: LocalDateTime?,
         scheduleJobDetail: ScheduleJobDetail
     ): Trigger {
         return TriggerBuilder.newTrigger()
             .forJob(jobDetail)
             .withIdentity(jobDetail.key.name, scheduleJobDetail.jobName)
             .withDescription(scheduleJobDetail.description)
-            .startAt(startTime)
-            .endAt(endTime)
+            .startAt(Date.from(startTime?.atZone(ZoneId.systemDefault())?.toInstant()))
+            .endAt(Date.from(endTime?.atZone(ZoneId.systemDefault())?.toInstant()))
             .withSchedule(
                 ScheduleEmun.getTimeUnit(scheduleJobDetail.timeUnit)
                     ?.setCycle(scheduleJobDetail.interval, scheduleJobDetail.repeatTimes)
@@ -96,7 +102,7 @@ abstract class AbstractJob {
     ): ScheduleJobDetail {
         val jobKey = JobKey.jobKey(scheduleJobDetail.jobName, scheduleJobDetail.group)
         try {
-            if (!scheduler!!.checkExists(jobKey) && !sheduleJobStatusEmun.desc
+            if (!scheduler.checkExists(jobKey) && !sheduleJobStatusEmun.desc
                     .equals(SheduleJobStatusEmun.CREATE.desc)
             ) {
                 throw SchedulerConfigException("The job is not exist.")
@@ -107,12 +113,12 @@ abstract class AbstractJob {
         try {
             when (sheduleJobStatusEmun) {
                 ECMAException.CREATE -> {
-                    scheduler!!.deleteJob(jobKey)
+                    scheduler.deleteJob(jobKey)
                     executeJobProcess(scheduleJobDetail)
                 }
-                SheduleJobStatusEmun.SUSPEND -> scheduler!!.pauseJob(jobKey)
-                SheduleJobStatusEmun.RESUME -> scheduler!!.resumeJob(jobKey)
-                SheduleJobStatusEmun.DELETE -> scheduler!!.deleteJob(jobKey)
+                SheduleJobStatusEmun.SUSPEND -> scheduler.pauseJob(jobKey)
+                SheduleJobStatusEmun.RESUME -> scheduler.resumeJob(jobKey)
+                SheduleJobStatusEmun.DELETE -> scheduler.deleteJob(jobKey)
             }
         } catch (e: SchedulerException) {
             e.printStackTrace()
