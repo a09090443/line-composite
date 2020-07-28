@@ -23,22 +23,20 @@ class ScheduleJobServiceImpl : IScheduleJobService {
 
     @Throws(Exception::class)
     override fun findById(id: Int): ScheduleJob? {
-        if (scheduleJobRepository != null) {
-            return scheduleJobRepository.findById(id)
-        }
-        return ScheduleJob()
+        return scheduleJobRepository.findById(id)
+//        return ScheduleJob()
     }
 
     @Throws(Exception::class)
     override fun findByJobName(jobName: String?): ScheduleJob? {
         return scheduleJobRepository.findByJobName(jobName)
-        return ScheduleJob()
+//        return ScheduleJob()
     }
 
-    override fun saveOrUpdate(scheduleJobDetail: ScheduleJobDetail?) {
+    override fun saveOrUpdate(scheduleJobDetail: ScheduleJobDetail) {
 
         val scheduleJob = ScheduleJob().apply {
-            this.jobClass = scheduleJobDetail!!.classPath
+            this.jobClass = scheduleJobDetail.classPath
             this.jobName = scheduleJobDetail.jobName
             this.jobGroup = scheduleJobDetail.group
             this.jobDescription = scheduleJobDetail.description
@@ -54,7 +52,7 @@ class ScheduleJobServiceImpl : IScheduleJobService {
     }
 
     @Throws(Exception::class)
-    override fun delete(scheduleJobEntity: ScheduleJob?) {
+    override fun delete(scheduleJobEntity: ScheduleJob) {
         if (scheduleJobRepository != null) {
 //            scheduleJobEntityRepository.delete(scheduleJobEntity)
         }

@@ -15,8 +15,8 @@ interface IScheduleJobService {
     fun findByJobName(jobName: String?): ScheduleJob?
 
     @Throws(Exception::class)
-    fun saveOrUpdate(scheduleJobDetail: ScheduleJobDetail?)
+    fun saveOrUpdate(scheduleJobDetail: ScheduleJobDetail)
 
     @Throws(Exception::class)
-    fun delete(scheduleJobEntity: ScheduleJob?)
+    fun delete(scheduleJob: ScheduleJob)
 }

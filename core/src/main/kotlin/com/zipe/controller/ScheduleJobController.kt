@@ -1,8 +1,8 @@
 package com.zipe.controller
 
+import com.zipe.entity.ScheduleJob
 import com.zipe.enum.SheduleJobStatusEmun
 import com.zipe.job.AbstractJob
-import com.zipe.entity.ScheduleJob
 import com.zipe.payload.ScheduleJobDetail
 import com.zipe.service.IScheduleJobService
 import org.quartz.SchedulerException
@@ -19,8 +19,9 @@ import java.text.ParseException
 @RestController
 @RequestMapping("/job")
 class ScheduleJobController : AbstractJob() {
+
     @Autowired
-    private val scheduleJobService: IScheduleJobService? = null
+    private lateinit var scheduleJobService: IScheduleJobService
 
     @PostMapping("/register")
     @Throws(Exception::class)
@@ -104,11 +105,9 @@ class ScheduleJobController : AbstractJob() {
     private fun saveOrUpdateScheduleJobStatus(scheduleJobDetail: ScheduleJobDetail, status: Int): ScheduleJobDetail {
         scheduleJobDetail.status = status
         try {
-            val scheduleJobEntity: ScheduleJob? = scheduleJobService?.findByJobName(scheduleJobDetail.jobName)
-            if (null != scheduleJobEntity) {
-                scheduleJobService?.delete(scheduleJobEntity)
-            }
-            scheduleJobService?.saveOrUpdate(scheduleJobDetail)
+            scheduleJobService.findByJobName(scheduleJobDetail.jobName)?.let {
+                scheduleJobService.delete(it)
+            } ?: scheduleJobService.saveOrUpdate(scheduleJobDetail)
         } catch (e: Exception) {
             logger.error(e.message)
             throw e
