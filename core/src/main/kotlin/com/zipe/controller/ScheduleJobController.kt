@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.text.ParseException
 
 @RestController
@@ -45,17 +42,16 @@ class ScheduleJobController : AbstractJob() {
         return ResponseEntity.ok(result!!)
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     @Throws(Exception::class)
     fun delete(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
-        var scheduleJobDetail = scheduleJobDetail
-        scheduleJobDetail = try {
+        try {
             saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.DELETE.status)
         } catch (e: Exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(result)
         }
-        result = deleteJobProcess(scheduleJobDetail!!)
+        result = deleteJobProcess(scheduleJobDetail)
         return run {
             logger.error(result!!.errorMessage)
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -66,8 +62,7 @@ class ScheduleJobController : AbstractJob() {
     @PostMapping("/stop")
     @Throws(Exception::class)
     fun stop(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
-        var scheduleJobDetail = scheduleJobDetail
-        scheduleJobDetail = try {
+        try {
             saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.SUSPEND.status)
         } catch (e: Exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -84,8 +79,7 @@ class ScheduleJobController : AbstractJob() {
     @PostMapping("/start")
     @Throws(Exception::class)
     fun start(@RequestBody scheduleJobDetail: ScheduleJobDetail): ResponseEntity<ScheduleJobDetail> {
-        var scheduleJobDetail = scheduleJobDetail
-        scheduleJobDetail = try {
+        try {
             saveOrUpdateScheduleJobStatus(scheduleJobDetail, SheduleJobStatusEmun.START.status)
         } catch (e: Exception) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

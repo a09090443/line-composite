@@ -6,5 +6,4 @@ enum class SheduleJobStatusEmun(var status: Int, var desc: String) {
     SUSPEND(2, "SUSPEND"),
     RESUME(3, "RESUME"),
     CREATE(4, "CREATE");
-
 }
