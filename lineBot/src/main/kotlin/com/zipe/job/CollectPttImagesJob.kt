@@ -5,18 +5,27 @@ import org.jsoup.Jsoup
 import org.quartz.JobExecutionContext
 
 const val PTT_DOMAIN = "https://www.ptt.cc"
+const val PTT_18_ACCESS_URL = "$PTT_DOMAIN/ask/over18"
+const val PTT_BOARD_URL = "$PTT_DOMAIN/bbs/%s/index.html"
 const val PTT_18_COOKIE_NAME = "over18"
+const val USER_AGENT = "Mozilla"
 
 class CollectPttImagesJob : QuartzJobFactory() {
     override fun executeJob(jobExecutionContext: JobExecutionContext?) {
         val cookie: String = getPttAdultCookie()
-        val jobMap =
-            jobExecutionContext?.jobDetail?.jobDataMap?.map { (key, value) -> println("$key -> $value") }
-        var doc = Jsoup.connect("$PTT_DOMAIN/bbs/Beauty/index.html")
-            .userAgent("Mozilla").cookie(PTT_18_COOKIE_NAME, cookie).get()
+        val jobMap = jobExecutionContext?.jobDetail?.jobDataMap ?: mapOf<String, Any>()
+        var board = ""
+        var deepLevel = 0
+        if (jobMap.isNotEmpty()) {
+            board = jobMap["board"].toString()
+            deepLevel = jobMap["deepLevel"] as Int
+        }
+
+        var doc = Jsoup.connect(String.format(PTT_BOARD_URL, board))
+            .userAgent(USER_AGENT).cookie(PTT_18_COOKIE_NAME, cookie).get()
         var previous = doc.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
-        for (i in 0 until 5) {
-            doc = Jsoup.connect("$PTT_DOMAIN$previous").userAgent("Mozilla").cookie("over18", cookie).get()
+        for (i in 0 until deepLevel) {
+            doc = Jsoup.connect("$PTT_DOMAIN$previous").userAgent(USER_AGENT).cookie(PTT_18_COOKIE_NAME, cookie).get()
             previous = doc.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
             println(previous)
 
@@ -43,6 +52,6 @@ class CollectPttImagesJob : QuartzJobFactory() {
 }
 
 private fun getPttAdultCookie(): String {
-    val response = Jsoup.connect("$PTT_DOMAIN/ask/over18").data("yes", "yes").method(Connection.Method.POST).execute()
+    val response = Jsoup.connect(PTT_18_ACCESS_URL).data("yes", "yes").method(Connection.Method.POST).execute()
     return response.cookie(PTT_18_COOKIE_NAME)
 }
