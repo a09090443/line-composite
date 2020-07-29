@@ -32,10 +32,10 @@ class CollectPttImagesJob : QuartzJobFactory() {
             val list = doc.select("div[class=r-ent]").forEach {
                 val links = it.select("div[class=title]>a[href]")
                 for (link in links) {
-                    doc = Jsoup.connect("$PTT_DOMAIN${link.attr("href")}").userAgent("Mozilla").cookie("over18", cookie)
-                        .get()
+                    doc = Jsoup.connect("$PTT_DOMAIN${link.attr("href")}").userAgent("Mozilla")
+                        .cookie(PTT_18_COOKIE_NAME, cookie).get()
                     println("link : ${link.attr("href")}")
-                    val images = doc.select("a[rel]").map { it.attr("href") }.toList()
+                    val images = doc.select("a[rel]").map { image -> image.attr("href") }.toList()
                     println(images)
 //                images.forEach {
 //                    val href = it.attr("href")

@@ -17,7 +17,7 @@ import java.text.ParseException
 @RequestMapping("/job")
 class ScheduleJobController : AbstractJob() {
 
-    val logger= logger()
+    val logger = logger()
 
     @Autowired
     private lateinit var scheduleJobService: IScheduleJobService
@@ -98,13 +98,11 @@ class ScheduleJobController : AbstractJob() {
 
     @Throws(Exception::class)
     private fun saveOrUpdateScheduleJobStatus(scheduleJobDetail: ScheduleJobDetail, status: Int): ScheduleJobDetail {
-        with(scheduleJobDetail){
+        with(scheduleJobDetail) {
             this.status = status
         }
         try {
-            scheduleJobService.findByJobName(scheduleJobDetail.jobName)?.let {
-//                scheduleJobService.delete(it)
-            } ?: scheduleJobService.saveOrUpdate(scheduleJobDetail)
+            scheduleJobService.findByJobName(scheduleJobDetail.jobName) ?: scheduleJobService.saveOrUpdate(scheduleJobDetail)
         } catch (e: Exception) {
             logger.error(e.message)
             throw e
