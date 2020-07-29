@@ -17,6 +17,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-redis")
     api("org.springframework.boot:spring-boot-devtools")
     api("org.springframework.boot:spring-boot-starter-logging")
+    api("org.springframework.boot:spring-boot-starter-quartz")
 
     api("org.springframework.cloud:spring-cloud-starter-config")
     api("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
@@ -42,7 +43,7 @@ dependencies {
     api("commons-io:commons-io:${property("commonIoVersion")}")
     api("com.googlecode.log4jdbc:log4jdbc:${property("log4jdbcVersion")}")
     api("com.squareup.okhttp3:okhttp:${property("okhttpVersion")}")
-    api("org.quartz-scheduler:quartz:${property("quartzVersion")}")
+//    api("org.quartz-scheduler:quartz:${property("quartzVersion")}")
 
     api("org.slf4j:slf4j-api:${property("slf4jApiVersion")}")
 }

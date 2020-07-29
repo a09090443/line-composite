@@ -112,7 +112,7 @@ abstract class AbstractJob {
         }
         try {
             when (sheduleJobStatusEmun) {
-                ECMAException.CREATE -> {
+                SheduleJobStatusEmun.CREATE -> {
                     scheduler.deleteJob(jobKey)
                     executeJobProcess(scheduleJobDetail)
                 }

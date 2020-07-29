@@ -3,10 +3,15 @@ spring:
     allow-bean-definition-overriding: true
   application:
     name: core
-  cloud:
-    config:
-      profile: dev
-      uri: http://127.0.0.1:8000
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      schema: classpath:org/quartz/impl/jdbcjobstore/tables_mysql_innodb.sql
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 5
 
 server:
   port: 8080
