@@ -3,7 +3,6 @@ package com.zipe.job
 import com.zipe.enum.ScheduleEmun
 import com.zipe.enum.SheduleJobStatusEmun
 import com.zipe.payload.ScheduleJobDetail
-import jdk.nashorn.internal.runtime.ECMAException
 import org.apache.commons.lang.StringUtils
 import org.quartz.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -65,9 +64,7 @@ abstract class AbstractJob {
     @Throws(ClassNotFoundException::class)
     fun buildJobDetail(scheduleJobDetail: ScheduleJobDetail): JobDetail {
         val clazz: Class<out Job> = Class.forName(scheduleJobDetail.classPath) as Class<out Job>
-//        if (null == scheduleJobDetail.jobDataMap) {
-//            scheduleJobDetail.setJobDataMap(JobDataMap())
-//        }
+
         return JobBuilder.newJob(clazz)
             .withIdentity(scheduleJobDetail.jobName, scheduleJobDetail.group)
             .withDescription(scheduleJobDetail.description)
@@ -76,7 +73,7 @@ abstract class AbstractJob {
             .build()
     }
 
-    fun buildJobTrigger(
+    private fun buildJobTrigger(
         jobDetail: JobDetail,
         startTime: LocalDateTime?,
         endTime: LocalDateTime?,
@@ -102,9 +99,7 @@ abstract class AbstractJob {
     ): ScheduleJobDetail {
         val jobKey = JobKey.jobKey(scheduleJobDetail.jobName, scheduleJobDetail.group)
         try {
-            if (!scheduler.checkExists(jobKey) && !sheduleJobStatusEmun.desc
-                    .equals(SheduleJobStatusEmun.CREATE.desc)
-            ) {
+            if (!scheduler.checkExists(jobKey) && sheduleJobStatusEmun.desc != SheduleJobStatusEmun.CREATE.desc) {
                 throw SchedulerConfigException("The job is not exist.")
             }
         } catch (e: SchedulerException) {
