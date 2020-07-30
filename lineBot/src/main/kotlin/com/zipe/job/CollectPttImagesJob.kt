@@ -1,8 +1,11 @@
 package com.zipe.job
 
+import com.zipe.service.ICrawlerService
 import org.jsoup.Connection
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import org.quartz.JobExecutionContext
+import org.springframework.beans.factory.annotation.Autowired
 
 const val PTT_DOMAIN = "https://www.ptt.cc"
 const val PTT_18_ACCESS_URL = "$PTT_DOMAIN/ask/over18"
@@ -11,43 +14,49 @@ const val PTT_18_COOKIE_NAME = "over18"
 const val USER_AGENT = "Mozilla"
 
 class CollectPttImagesJob : QuartzJobFactory() {
+    @Autowired
+    lateinit var crawlerService: ICrawlerService
+
     override fun executeJob(jobExecutionContext: JobExecutionContext?) {
-        val cookie: String = getPttAdultCookie()
         val jobMap = jobExecutionContext?.jobDetail?.jobDataMap ?: mapOf<String, Any>()
         var board = ""
         var deepLevel = 0
         if (jobMap.isNotEmpty()) {
             board = jobMap["board"].toString()
-            deepLevel = jobMap["deepLevel"] as Int
+            deepLevel = jobMap["deepLevel"].toString().toInt()
         }
 
-        var doc = Jsoup.connect(String.format(PTT_BOARD_URL, board))
-            .userAgent(USER_AGENT).cookie(PTT_18_COOKIE_NAME, cookie).get()
-        var previous = doc.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
-        for (i in 0 until deepLevel) {
-            doc = Jsoup.connect("$PTT_DOMAIN$previous").userAgent(USER_AGENT).cookie(PTT_18_COOKIE_NAME, cookie).get()
-            previous = doc.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
-            println(previous)
+        var currentPage = getDoc(String.format(PTT_BOARD_URL, board))
 
-            val list = doc.select("div[class=r-ent]").forEach {
-                val links = it.select("div[class=title]>a[href]")
-                for (link in links) {
-                    doc = Jsoup.connect("$PTT_DOMAIN${link.attr("href")}").userAgent("Mozilla")
-                        .cookie(PTT_18_COOKIE_NAME, cookie).get()
-                    println("link : ${link.attr("href")}")
-                    val images = doc.select("a[rel]").map { image -> image.attr("href") }.toList()
-                    println(images)
-//                images.forEach {
-//                    val href = it.attr("href")
-//                    val text = it.text()
-//                    println("$text - $href")
-//                }
+        var previous: String
 
-
-//                println("image : " + doc.select("img[src$=.jpg]"))
-                }
+        val pages = mutableListOf<String>().apply {
+            for (i in 0..1) {
+                previous = currentPage.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
+                currentPage = getDoc("$PTT_DOMAIN$previous")
+                this.add("$PTT_DOMAIN$previous")
             }
         }
+
+        val links = pages.run {
+            val allPages = mutableListOf<String>()
+            this.forEach {
+                allPages.addAll(
+                    getDoc(it).select("div[class=r-ent]")
+                        .map { element -> getSubjectpages("[正妹]", 30, element) }.toList()
+                )
+            }
+            allPages
+        }.toList()
+
+        val images = mutableListOf<String>()
+        links.filter { it.isNotBlank() }.forEach { link ->
+            val image = getDoc("$PTT_DOMAIN$link").select("a[rel]").map { it.attr("href") }
+                .filter { it.endsWith(".jpg") }
+            images.addAll(image)
+        }
+        println(images)
+        crawlerService.saveImageUrlFromPtt("1654386117", "抽", images)
     }
 }
 
@@ -55,3 +64,21 @@ private fun getPttAdultCookie(): String {
     val response = Jsoup.connect(PTT_18_ACCESS_URL).data("yes", "yes").method(Connection.Method.POST).execute()
     return response.cookie(PTT_18_COOKIE_NAME)
 }
+
+private fun getSubjectpages(keyWord: String, minimalStars: Int, element: Element): String {
+    val goodStars = element.select("div[class=nrec]").text()
+    val title: String
+
+    if (goodStars.isNotBlank() and !goodStars.startsWith("X")) {
+        if (goodStars.toInt() > minimalStars) {
+            title = element.select("div[class=title] > a[href]").text()
+            if (title.contains(keyWord)) {
+                return element.select("div[class=title] > a[href]").attr("href")
+            }
+        }
+    }
+    return ""
+}
+
+private fun getDoc(url: String) =
+    Jsoup.connect(url).userAgent(USER_AGENT).cookie(PTT_18_COOKIE_NAME, getPttAdultCookie()).get()

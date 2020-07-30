@@ -1,53 +1,81 @@
-package com.zipe.util
-
-import org.jsoup.Connection
-import org.jsoup.Jsoup
-
+//package com.zipe.util
+//
+//import com.zipe.job.PTT_18_ACCESS_URL
+//import com.zipe.job.PTT_18_COOKIE_NAME
+//import com.zipe.job.USER_AGENT
+//import org.jsoup.Connection
+//import org.jsoup.Jsoup
+//import org.jsoup.nodes.Element
+//
+//const val PTT_DOMAIN = "https://www.ptt.cc"
+//const val PTT_18_ACCESS_URL = "$PTT_DOMAIN/ask/over18"
+//const val PTT_BOARD_URL = "$PTT_DOMAIN/bbs/%s/index.html"
+//const val PTT_18_COOKIE_NAME = "over18"
+//const val USER_AGENT = "Mozilla"
+//
 //fun main() {
-//    val response = Jsoup.connect("https://www.ptt.cc/ask/over18").data("yes", "yes").method(Connection.Method.POST).execute()
-//    val cookie: String = response.cookie("over18")
+//    val jobMap = mapOf("board" to "Beauty", "deepLevel" to "3")
+//    var board = ""
+//    var deepLevel = 0
+//    if (jobMap.isNotEmpty()) {
+//        board = jobMap["board"].toString()
+//        deepLevel = jobMap["deepLevel"].toString().toInt()
+//    }
 //
-//    var doc = Jsoup.connect("https://www.ptt.cc/bbs/Beauty/index.html")
-//            .userAgent("Mozilla").cookie("over18", cookie).get()
+//    var currentPage = getDoc(String.format(com.zipe.job.PTT_BOARD_URL, board))
 //
-//    var previous = doc.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
-//    for (i in 0 until 5) {
-//        doc = Jsoup.connect("https://www.ptt.cc$previous").userAgent("Mozilla").cookie("over18", cookie).get()
-//        previous = doc.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
-//        println(previous)
+//    var previous: String
 //
-//        val list = doc.select("div[class=r-ent]").forEach {
-//            val links = it.select("div[class=title]>a[href]")
-//            for (link in links) {
-//                doc = Jsoup.connect("https://www.ptt.cc${link.attr("href")}").userAgent("Mozilla").cookie("over18", cookie).get()
-//                println("link : ${link.attr("href")}")
-//                val images = doc.select("a[rel]").map { it.attr("href") }.toList()
-//                println(images)
-////                images.forEach {
-////                    val href = it.attr("href")
-////                    val text = it.text()
-////                    println("$text - $href")
-////                }
+//    val pages = mutableListOf<String>().apply {
+//        for (i in 0..deepLevel) {
+//            previous = currentPage.select("div[class=btn-group btn-group-paging]>a:contains(上頁)").attr("href")
+//            currentPage = getDoc("${PTT_DOMAIN}$previous")
+//            this.add("${PTT_DOMAIN}$previous")
+//        }
+//    }
+//
+//    val links = pages.run {
+//        val allPages = mutableListOf<String>()
+//        this.forEach {
+//            allPages.addAll(
+//                getDoc(it).select("div[class=r-ent]")
+//                    .map { element -> getSubjectpages("[正妹]", 30, element) }.toList()
+//            )
+//        }
+//        allPages
+//    }.toList()
+//
+//    val images = mutableListOf<String>()
+//    links.filter { it.isNotBlank() }.forEach { link ->
+//        val image = getDoc("${PTT_DOMAIN}$link").select("a[rel]").map { it.attr("href") }
+//            .filter { it.endsWith(".jpg") }
+//        println(image)
+//        images.addAll(image)
+//    }
+//    println(images)
+////    crawlerService.saveImageUrlFromPtt("1654386117", "抽", images)
+//}
 //
 //
-////                println("image : " + doc.select("img[src$=.jpg]"))
+//private fun getPttAdultCookie(): String {
+//    val response = Jsoup.connect(PTT_18_ACCESS_URL).data("yes", "yes").method(Connection.Method.POST).execute()
+//    return response.cookie(PTT_18_COOKIE_NAME)
+//}
+//
+//private fun getSubjectpages(keyWord: String, minimalStars: Int, element: Element): String {
+//    val goodStars = element.select("div[class=nrec]").text()
+//    val title: String
+//
+//    if (goodStars.isNotBlank() and !goodStars.startsWith("X")) {
+//        if (goodStars.toInt() > minimalStars) {
+//            title = element.select("div[class=title] > a[href]").text()
+//            if (title.contains(keyWord)) {
+//                return element.select("div[class=title] > a[href]").attr("href")
 //            }
 //        }
 //    }
-//    println(previous)
-////    val list = doc.select("div[class=r-ent]").forEach {
-////        val links = it.select("div[class=title]>a[href]")
-////        for (link in links) {
-////            println("link : ${link.attr("href")}")
-////            println("text : " + link.text())
-////        }
-////
-////    }
-//
-////    println(list.size)
-////    val first: String = doc.select("div[class=r-ent]>div[class=title]>a")[0].text()
-////    println(first)
-////    val doc = Jsoup.connect("https://www.ptt.cc/bbs/Beauty/index.html").get()
-////    val test = doc.select("img[src$=.jpg]")
-////    println(test)
+//    return ""
 //}
+//
+//private fun getDoc(url: String) =
+//    Jsoup.connect(url).userAgent(USER_AGENT).cookie(PTT_18_COOKIE_NAME, getPttAdultCookie()).get()

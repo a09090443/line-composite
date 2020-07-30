@@ -1,5 +1,6 @@
 package com.zipe.service.impl
 
+import com.zipe.entity.MessageDetail
 import com.zipe.entity.MessageSetting
 import com.zipe.repository.IMessageSettingRepository
 import com.zipe.service.ICrawlerService
@@ -16,8 +17,15 @@ class CrawlerServiceImpl : ICrawlerService {
 
     override fun saveImageUrlFromPtt(channelId: String, key: String, images: List<String>) {
 
-        images.filter { it.endsWith(".jpg") }.forEach {
+        val message = messageSettingRepository.findAllByKey(key)
 
+
+        message?.messageDetails = images.map {
+            MessageDetail(value = it, type = "image")
+        }.toSet()
+
+        if (message != null) {
+            messageSettingRepository.save(message)
         }
     }
 
