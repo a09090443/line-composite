@@ -20,9 +20,9 @@ class CrawlerServiceImpl : ICrawlerService {
         val message = messageSettingRepository.findAllByKey(key)
 
 
-        message?.messageDetails = images.map {
-            MessageDetail(value = it, type = "image")
-        }.toSet()
+//        message?.messageDetails = images.map {
+//            MessageDetail(value = it, type = "image")
+//        }.toSet()
 
         if (message != null) {
             messageSettingRepository.save(message)

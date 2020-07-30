@@ -54,9 +54,9 @@ class LineController : BaseController() {
         val json = """{"amount":100,"currency":"TWD","orderId":"53b55346-bf6b-4a9a-855a-cd937464525c","packages":[{"id":"44433234dsa","name":"shop_name","amount":100,"products":[{"id":"product_id","name":"product_name","quantity":10,"price":10}]}],"redirectUrls":{"confirmUrl":"http://localhost/confirm","cancelUrl":"http://localhost/cencel"}}"""
         val tttt = lineActionService.paymentProcess(json, LineChannel())
         val messageSetting = messageSettingService.findBykey("捐錢")
-        lineActionService.pushFromJson("C67b997253bf2da1487a3752c658a2b61",
-                String.format(messageSetting.messageDetails.first().value, tttt), "健人工程師",
-                false)
+//        lineActionService.pushFromJson("C67b997253bf2da1487a3752c658a2b61",
+//                String.format(messageSetting.messageDetails.first().value, tttt), "健人工程師",
+//                false)
     }
 
     @GetMapping(value = ["/payment/confirm"])

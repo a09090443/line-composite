@@ -8,7 +8,6 @@ import com.zipe.test.base.TestBase
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-
 class MessageJdbcRepositoryTest : TestBase() {
     @Autowired
     lateinit var messageJDBC: MessageJDBC

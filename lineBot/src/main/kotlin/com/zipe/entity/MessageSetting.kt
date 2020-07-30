@@ -10,30 +10,33 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "message_setting")
-class MessageSetting : Serializable, BaseEntity() {
+data class MessageSetting(
 
     @Column(name = "id")
-    var id: Long = 0
+    var id: Long = 0,
 
     @Id
     @Column(name = "message_id")
-    var messageId: String = ""
+    var messageId: String = "",
 
     @Column(name = "key")
-    var key: String = ""
+    var key: String = "",
 
     @Column(name = "comment", nullable = true)
-    val comment: String = ""
+    val comment: String = "",
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
-            name = "message_mapping",
-            joinColumns = [JoinColumn(name = "message_id")],
-            inverseJoinColumns = [JoinColumn(name = "detail_id")]
+        name = "message_mapping",
+        joinColumns = [JoinColumn(name = "message_id")],
+        inverseJoinColumns = [JoinColumn(name = "detail_id")]
     )
     var messageDetails: Set<MessageDetail> = setOf()
 
+) : Serializable, BaseEntity() {
+
     fun MessageSetting.convertMessageType(json: String): List<Message> {
-        return this.messageDetails.map { MessageType.valueOf(it.type.toUpperCase()).message(json.trimIndent()) }.toList()
+        return this.messageDetails.map { MessageType.valueOf(it.type.toUpperCase()).message(json.trimIndent()) }
+            .toList()
     }
 }

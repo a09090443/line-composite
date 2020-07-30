@@ -45,17 +45,17 @@ class MessageHandler {
         val originalMessageText = event.message.text
 
         val message = messageService.findBykey(originalMessageText)
-        if (message.messageDetails.isEmpty()) {
-            return
-        } else {
-            var json = message.messageDetails.first().value
-//            if (originalMessageText == "捐款" || originalMessageText == "老司機") {
-//                val paymentUrl = lineActionService.paymentProcess()
-//                json = String.format(message.messageDetail.first().value, paymentUrl)
-//            }
-            lineActionService.replyFromJson(event.replyToken, json, event.source.userId, false)
-
-        }
+//        if (message.messageDetails.isEmpty()) {
+//            return
+//        } else {
+//            var json = message.messageDetails.first().value
+////            if (originalMessageText == "捐款" || originalMessageText == "老司機") {
+////                val paymentUrl = lineActionService.paymentProcess()
+////                json = String.format(message.messageDetail.first().value, paymentUrl)
+////            }
+//            lineActionService.replyFromJson(event.replyToken, json, event.source.userId, false)
+//
+//        }
     }
 
     @EventMapping
