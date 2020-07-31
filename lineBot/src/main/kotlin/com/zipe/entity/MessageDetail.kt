@@ -9,22 +9,29 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "message_detail")
-data class MessageDetail(
+class MessageDetail : Serializable, BaseEntity() {
 
     @Column(name = "id")
-    var id: Long = 0,
+    var id: Long = 0
 
     @Id
     @Column(name = "detail_id")
-    var detailId: String = "",
+    var detailId: String = ""
 
     @Column(name = "value")
-    val value: String = "",
+    var value: String = ""
 
     @Column(name = "type")
-    val type: String = "",
+    var type: String = ""
 
     @Column(name = "channel_id")
-    val channelId: String = ""
+    var channelId: String = ""
 
-) : Serializable, BaseEntity()
+}
+
+fun MessageDetail.asObject(detailId: String, value: String, type: String, channelId: String) = MessageDetail().apply {
+    this.detailId = detailId
+    this.value = value
+    this.type = type
+    this.channelId = channelId
+}

@@ -27,8 +27,8 @@ class MessageSettingRepositoryTest : TestBase() {
     @Test
     fun `jdbc test`(){
 
-//        val test = lineChannelJDBC.queryForList(ResourceEnum.SQL_LINE_CHANNEL, LineChannel::class.java)
-//        println(test)
+        val messageSetting = messageSettingRepository.findAllByKey("抽")
+        println(messageSetting)
     }
 
     @Ignore

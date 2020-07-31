@@ -6,10 +6,19 @@ plugins {
     base
     id("org.springframework.boot") version "2.3.1.RELEASE" apply false
     id("io.spring.dependency-management") version "1.0.9.RELEASE" apply false
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.3.72"
+
     kotlin("jvm") version "1.3.72" apply false
     kotlin("plugin.spring") version "1.3.72" apply false
     kotlin("plugin.jpa") version "1.3.72" apply false
 }
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
 extra["springCloudVersion"] = "Hoxton.RELEASE"
 extra["loremVersion"] = "2.1"
 extra["validationApiVersion"] = "2.0.1.Final"
