@@ -2,16 +2,17 @@ package com.zipe.entity
 
 import com.zipe.entity.base.BaseEntity
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "message_mapping")
 data class MessageMapping(
 
         @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id")
+        val id: Long = 0,
+
         @Column(name = "message_id")
         val messageId: String = "",
 

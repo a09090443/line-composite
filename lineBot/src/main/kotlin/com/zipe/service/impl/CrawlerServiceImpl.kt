@@ -27,21 +27,31 @@ class CrawlerServiceImpl : ICrawlerService {
     @Autowired
     lateinit var messageMappingRepository: IMessageMappingRepository
 
+    @Throws(Exception::class)
     override fun saveImageUrlFromPtt(channelId: String, key: String, images: List<String>) {
 
         val messageSetting = messageSettingRepository.findAllByKey(key) ?: saveMessageSetting(key)
+        messageMappingRepository.deleteMessageMappingByMessageId(messageSetting.messageId)
+
+        messageMappingRepository.findDetailIdsByMessageId(messageSetting.messageId)?.map { messageDetailRepository.deleteByDetailId(it) }
 
         var newDetailId = getNewDetailId()
         var messageDetail: MessageDetail
         images.forEach {
-            messageDetail = MessageDetail().asObject(String.format("%5d", newDetailId), it, "image", channelId)
+            messageDetail = MessageDetail().asObject(String.format("%05d", newDetailId), it, "image", channelId)
             messageDetailRepository.save(messageDetail)
-            messageMappingRepository.save(
-                MessageMapping(
-                    messageId = messageSetting.messageId,
-                    detailId = String.format("%5d", newDetailId)
+            println("Message_id:${messageSetting.messageId}    detail id:${newDetailId}")
+            try{
+                messageMappingRepository.save(
+                    MessageMapping(
+                        messageId = messageSetting.messageId,
+                        detailId = String.format("%05d", newDetailId)
+                    )
                 )
-            )
+            }catch(e:Exception){
+                e.printStackTrace()
+            }
+
             newDetailId += 1
         }
 
