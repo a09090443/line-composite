@@ -25,7 +25,6 @@ import com.zipe.service.ILineActionService
 import com.zipe.util.*
 import com.zipe.util.crypto.HmacEncryptUtil
 import com.zipe.util.http.OkHttpUtil
-import com.zipe.util.log.logger
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,8 +54,6 @@ const val LINE_REQUEST_SUCCESS_CODE = "0000"
 
 @Service("lineActionService")
 class LineActionServiceImpl : ILineActionService {
-
-    val logger = logger()
 
     @Autowired
     private lateinit var lineMessagingClient: LineMessagingClient
@@ -154,7 +151,7 @@ class LineActionServiceImpl : ILineActionService {
         val requestBody = Gson().toJson(PaymentConfirmRequest(amount = productOrder.amount, currency = "TWD"))
 
         val paymentRequest = PaymentRequest(channelSecret = store.channelSecret, requestUri = conformUri,
-                requestBody = requestBody, sendUrl = String.format(PAYMENT_CONFIRM, transaction), channelId = store.channelId)
+            requestBody = requestBody, sendUrl = String.format(PAYMENT_CONFIRM, transaction), channelId = store.channelId)
         val response = encryptPaymentContent(paymentRequest)
         if (response.returnCode == LINE_REQUEST_SUCCESS_CODE) {
             with(productOrder) {
@@ -179,8 +176,8 @@ class LineActionServiceImpl : ILineActionService {
             sha256HMAC.init(secretKey)
             val headerSignature = Base64.getDecoder().decode(signature)
             val bodySignature = sha256HMAC.doFinal(body)
-            logger.info("headerSignature = $headerSignature")
-            logger.info("bodySignature = $bodySignature")
+//            logger.info("headerSignature = $headerSignature")
+//            logger.info("bodySignature = $bodySignature")
             result = MessageDigest.isEqual(headerSignature, bodySignature)
         } catch (e: Exception) {
 //            logger.error(e)
@@ -194,7 +191,7 @@ class LineActionServiceImpl : ILineActionService {
         val channel = lineChannelRepository.findByChannelSecret(cahnnelSecret)
         val userId = event.source.userId
         val processCache = redisTemplate.opsForList().range(String.format(ORDER_PROCESS_CACHE_KEY, userId), 0, -1)
-                ?: listOf()
+            ?: listOf()
 
         when (EventType.valueOf(className.toUpperCase())) {
             EventType.FOLLOWEVENT -> {
@@ -204,7 +201,7 @@ class LineActionServiceImpl : ILineActionService {
 
                         if (null == lineInfo) {
                             this.saveLineInfo(LineInfo(lineId = userId, name = profile.displayName,
-                                    statusMessage = profile.statusMessage, type = LineType.USER.name))
+                                statusMessage = profile.statusMessage, type = LineType.USER.name))
                             lineInfo = lineInfoRepository.findByLineIdAndType(userId, LineType.USER.name)
                         }
 
@@ -258,8 +255,8 @@ class LineActionServiceImpl : ILineActionService {
                     // 取消訂單流程
                     if (processRequest.isCancel) {
                         redisTemplate.opsForList()
-                                .index(String.format(ORDER_PROCESS_CACHE_KEY, userId), 0)
-                                .isNullOrEmpty().takeIf { it }?.let { return }
+                            .index(String.format(ORDER_PROCESS_CACHE_KEY, userId), 0)
+                            .isNullOrEmpty().takeIf { it }?.let { return }
                         redisTemplate.delete(String.format(ORDER_PROCESS_CACHE_KEY, userId))
                         val cancelOK = orderProcessRepository.findByProcessName(CANCEL_SUCCESS)
                         replyFromJson(event.replyToken, cancelOK.content, channel.accessToken, false)
@@ -274,7 +271,7 @@ class LineActionServiceImpl : ILineActionService {
                     val product = productRepository.findByProductIdAndLineId(processRequest.productId, channel.lineId)
                     //Step1 確認輸入值為"數目"或"金額"，如輸入為"金額"數量預設為"1"
                     val paymentProduct = PaymentProduct(id = product.productId, name = product.name,
-                            imageUrl = product.image).apply {
+                        imageUrl = product.image).apply {
                         if (processRequest.quantityUnit == "price") {
                             this.price = processRequest.count
                             this.quantity = 1
@@ -291,7 +288,7 @@ class LineActionServiceImpl : ILineActionService {
                     //Step3
                     val order = ProductOrder().apply {
                         this.amount = productPackageForm.amount
-                        this.channelId = channel.channelId
+                        this.channelId = channel.channelId ?: ""
                         this.lineId = userId
                         this.quantity = paymentProduct.quantity
                         this.status = OrderStatus.PENDING.name
@@ -299,7 +296,7 @@ class LineActionServiceImpl : ILineActionService {
                     }
 
                     val form = CheckoutPaymentRequestForm(amount = productPackageForm.amount, currency = "TWD",
-                            orderId = order.orderId, packages = listOf(productPackageForm))
+                        orderId = order.orderId, packages = listOf(productPackageForm))
 
                     val redirectUrls = RedirectUrls(confirmUrl = PAYMENY_CONFIRN_CALLBAK, cancelUrl = PAYMENY_CANCEL_CALLBAK)
                     form.redirectUrls = redirectUrls
@@ -329,7 +326,7 @@ class LineActionServiceImpl : ILineActionService {
 
                         val replyToken = event.replyToken
                         val result = redisTemplate.opsForList()
-                                .range(String.format(ORDER_PROCESS_CACHE_KEY, userId), 0, -1) ?: listOf()
+                            .range(String.format(ORDER_PROCESS_CACHE_KEY, userId), 0, -1) ?: listOf()
 
                         if (result.isNullOrEmpty()) {
                             val json = getDataByMessage(originalMessageText)
@@ -349,7 +346,7 @@ class LineActionServiceImpl : ILineActionService {
                                 }
                             }
                             this.replyFromJson(event.replyToken, String.format(process.content, originalMessageText,
-                                    originalMessageText), channel.accessToken, false)
+                                originalMessageText), channel.accessToken, false)
                             redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, userId))
                         }
                     }
@@ -361,8 +358,8 @@ class LineActionServiceImpl : ILineActionService {
     private fun encryptPaymentContent(paymentRequest: PaymentRequest): PaymentResponse {
         val signature = HmacEncryptUtil.encrypt(paymentRequest.channelSecret, paymentRequest.data())
         val headerMap = mapOf(HttpHeaders.CONTENT_TYPE to MediaType.APPLICATION_JSON_VALUE,
-                CHANNEL_ID to paymentRequest.channelId, NONCE to paymentRequest.nonce,
-                AUTHORIZATION to signature)
+            CHANNEL_ID to paymentRequest.channelId, NONCE to paymentRequest.nonce,
+            AUTHORIZATION to signature)
 
         val response = okHttpUtil.postSyncJSON(paymentRequest.sendUrl, paymentRequest.requestBody, headerMap)
         return Gson().fromJson(response, PaymentResponse::class.java)

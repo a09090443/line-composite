@@ -13,19 +13,19 @@ class OkHttpUtil {
     lateinit var okHttpClient: OkHttpClient
 
     fun initPostRequest(url: String, body: RequestBody, headerMap: Map<String, String>): Request =
-            with(Request.Builder()) {
-                url(url)
-                post(body)
-                headerMap.forEach { (key, value) -> addHeader(key, value) }
-                build()
-            }
+        with(Request.Builder()) {
+            url(url)
+            post(body)
+            headerMap.forEach { (key, value) -> addHeader(key, value) }
+            build()
+        }
 
     fun initGetRequest(url: String): Request =
-            with(Request.Builder()) {
-                url(url)
-                get()
-                build()
-            }
+        with(Request.Builder()) {
+            url(url)
+            get()
+            build()
+        }
 
     interface IOkHttpCallback {
         fun onResponse(response: Response)
@@ -35,26 +35,26 @@ class OkHttpUtil {
 
     //同步
     fun sync(call: Call): String =
-            try {
-                val response = call.execute()
-                if (response.isSuccessful) response.body!!.string() else ""
-            } catch (e: IOException) {
-                e.printStackTrace()
-                ""
-            }
+        try {
+            val response = call.execute()
+            if (response.isSuccessful) response.body!!.string() else ""
+        } catch (e: IOException) {
+            e.printStackTrace()
+            ""
+        }
 
     //異步
     fun async(call: Call, callback: IOkHttpCallback) =
-            call.enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    callback.onFailure(e)
-                }
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback.onFailure(e)
+            }
 
-                @Throws(IOException::class)
-                override fun onResponse(call: Call, response: Response) {
-                    callback.onResponse(response)
-                }
-            })
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                callback.onResponse(response)
+            }
+        })
 
     //Get同步
     fun getSync(url: String): String? {

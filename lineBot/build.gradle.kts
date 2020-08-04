@@ -20,6 +20,7 @@ dependencies {
     implementation("org.apache.commons:commons-pool2:2.8.0")
     implementation("redis.clients:jedis:3.3.0")
     implementation("org.jsoup:jsoup:1.13.1")
+    implementation("com.squareup.okhttp3:okhttp:4.8.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
