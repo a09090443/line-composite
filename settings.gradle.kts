@@ -1,3 +1,4 @@
 rootProject.name = "line-composite"
-include("core")
+include(":core")
+project(":core").projectDir = File("../core")
 include("lineBot")
