@@ -1,10 +1,6 @@
 package com.zipe.test.service
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.google.gson.Gson
 import com.linecorp.bot.model.event.CallbackRequest
-import com.linecorp.bot.model.event.Event
-import com.linecorp.bot.model.message.template.CarouselTemplate
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper
 import com.zipe.service.ILineActionService
 import com.zipe.test.base.TestBase
