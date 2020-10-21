@@ -13,6 +13,8 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class HmacEncryptTest : TestBase() {
@@ -22,7 +24,11 @@ class HmacEncryptTest : TestBase() {
 
     @Test
     fun `test to send order to line pay api`() {
-
+        val test = LocalDateTime.parse(
+            "2020-09-17 22:43:00",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.TAIWAN)
+        )
+        println(test)
 //        val form = CheckoutPaymentRequestForm(amount = BigDecimal("100"), currency = "TWD", orderId = UUID.randomUUID().toString())
 //
 //        val productPackageForm = ProductPackageForm(id = "44433234dsa", name = "shop_name", amount = BigDecimal("100"))

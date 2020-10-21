@@ -34,7 +34,7 @@ spring:
   datasource:
     primary:
       type: com.zaxxer.hikari.HikariDataSource
-      jdbc-url: jdbc:log4jdbc:mysql://192.168.1.151:3306/dev?characterEncoding=UTF-8&autoReconnect=true
+      jdbc-url: jdbc:log4jdbc:mysql://192.168.1.150:3306/line?characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Taipei
       username: dev
       password: 1qaz@WSX
       driver-class-name: net.sf.log4jdbc.DriverSpy
