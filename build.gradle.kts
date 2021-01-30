@@ -4,13 +4,13 @@ import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 
 plugins {
     base
-    id("org.springframework.boot") version "2.3.1.RELEASE" apply false
+    id("org.springframework.boot") version "2.4.2" apply false
     id("io.spring.dependency-management") version "1.0.9.RELEASE" apply false
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.3.72"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.21"
 
-    kotlin("jvm") version "1.3.72" apply false
-    kotlin("plugin.spring") version "1.3.72" apply false
-    kotlin("plugin.jpa") version "1.3.72" apply false
+    kotlin("jvm") version "1.4.21" apply false
+    kotlin("plugin.spring") version "1.4.21" apply false
+    kotlin("plugin.jpa") version "1.4.21" apply false
 }
 
 allOpen {
@@ -19,7 +19,8 @@ allOpen {
     annotation("javax.persistence.Embeddable")
 }
 
-extra["springCloudVersion"] = "Hoxton.RELEASE"
+extra["springCloudVersion"] = "2020.0.1"
+extra["springCloudOauth2Version"] = "2.2.4.RELEASE"
 extra["loremVersion"] = "2.1"
 extra["validationApiVersion"] = "2.0.1.Final"
 extra["slf4jApiVersion"] = "1.7.30"
@@ -32,14 +33,15 @@ extra["fastjsonVersion"] = "1.2.68"
 extra["quartzVersion"] = "2.3.2"
 extra["okhttpVersion"] = "4.8.0"
 extra["hateoasVersion"] = "1.1.0.RELEASE"
+extra["hibernateJava8Version"] = "5.4.27.Final"
 extra["hibernateValidatorVersion"] = "6.1.5.Final"
+extra["hibernateTypesVersion"] = "2.9.12"
 extra["guavaVersion"] = "29.0-jre"
 extra["lombokVersion"] = "1.18.12"
 extra["codecVersion"] = "1.14"
 extra["gsonVersion"] = "2.8.6"
 extra["collections4Version"] = "4.4"
 extra["lang3Version"] = "3.10"
-extra["hibernateTypesVersion"] = "2.9.12"
 extra["pool2Version"] = "2.8.0"
 extra["jedisVersion"] = "3.3.0"
 extra["p6spyVersion"] = "3.9.1"
