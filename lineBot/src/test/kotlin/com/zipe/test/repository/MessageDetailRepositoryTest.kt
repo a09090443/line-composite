@@ -10,12 +10,12 @@ class MessageDetailRepositoryTest : TestBase() {
     @Autowired
     lateinit var messageDetailRepository: IMessageDetailRepository
 
-    @Test
-    fun `find max detail id`() {
-        val test = String.format("%09d", 122)
-        val test2 = test.trimStart('0')
-        println(test)
-        val maxDetailId = messageDetailRepository.findTopByOrderByDetailIdDesc()
-        println(maxDetailId)
-    }
+//    @Test
+//    fun `find max detail id`() {
+//        val test = String.format("%09d", 122)
+//        val test2 = test.trimStart('0')
+//        println(test)
+//        val maxDetailId = messageDetailRepository.findTopByOrderByDetailIdDesc()
+//        println(maxDetailId)
+//    }
 }

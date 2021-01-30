@@ -42,6 +42,7 @@ extra["lang3Version"] = "3.10"
 extra["hibernateTypesVersion"] = "2.9.12"
 extra["pool2Version"] = "2.8.0"
 extra["jedisVersion"] = "3.3.0"
+extra["p6spyVersion"] = "3.9.1"
 
 allprojects {
     group = "com.zipe"

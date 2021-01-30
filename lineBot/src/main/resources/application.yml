@@ -2,12 +2,12 @@ server:
   port: 8080
 
 line.bot:
-  channel-token: D7YFymbHjichf2vTlzSCoTdcJtQjA/BeqmaphMKr+1VJs0y6OEDl3BILKtegGjlwWIuy8Xe9OonY6eq3+j+XlB7Pum5VMVqXpEsyz9W2JEpNvGKERTkXkZgoSYF5YmWbNaBytbFHJtdTswbYGrk6VQdB04t89/1O/w1cDnyilFU=
+  channel-token: vNdRMDFhuSZWBl0Jj5D0mZk/T7iGtirHCwZ/xme7Q0hH3RDfppTuTsaksLK/WeEqH37gKJxp17aiPT5MIIfHfUSLFt9B1lAmbpTSk3attfdbHSne8OziT0mnhSXkeRu8kixTFUndKq3wSroqHGG6IAdB04t89/1O/w1cDnyilFU=
   channel-secret: 703c0f44af4957ab84b0e59b344dc26e
   handler.path: /callback
 
 hibernate:
-  dialect: org.hibernate.dialect.MySQL5Dialect
+  dialect: org.hibernate.dialect.MySQL57Dialect
   show_sql: false
   format_sql: false
   factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
@@ -34,10 +34,10 @@ spring:
   datasource:
     primary:
       type: com.zaxxer.hikari.HikariDataSource
-      jdbc-url: jdbc:log4jdbc:mysql://192.168.1.150:3306/line?characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Taipei
+      jdbc-url: jdbc:p6spy:mysql://192.168.1.150:3306/line?characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Taipei
       username: dev
       password: 1qaz@WSX
-      driver-class-name: net.sf.log4jdbc.DriverSpy
+      driver-class-name: com.p6spy.engine.spy.P6SpyDriver
 
     hikari:
       minimumIdle: 5
@@ -46,7 +46,7 @@ spring:
       poolName: SpringBootJPAHikariCP
       maxLifetime: 2000000
       connectionTimeout: 30000
-      autoCommit: true
+      autoCommit: false
       connectionTestQuery: SELECT 1
 
   redis:

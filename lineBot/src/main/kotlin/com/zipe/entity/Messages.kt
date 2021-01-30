@@ -3,13 +3,13 @@ package com.zipe.entity
 import com.zipe.entity.base.BaseEntity
 import java.io.Serializable
 
-data class MessageSettingTest(
-
-    var id: Long = 0,
-
-    var messageId: String = "",
+data class Messages(
 
     var key: String = "",
+
+    var value: String = "",
+
+    var type: String = "",
 
     val comment: String = "",
 

@@ -1,9 +1,7 @@
 package com.zipe.test.repository
 
-import com.zipe.entity.MessageSetting
-import com.zipe.entity.MessageSettingTest
+import com.zipe.entity.Messages
 import com.zipe.enum.ResourceEnum
-import com.zipe.jdbc.LineChannelJDBC
 import com.zipe.jdbc.MessageJDBC
 import com.zipe.test.base.TestBase
 import org.junit.Test
@@ -17,7 +15,7 @@ class MessageJdbcRepositoryTest : TestBase() {
     fun getMessageSettingTest() {
         val resource: ResourceEnum = ResourceEnum.SQL_LINE.getResource("FIND_MESSAGE")
         val argMap = mapOf("key" to "抽")
-        val test = messageJDBC.queryForList(resource, MessageSettingTest::class.java)
+        val test = messageJDBC.queryForList(resource, Messages::class.java)
         println(test)
     }
 }

@@ -1,15 +1,14 @@
 package com.zipe.repository
 
 import com.zipe.entity.LineChannel
-import com.zipe.entity.LineInfo
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ILineChannelRepository : CrudRepository<LineChannel, Long> {
+interface ILineChannelRepository : JpaRepository<LineChannel, Long> {
 
     @Cacheable(cacheNames = ["channel"])
     fun findByChannelSecret(channelSecret: String): LineChannel

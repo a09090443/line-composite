@@ -22,13 +22,17 @@ interface ILineActionService {
 
     fun pushFromJson(to: String, json: String, channelName: String, notificationDisabled: Boolean)
 
-    fun replyFromJson(replyToken: String, json: String, accessToken: String, notificationDisabled: Boolean)
+//    fun replyFromJson(replyToken: String, json: String, accessToken: String, notificationDisabled: Boolean)
 
-    fun paymentProcess(json: String, channel: LineChannel): PaymentResponse
+//    fun paymentProcess(json: String, channel: LineChannel): PaymentResponse
 
     fun paymentConfirm(transaction: Long): String
 
+    /**
+     * 驗證從 Line 所傳送之 Channel secret 是否正確
+     */
     fun isSignatureValid(channelSecret: String, signature: String, body: ByteArray): Boolean
 
-    fun eventHandler(event: Event, cahnnelSecret: String)
+    fun eventHandler(event: Event, channelSecret: String)
+
 }

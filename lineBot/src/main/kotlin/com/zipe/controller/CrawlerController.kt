@@ -1,16 +1,12 @@
 package com.zipe.controller
 
 import CrawlerRequest
-import com.zipe.job.PTT_18_ACCESS_URL
-import com.zipe.job.PTT_18_COOKIE_NAME
-import com.zipe.job.PTT_BOARD_URL
-import com.zipe.job.USER_AGENT
 import com.zipe.service.ICrawlerService
-import org.jsoup.Connection
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 const val PTT_DOMAIN = "https://www.ptt.cc"
 const val PTT_18_ACCESS_URL = "$PTT_DOMAIN/ask/over18"

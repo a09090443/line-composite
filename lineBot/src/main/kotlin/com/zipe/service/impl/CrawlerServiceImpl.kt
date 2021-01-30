@@ -9,7 +9,6 @@ import com.zipe.repository.IMessageMappingRepository
 import com.zipe.repository.IMessageSettingRepository
 import com.zipe.service.ICrawlerService
 import org.apache.commons.lang.StringUtils
-import org.aspectj.bridge.Message
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -33,26 +32,24 @@ class CrawlerServiceImpl : ICrawlerService {
         val messageSetting = messageSettingRepository.findAllByKey(key) ?: saveMessageSetting(key)
         messageMappingRepository.deleteMessageMappingByMessageId(messageSetting.messageId)
 
-        messageMappingRepository.findDetailIdsByMessageId(messageSetting.messageId)?.map { messageDetailRepository.deleteByDetailId(it) }
+        messageMappingRepository.findDetailIdsByMessageId(messageSetting.messageId)
+            ?.map { messageDetailRepository.deleteById(it) }
 
-        var newDetailId = getNewDetailId()
         var messageDetail: MessageDetail
         images.forEach {
-            messageDetail = MessageDetail().asObject(String.format("%05d", newDetailId), it, "image", channelId)
+            messageDetail = MessageDetail().asObject(it, "image", channelId)
             messageDetailRepository.save(messageDetail)
-            println("Message_id:${messageSetting.messageId}    detail id:${newDetailId}")
-            try{
+            try {
                 messageMappingRepository.save(
                     MessageMapping(
                         messageId = messageSetting.messageId,
-                        detailId = String.format("%05d", newDetailId)
+                        detailId = String.format("%05d", messageDetail.channelId)
                     )
                 )
-            }catch(e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-            newDetailId += 1
         }
 
     }
@@ -64,9 +61,6 @@ class CrawlerServiceImpl : ICrawlerService {
         messageSettingRepository.save(messageSetting)
         return messageSetting
     }
-
-    private fun getNewDetailId() =
-        messageDetailRepository.findTopByOrderByDetailIdDesc()?.detailId?.trimStart('0')?.toLong()?.plus(1) ?: 1
 
     private fun getNewMessageId() =
         messageSettingRepository.findTopByOrderByMessageIdDesc()?.messageId?.trimStart('0')?.toLong()?.plus(1) ?: 1

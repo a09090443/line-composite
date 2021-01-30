@@ -1,41 +1,19 @@
 package com.zipe.entity
 
 import com.zipe.entity.base.BaseEntity
-import org.springframework.format.annotation.DateTimeFormat
 import java.io.Serializable
-import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Id
 
 @Entity
-@Table(name = "line_channel")
-class LineChannel : Serializable, BaseEntity() {
-
+data class LineChannel(
     @Id
-    @Column(name = "line_id")
-    var lineId: Long = 0
-
-    @Column(name = "channel_id")
-    var channelId: String = ""
-
-    @Column(name = "channel_secret")
-    var channelSecret: String = ""
-
-    @Column(name = "bot_id")
-    var botId: String = ""
-
-    @Column(name = "name")
-    var name: String = ""
-
-    @Column(name = "description")
-    var description: String = ""
-
-    @Column(name = "email")
-    var email: String = ""
-
-    @Column(name = "user_id")
-    var userId: String = ""
-
-    @Column(name = "access_token")
-    var accessToken: String = ""
-
-}
+    val channelId: String = "",
+    val channelSecret: String = "",
+    val botId: String = "",
+    val name: String = "",
+    val description: String = "",
+    val email: String = "",
+    val userId: String = "",
+    val accessToken: String = ""
+) : Serializable, BaseEntity()

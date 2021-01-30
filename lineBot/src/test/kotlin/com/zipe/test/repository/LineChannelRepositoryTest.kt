@@ -1,10 +1,8 @@
 package com.zipe.test.repository
 
 import com.zipe.entity.LineChannel
-import com.zipe.entity.LineInfo
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.LineChannelJDBC
-import com.zipe.jdbc.criteria.Conditions
 import com.zipe.repository.ILineChannelRepository
 import com.zipe.test.base.TestBase
 import org.junit.Ignore
@@ -12,8 +10,6 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.RowMapper
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 class LineChannelRepositoryTest : TestBase() {
 

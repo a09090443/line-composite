@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository
  *
  * @author adam.yeh
  */
-@Repository("BaseJDBC")
+@Repository
 abstract class BaseJDBC {
 
     @Autowired
@@ -76,7 +76,7 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForBean(resource: ResourceEnum, clazz: Class<T>): T? {
-        return queryForBean(resource, HashMap<String, Any>(), clazz)
+        return queryForBean(resource, HashMap(), clazz)
     }
 
     /**
@@ -86,8 +86,11 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForBean(resource: ResourceEnum, conditions: Conditions?, clazz: Class<T>?): T? {
-        val dataLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, conditions), HashMap<String, Any?>(), BeanPropertyRowMapper(clazz!!))
-        return if (CollectionUtils.isEmpty(dataLs)) null else dataLs[0]
+        return support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, conditions),
+            HashMap<String, Any?>(),
+            BeanPropertyRowMapper(clazz!!)
+        ).getOrNull(0)
     }
 
     /**
@@ -98,8 +101,8 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForBean(resource: ResourceEnum, params: Map<String, Any>, clazz: Class<T>): T? {
-        val dataLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource), params, BeanPropertyRowMapper(clazz))
-        return if (CollectionUtils.isEmpty(dataLs)) null else dataLs[0]
+        return support.namedParameterJdbcTemplate!!.query(getSqlText(resource), params, BeanPropertyRowMapper(clazz))
+            .getOrNull(0)
     }
 
     /**
@@ -108,8 +111,17 @@ abstract class BaseJDBC {
      * @param clazz
      * @return
      */
-    fun <T> queryForBean(resource: ResourceEnum, conditions: Conditions?, params: Map<String?, Any?>?, clazz: Class<T>?): T? {
-        val dataLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, conditions), params!!, BeanPropertyRowMapper(clazz!!))
+    fun <T> queryForBean(
+        resource: ResourceEnum,
+        conditions: Conditions?,
+        params: Map<String?, Any?>?,
+        clazz: Class<T>?
+    ): T? {
+        val dataLs = support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, conditions),
+            params!!,
+            BeanPropertyRowMapper(clazz!!)
+        )
         return if (CollectionUtils.isEmpty(dataLs)) null else dataLs[0]
     }
 
@@ -129,7 +141,8 @@ abstract class BaseJDBC {
      * @return
      */
     fun queryForMap(resource: ResourceEnum, conditions: Conditions): Map<String, Any>? {
-        val dataLs = support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource, conditions), HashMap<String, Any?>())
+        val dataLs =
+            support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource, conditions), HashMap<String, Any?>())
         val size = dataLs.size
         if (dataLs.size > 1) {
             throw IncorrectResultSizeDataAccessException(1, size)
@@ -179,10 +192,7 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum): List<Map<String, Any>> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource), HashMap<String, Any?>())
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+        return support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource), HashMap<String, Any?>())
     }
 
     /**
@@ -192,10 +202,11 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum, conditions: Conditions?): List<Map<String, Any>> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource, conditions), HashMap<String, Any?>())
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+        return support.namedParameterJdbcTemplate!!.queryForList(
+            getSqlText(resource, conditions),
+            HashMap<String, Any?>()
+        )
+
     }
 
     /**
@@ -205,10 +216,7 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum, params: Map<String?, Any?>?): List<Map<String, Any>> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource), params!!)
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+        return support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource), params!!)
     }
 
     /**
@@ -217,11 +225,12 @@ abstract class BaseJDBC {
      * @param params    查詢條件參數
      * @return
      */
-    fun <T> queryForList(resource: ResourceEnum, conditions: Conditions?, params: Map<String?, Any?>?): List<Map<String, Any>> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource, conditions), params!!)
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+    fun <T> queryForList(
+        resource: ResourceEnum,
+        conditions: Conditions?,
+        params: Map<String?, Any?>?
+    ): List<Map<String, Any>> {
+        return support.namedParameterJdbcTemplate!!.queryForList(getSqlText(resource, conditions), params!!)
     }
 
     /**
@@ -230,10 +239,11 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum, clazz: Class<T>): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource), HashMap<String, Any?>(), BeanPropertyRowMapper(clazz))
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+        return support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource),
+            HashMap<String, Any?>(),
+            BeanPropertyRowMapper(clazz)
+        )
     }
 
     /**
@@ -242,10 +252,11 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum, paging: Paging, clazz: Class<T>?): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, null, paging), HashMap<String, Any?>(), BeanPropertyRowMapper(clazz!!))
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+        return support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, null, paging),
+            HashMap<String, Any?>(),
+            BeanPropertyRowMapper(clazz!!)
+        )
     }
 
     /**
@@ -255,7 +266,11 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum, conditions: Conditions?, clazz: Class<T>?): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, conditions), HashMap<String, Any?>(), BeanPropertyRowMapper(clazz!!))
+        val rtnLs = support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, conditions),
+            HashMap<String, Any?>(),
+            BeanPropertyRowMapper(clazz!!)
+        )
         return if (CollectionUtils.isEmpty(rtnLs)) {
             emptyList()
         } else rtnLs
@@ -268,7 +283,11 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum, conditions: Conditions?, paging: Paging, clazz: Class<T>?): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, conditions, paging), HashMap<String, Any?>(), BeanPropertyRowMapper(clazz!!))
+        val rtnLs = support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, conditions, paging),
+            HashMap<String, Any?>(),
+            BeanPropertyRowMapper(clazz!!)
+        )
         return if (CollectionUtils.isEmpty(rtnLs)) {
             emptyList()
         } else rtnLs
@@ -281,11 +300,17 @@ abstract class BaseJDBC {
      * @param clazz     須轉型之類別
      * @return
      */
-    fun <T> queryForList(resource: ResourceEnum, conditions: Conditions?, params: Map<String?, Any?>?, clazz: Class<T>?): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, conditions), params!!, BeanPropertyRowMapper(clazz!!))
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+    fun <T> queryForList(
+        resource: ResourceEnum,
+        conditions: Conditions?,
+        params: Map<String, Any>?,
+        clazz: Class<T>?
+    ): List<T> {
+        return support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, conditions),
+            params!!,
+            BeanPropertyRowMapper(clazz!!)
+        )
     }
 
     /**
@@ -295,11 +320,18 @@ abstract class BaseJDBC {
      * @param clazz     須轉型之類別
      * @return
      */
-    fun <T> queryForList(resource: ResourceEnum, conditions: Conditions?, params: Map<String?, Any?>?, paging: Paging, clazz: Class<T>?): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, conditions, paging), params!!, BeanPropertyRowMapper(clazz!!))
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+    fun <T> queryForList(
+        resource: ResourceEnum,
+        conditions: Conditions?,
+        params: Map<String?, Any?>?,
+        paging: Paging,
+        clazz: Class<T>?
+    ): List<T> {
+        return support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, conditions, paging),
+            params!!,
+            BeanPropertyRowMapper(clazz!!)
+        )
     }
 
     /**
@@ -310,10 +342,12 @@ abstract class BaseJDBC {
      * @return
      */
     fun <T> queryForList(resource: ResourceEnum, params: Map<String?, Any?>?, clazz: Class<T>?): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource), params!!, BeanPropertyRowMapper(clazz!!))
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+        return support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource),
+            params!!,
+            BeanPropertyRowMapper(clazz!!)
+        )
+
     }
 
     /**
@@ -323,11 +357,17 @@ abstract class BaseJDBC {
      * @param clazz     須轉型之類別
      * @return
      */
-    fun <T> queryForList(resource: ResourceEnum, params: Map<String?, Any?>?, paging: Paging, clazz: Class<T>?): List<T> {
-        val rtnLs = support.namedParameterJdbcTemplate!!.query(getSqlText(resource, null, paging), params!!, BeanPropertyRowMapper(clazz!!))
-        return if (CollectionUtils.isEmpty(rtnLs)) {
-            emptyList()
-        } else rtnLs
+    fun <T> queryForList(
+        resource: ResourceEnum,
+        params: Map<String?, Any?>?,
+        paging: Paging,
+        clazz: Class<T>?
+    ): List<T> {
+        return support.namedParameterJdbcTemplate!!.query(
+            getSqlText(resource, null, paging),
+            params!!,
+            BeanPropertyRowMapper(clazz!!)
+        )
     }
 
     companion object {

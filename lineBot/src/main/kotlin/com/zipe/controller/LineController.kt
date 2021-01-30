@@ -3,49 +3,56 @@ package com.zipe.controller
 import com.google.common.io.ByteStreams
 import com.linecorp.bot.model.event.CallbackRequest
 import com.zipe.base.controller.BaseController
-import com.zipe.entity.LineChannel
 import com.zipe.service.ILineActionService
 import com.zipe.service.IMessageSettingService
 import com.zipe.util.JsonUtil
 import com.zipe.util.SINGNATURE
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.ModelAndView
 
 @RestController
 @RequestMapping(value = ["/line"])
-class LineController : BaseController() {
+class LineController(private val lineActionServiceImpl: ILineActionService,
+                     private val messageSettingServiceImpl: IMessageSettingService) : BaseController() {
 
-    @Autowired
-    lateinit var lineActionService: ILineActionService
-
-    @Autowired
-    lateinit var messageSettingService: IMessageSettingService
-
+    /**
+     * Line 頻道設定 Webhook URL verify 網址
+     * 需在 Line Message API 的 Webhook URL 設定 : https://domain/line/channel-secret/callback
+     */
     @PostMapping(value = ["/{channelSecret}/callback"])
     fun handleCallback(@PathVariable channelSecret: String): ResponseEntity<String> {
         val signature = request.getHeader(SINGNATURE)
         val body = ByteStreams.toByteArray(request.inputStream)
         val callbackRequest = JsonUtil.lineJsonMapper().readValue(body, CallbackRequest::class.java)
-        lineActionService.isSignatureValid(channelSecret, signature, body).takeIf { !it }?.let {
+        lineActionServiceImpl.isSignatureValid(channelSecret, signature, body).takeIf { !it }?.let {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
-        callbackRequest.events.map { lineActionService.eventHandler(it, channelSecret) }
+        callbackRequest.events.map { lineActionServiceImpl.eventHandler(it, channelSecret) }
 
         return ResponseEntity(HttpStatus.OK)
     }
 
+    /**
+     * 使用頻道設定的 message 寄送給指定使用者
+     *
+     */
     @PostMapping(value = ["/send"])
-    fun send(@RequestParam(value = "key") key: String, @RequestParam(value = "to") to: String,
-             @RequestParam(value = "channel") channel: String) {
+    fun send(
+        @RequestParam(value = "key") key: String, @RequestParam(value = "to") to: String,
+        @RequestParam(value = "channel") channel: String
+    ) {
 
-        val messageSetting = messageSettingService.findBykey(key)
-
-        val lineId = lineActionService.getLineIdByNameExcludeChannelType(to)
-        val randomMessage = messageSetting.messageDetails.first()
-        lineActionService.pushFromJson(lineId, randomMessage.value, channel, false)
+        val messages = messageSettingServiceImpl.findMessagesByMessageKey(key)
+        val lineId = lineActionServiceImpl.getLineIdByNameExcludeChannelType(to)
+        messages.random().value
+        lineActionServiceImpl.pushFromJson(lineId, messages.random().value, channel, false)
     }
 
     @PostMapping(value = ["/sendPayment"])
@@ -59,17 +66,27 @@ class LineController : BaseController() {
 ////                false)
     }
 
+    /**
+     * Line pay 付費後從 Line 官網回傳的確認網址
+     *
+     */
     @GetMapping(value = ["/payment/confirm"])
-    fun confirm(@RequestParam("orderId") orderId: String,
-                @RequestParam("transactionId") transactionId: String): ModelAndView {
+    fun confirm(
+        @RequestParam("orderId") orderId: String,
+        @RequestParam("transactionId") transactionId: String
+    ): ModelAndView {
 
-        val botId = lineActionService.paymentConfirm(transactionId.toLong())
+        val botId = lineActionServiceImpl.paymentConfirm(transactionId.toLong())
 
         return ModelAndView("redirect:line://ti/p/$botId")
     }
 
+    /**
+     * 取消 Line pay
+     *
+     */
     @GetMapping(value = ["/payment/cancel"])
-    fun cancel(@RequestParam("transactionId") transactionId: String) :ModelAndView{
+    fun cancel(@RequestParam("transactionId") transactionId: String): ModelAndView {
         return ModelAndView("redirect:line://ti/p/@020lrinf")
     }
 }

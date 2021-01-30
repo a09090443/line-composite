@@ -1,6 +1,7 @@
 package com.zipe.repository
 
 import com.zipe.entity.OrderProcess
+import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
@@ -15,16 +16,16 @@ INNER JOIN order_process op2 ON
 	op.process_id = op2.parent_id
 	OR op.process_id = op2.process_id
 WHERE
-	op.process_name = :processName AND op.line_id = :lineId
+	op.process_name = :name AND op.line_id = :channelId
 ORDER BY
 	op2.`sequence`
 """
 
 @Repository
-interface IOrderProcessRepository : CrudRepository<OrderProcess, Long> {
+interface IOrderProcessRepository : JpaRepository<OrderProcess, Long> {
 
     @Query(ORDER_TREE_VIEW_PROCESS_SQL, nativeQuery = true)
-    fun findByProcessNameAndLineIdOrderBySequence(@Param("processName") processName: String, @Param("lineId") lineId: Long): List<OrderProcess>
+    fun findByNameAndChannelId(name: String, channelId: String): List<OrderProcess>
 
-    fun findByProcessName(name: String): OrderProcess
+    fun findByName(name: String): OrderProcess
 }

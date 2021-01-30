@@ -1,30 +1,23 @@
 package com.zipe.entity
 
 import com.zipe.entity.base.BaseEntity
+import org.hibernate.annotations.GenericGenerator
 import java.io.Serializable
-import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
-import javax.persistence.Table
 
 @Entity
-@Table(name = "line_info")
 data class LineInfo(
 
-        @Id
-        @Column(name = "info_id")
-        var infoId: Long? = 0,
+    @Id
+    val lineId: String = "",
 
-        @Column(name = "line_id")
-        val lineId: String = "",
+    val name: String = "",
 
-        @Column(name = "name")
-        val name: String = "",
+    val statusMessage: String? = "",
 
-        @Column(name = "status_message")
-        val statusMessage: String? = "",
+    val type: String = "",
 
-        @Column(name = "type")
-        val type: String = ""
+    val status: String = ""
 
 ) : Serializable, BaseEntity()

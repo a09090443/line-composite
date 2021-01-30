@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface IMessageDetailRepository : JpaRepository<MessageDetail, Long> {
-    fun findTopByOrderByDetailIdDesc(): MessageDetail?
+    fun findTopByOrderByIdDesc(): MessageDetail?
 
-    fun deleteByDetailId(detailId: String)
+    fun deleteById(id: String)
 }
