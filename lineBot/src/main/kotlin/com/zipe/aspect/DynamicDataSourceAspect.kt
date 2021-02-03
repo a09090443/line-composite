@@ -1,13 +1,13 @@
 package com.zipe.aspect
 
 import com.zipe.config.DynamicDataSourceContextHolder
-import org.aspectj.lang.ProceedingJoinPoint
-import org.aspectj.lang.annotation.Around
+import org.aspectj.lang.JoinPoint
+import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
+import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-
 
 @Aspect
 @Order(-1)
@@ -17,15 +17,14 @@ class DynamicDataSourceAspect {
     private fun aspect() {
     }
 
-    @Around("aspect()")
-    @Throws(Throwable::class)
-    fun around(point: ProceedingJoinPoint): Any {
+    @Before("aspect()")
+    fun before(point: JoinPoint) {
         val datasourceName = "primaryDataSource"
         DynamicDataSourceContextHolder.setDataSourceName(datasourceName)
-        try {
-            return point.proceed()
-        } finally {
-            DynamicDataSourceContextHolder.clearDataSourceName()
-        }
+    }
+
+    @After("aspect()")
+    fun after(point: JoinPoint){
+        DynamicDataSourceContextHolder.clearDataSourceName()
     }
 }

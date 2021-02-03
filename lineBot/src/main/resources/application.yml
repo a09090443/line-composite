@@ -29,6 +29,8 @@ hibernate:
 #    org.hibernate: ${properties.log-level}
 
 spring:
+  application:
+    name: Line-Bot
   mvc:
     throw-exception-if-no-handler-found: true
   datasource:

@@ -5,13 +5,13 @@ import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.event.source.GroupSource
 import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
-import com.zipe.entity.LineMapping
 import com.zipe.enum.LineType
 import com.zipe.repository.ILineInfoRepository
 import com.zipe.repository.ILineMappingRepository
 import com.zipe.service.ILineEventService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class LineLeaveEventServiceImpl : ILineEventService {
@@ -22,6 +22,7 @@ class LineLeaveEventServiceImpl : ILineEventService {
     @Autowired
     private lateinit var lineMappingRepository: ILineMappingRepository
 
+    @Transactional(rollbackFor = [Exception::class])
     override fun process(
         channel: LineChannel,
         client: LineMessagingClient,
@@ -29,8 +30,13 @@ class LineLeaveEventServiceImpl : ILineEventService {
         profile: UserProfileResponse?
     ) {
         (event.source as GroupSource).groupId.let {
-            val lineInfo = lineInfoRepository.findByLineIdAndType(it, LineType.GROUP.name)
-            lineMappingRepository.delete(LineMapping(channelId = channel.channelId, infoId = lineInfo?.lineId ?: ""))
+            lineInfoRepository.findByLineIdAndType(it, LineType.GROUP.name)?.let { lineInfo ->
+                try {
+                    lineMappingRepository.deleteByChannelIdAndInfoId(channel.channelId, lineInfo.lineId)
+                } catch (e: Exception) {
+                    throw Exception("Could not delete channelId:$channel.channelId, infoId:$it.lineId in LineMapping table.")
+                }
+            }
         }
     }
 }

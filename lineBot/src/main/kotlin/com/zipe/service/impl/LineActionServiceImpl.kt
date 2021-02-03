@@ -7,10 +7,14 @@ import com.linecorp.bot.model.ReplyMessage
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.message.Message
 import com.zipe.entity.LineInfo
+import com.zipe.entity.Messages
 import com.zipe.enum.EventType
 import com.zipe.enum.LineType
 import com.zipe.enum.MessageType
 import com.zipe.enum.OrderStatus
+import com.zipe.enum.ResourceEnum
+import com.zipe.jdbc.LineChannelJDBC
+import com.zipe.model.LineUser
 import com.zipe.model.PaymentConfirmRequest
 import com.zipe.model.PaymentRequest
 import com.zipe.repository.ILineChannelRepository
@@ -52,8 +56,17 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
     @Autowired
     private lateinit var lineChannelRepository: ILineChannelRepository
 
+    @Autowired
+    private lateinit var lineChannelJDBC: LineChannelJDBC
+
     override fun getLineIdByNameExcludeChannelType(name: String) =
         lineInfoRepository.findLineIdExcludeType(name, LineType.CHANNEL.name)
+
+    override fun getUserId(channelId: String, users: List<String>, types: List<String>): List<LineUser> {
+        val resource: ResourceEnum = ResourceEnum.SQL_LINE.getResource("FIND_LINE_USERS_BY_CHANNEL_ID")
+        val argMap = mapOf("channelId" to channelId, "name" to users, "types" to types)
+        return lineChannelJDBC.queryForList(resource, null, argMap, LineUser::class.java)
+    }
 
     override fun getLineIdByUserId(userId: String, type: String) = lineInfoRepository.findByLineIdAndType(userId, type)
 
@@ -82,15 +95,23 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
         }
     }
 
-    override fun pushFromJson(to: String, json: String, channelName: String, notificationDisabled: Boolean) {
-        val channelInfo = lineChannelRepository.findByName(channelName)
-        val sendContent = String.format(LINE_PUSH_MESSAGE_JSON_BLOCK, to, json)
-        try {
-            val response = sendMessage(PUSH_MESSAGE_URL, sendContent, channelInfo.accessToken)
-            println(response)
-        } catch (e: Exception) {
-            e.printStackTrace()
+    override fun pushFromJson(toUsers: List<String>, json: String, channelId: String, notificationDisabled: Boolean) {
+        val channelInfo = lineChannelRepository.findByChannelId(channelId)
+        toUsers.forEach { user ->
+            try {
+                val sendContent = String.format(LINE_PUSH_MESSAGE_JSON_BLOCK, user, json)
+                sendMessage(PUSH_MESSAGE_URL, sendContent, channelInfo.accessToken)
+            } catch (e: Exception) {
+                e.message
+            }
         }
+//        val sendContent = String.format(LINE_PUSH_MESSAGE_JSON_BLOCK, to, json)
+//        try {
+//            val response = sendMessage(PUSH_MESSAGE_URL, sendContent, channelInfo.accessToken)
+//            println(response)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     override fun paymentConfirm(transaction: Long): String {
@@ -115,7 +136,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
             }
             productOrderRepository.save(productOrder)
             val success = orderProcessRepository.findByName("pay_success")
-            this.pushFromJson(productOrder.lineId, success.content, channel.name, false)
+            this.pushFromJson(listOf(productOrder.lineId), success.content, channel.name, false)
         } else {
             println(response.returnCode)
             return ""

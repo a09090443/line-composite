@@ -4,13 +4,16 @@ import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.message.Message
 import com.zipe.entity.LineChannel
 import com.zipe.entity.LineInfo
+import com.zipe.model.LineUser
 import com.zipe.model.PaymentResponse
 
 interface ILineActionService {
 
     fun getLineIdByNameExcludeChannelType(name: String): String
 
-    fun getLineIdByUserId(userId: String, type: String): LineInfo?
+    fun getUserId(channelId: String, users: List<String>, types: List<String>): List<LineUser>
+
+    fun getLineIdByUserId(userId: String, types: String): LineInfo?
 
     fun saveLineInfo(lineInfo: LineInfo): LineInfo
 
@@ -20,7 +23,7 @@ interface ILineActionService {
 
     fun push(to: String, messages: List<Message>, notificationDisabled: Boolean)
 
-    fun pushFromJson(to: String, json: String, channelName: String, notificationDisabled: Boolean)
+    fun pushFromJson(toUsers: List<String>, json: String, channelId: String, notificationDisabled: Boolean)
 
 //    fun replyFromJson(replyToken: String, json: String, accessToken: String, notificationDisabled: Boolean)
 

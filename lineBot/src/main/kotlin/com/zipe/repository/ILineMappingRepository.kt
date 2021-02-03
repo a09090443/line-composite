@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ILineMappingRepository : JpaRepository<LineMapping, Long> {
 
+    fun deleteByChannelIdAndInfoId(channelId: String, infoId: String)
 }

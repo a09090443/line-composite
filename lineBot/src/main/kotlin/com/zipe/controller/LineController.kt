@@ -3,30 +3,37 @@ package com.zipe.controller
 import com.google.common.io.ByteStreams
 import com.linecorp.bot.model.event.CallbackRequest
 import com.zipe.base.controller.BaseController
+import com.zipe.enum.LineType
+import com.zipe.model.LineUser
 import com.zipe.service.ILineActionService
 import com.zipe.service.IMessageSettingService
 import com.zipe.util.JsonUtil
 import com.zipe.util.SINGNATURE
+import com.zipe.util.log.logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.ModelAndView
 
 @RestController
 @RequestMapping(value = ["/line"])
-class LineController(private val lineActionServiceImpl: ILineActionService,
-                     private val messageSettingServiceImpl: IMessageSettingService) : BaseController() {
+class LineController(
+    private val lineActionServiceImpl: ILineActionService,
+    private val messageSettingServiceImpl: IMessageSettingService
+) : BaseController() {
 
     /**
      * Line 頻道設定 Webhook URL verify 網址
      * 需在 Line Message API 的 Webhook URL 設定 : https://domain/line/channel-secret/callback
      */
-    @PostMapping(value = ["/{channelSecret}/callback"])
+//    @PostMapping(value = ["/{channelSecret}/callback"])
+    @RequestMapping(value = ["/{channelSecret}/callback"], method = [RequestMethod.GET, RequestMethod.POST])
     fun handleCallback(@PathVariable channelSecret: String): ResponseEntity<String> {
         val signature = request.getHeader(SINGNATURE)
         val body = ByteStreams.toByteArray(request.inputStream)
@@ -45,14 +52,26 @@ class LineController(private val lineActionServiceImpl: ILineActionService,
      */
     @PostMapping(value = ["/send"])
     fun send(
-        @RequestParam(value = "key") key: String, @RequestParam(value = "to") to: String,
-        @RequestParam(value = "channel") channel: String
-    ) {
+        @RequestParam(value = "key") key: String,
+        @RequestParam(value = "toUsers") toUsers: List<String>,
+        @RequestParam(value = "channelId") channelId: String,
+        @RequestParam(value = "type") type: String
+    ): String {
 
-        val messages = messageSettingServiceImpl.findMessagesByMessageKey(key)
-        val lineId = lineActionServiceImpl.getLineIdByNameExcludeChannelType(to)
-        messages.random().value
-        lineActionServiceImpl.pushFromJson(lineId, messages.random().value, channel, false)
+        messageSettingServiceImpl.findMessagesByMessageKey(key).let { messageData ->
+            if (messageData.isNullOrEmpty()) {
+                return "Can not found message."
+            }
+
+            val users = lineActionServiceImpl.getUserId(channelId, toUsers, listOf(type))
+            users.isNullOrEmpty().takeIf { it }?.let { return "Can not find user" }
+            toUsers.filterNot { user -> users.map { it.name }.toList().contains(user) }.let {
+                it.forEach { username -> logger().warn("Can not find username : $username in database") }
+            }
+            val ids = users.map { user -> user.lineId }.toList()
+            lineActionServiceImpl.pushFromJson(ids, messageData.random().value, channelId, false)
+        }
+        return "send message success"
     }
 
     @PostMapping(value = ["/sendPayment"])

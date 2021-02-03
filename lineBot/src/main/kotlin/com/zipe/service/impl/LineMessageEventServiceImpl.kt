@@ -25,8 +25,8 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
         event as MessageEvent<*>
         when (event.message::class.simpleName) {
             "TextMessageContent" -> {
-                event as MessageEvent<TextMessageContent>
-                val originalMessageText = event.message.text
+                val textMessage = event.message as TextMessageContent
+                val originalMessageText = textMessage.text
 
                 val replyToken = event.replyToken
                 val result = redisTemplate.opsForList()

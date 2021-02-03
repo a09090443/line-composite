@@ -33,28 +33,20 @@ class LineFollowEventServiceImpl : ILineEventService {
         event.source.userId?.let {
             client.getProfile(it)?.whenComplete { profile: UserProfileResponse, _: Throwable? ->
                 val serviceProxy = SpringUtil.getBean(this::class.java)
-                serviceProxy.saveProcess(event.source.userId, channel.channelId, profile)
+                serviceProxy.saveProcess(channel.channelId, profile)
             }
         }
     }
 
     @Transactional(rollbackFor = [Exception::class])
     fun saveProcess(
-        userId: String,
         channelId: String,
         profile: UserProfileResponse
     ) {
-        var lineInfo = lineInfoRepository.findByLineIdAndType(userId, LineType.USER.name)
-
+        var lineInfo = lineInfoRepository.findByLineIdAndType(profile.userId, LineType.USER.name)
         lineInfo ?: run {
-            //TODO Line user's status need to initial
-            lineInfo = lineInfoRepository.save(
-                LineInfo(
-                    lineId = userId, name = profile.displayName ?: "",
-                    statusMessage = profile.statusMessage ?: "", type = LineType.USER.name
-                )
-            )
+            lineInfo = lineInfoRepository.save(LineInfo(lineId = profile.userId, type = LineType.USER.name))
         }
-        lineMappingRepository.save(LineMapping(channelId = channelId, infoId = lineInfo?.lineId ?: ""))
+        lineMappingRepository.save(LineMapping(channelId = channelId, infoId = profile.userId))
     }
 }

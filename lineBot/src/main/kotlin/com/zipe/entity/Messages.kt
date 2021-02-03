@@ -1,6 +1,5 @@
 package com.zipe.entity
 
-import com.zipe.entity.base.BaseEntity
 import java.io.Serializable
 
 data class Messages(
@@ -15,5 +14,4 @@ data class Messages(
 
     var messageDetails: Set<MessageDetail> = setOf()
 
-) : Serializable, BaseEntity() {
-}
+) : Serializable
