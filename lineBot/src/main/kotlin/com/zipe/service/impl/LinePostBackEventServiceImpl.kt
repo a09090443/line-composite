@@ -16,7 +16,6 @@ import com.zipe.model.OrderProcessRequest
 import com.zipe.model.PaymentProduct
 import com.zipe.model.ProductPackageForm
 import com.zipe.model.RedirectUrls
-import com.zipe.repository.IOrderProcessRepository
 import com.zipe.repository.IProductRepository
 import com.zipe.service.BaseLineService
 import com.zipe.service.ILineEventService
@@ -24,7 +23,6 @@ import com.zipe.util.CANCEL_SUCCESS
 import com.zipe.util.ERROR
 import com.zipe.util.PAY
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.time.Duration
 
@@ -120,7 +118,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
             )
 
             val redirectUrls =
-                RedirectUrls(confirmUrl = PAYMENY_CONFIRN_CALLBAK, cancelUrl = PAYMENY_CANCEL_CALLBAK)
+                RedirectUrls(confirmUrl = PAYMENT_CONFIRM_CALLBACK, cancelUrl = PAYMENT_CANCEL_CALLBACK)
             form.redirectUrls = redirectUrls
 
             val paymentResponse = this.paymentProcess(Gson().toJson(form), channel)

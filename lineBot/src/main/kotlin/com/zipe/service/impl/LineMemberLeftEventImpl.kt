@@ -9,7 +9,7 @@ import com.zipe.util.log.logger
 import org.springframework.stereotype.Service
 
 @Service
-class LineMemberJoinedEventServiceImpl : ILineEventService {
+class LineMemberLeftEventImpl : ILineEventService {
 
     override fun process(
         channel: LineChannel,
@@ -17,6 +17,6 @@ class LineMemberJoinedEventServiceImpl : ILineEventService {
         event: Event,
         profile: UserProfileResponse?
     ) {
-        logger().info("Someone joined")
+        logger().info("Someone left")
     }
 }

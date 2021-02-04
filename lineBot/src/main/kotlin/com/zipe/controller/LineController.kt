@@ -31,8 +31,8 @@ class LineController(
     /**
      * Line 頻道設定 Webhook URL verify 網址
      * 需在 Line Message API 的 Webhook URL 設定 : https://domain/line/channel-secret/callback
+     * Line 會依照訊息類別回傳至該 URI，需處理不同之 Events
      */
-//    @PostMapping(value = ["/{channelSecret}/callback"])
     @RequestMapping(value = ["/{channelSecret}/callback"], method = [RequestMethod.GET, RequestMethod.POST])
     fun handleCallback(@PathVariable channelSecret: String): ResponseEntity<String> {
         val signature = request.getHeader(SINGNATURE)
@@ -48,7 +48,6 @@ class LineController(
 
     /**
      * 使用頻道設定的 message 寄送給指定使用者
-     *
      */
     @PostMapping(value = ["/send"])
     fun send(
@@ -87,7 +86,6 @@ class LineController(
 
     /**
      * Line pay 付費後從 Line 官網回傳的確認網址
-     *
      */
     @GetMapping(value = ["/payment/confirm"])
     fun confirm(
@@ -102,7 +100,6 @@ class LineController(
 
     /**
      * 取消 Line pay
-     *
      */
     @GetMapping(value = ["/payment/cancel"])
     fun cancel(@RequestParam("transactionId") transactionId: String): ModelAndView {

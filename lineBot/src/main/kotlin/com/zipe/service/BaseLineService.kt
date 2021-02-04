@@ -51,7 +51,7 @@ abstract class BaseLineService {
         try {
             val response = sendMessage(REPLY_MESSAGE_URL, sendContent, accessToken)
         } catch (e: Exception) {
-            e.printStackTrace()
+            e.message
         }
     }
 
@@ -64,15 +64,10 @@ abstract class BaseLineService {
     }
 
     protected fun getDataByMessage(message: String): String {
-        val messages = messageSettingImpl.findMessagesByMessageKey(message);
-        val json = messages.random().let {
-            when (MessageType.getTypeName(it.type.toUpperCase())) {
-                MessageType.IMAGE -> {
-                    val imageUrl = URI(it.value)
-                    jacksonObjectMapper().writeValueAsString(ImageMessage(imageUrl, imageUrl))
-                }
-                else -> it.value
-            }
+        val messages = messageSettingImpl.findMessagesByMessageKey(message)
+        var json = ""
+        if (messages.isNotEmpty()) {
+            json = messages.random().value
         }
 
         return json

@@ -7,7 +7,6 @@ import com.linecorp.bot.model.ReplyMessage
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.message.Message
 import com.zipe.entity.LineInfo
-import com.zipe.entity.Messages
 import com.zipe.enum.EventType
 import com.zipe.enum.LineType
 import com.zipe.enum.MessageType
@@ -39,8 +38,8 @@ const val PAYMENT_REQUEST = "https://sandbox-api-pay.line.me/v3/payments/request
 const val PAYMENT_CONFIRM_URI = "/v3/payments/%s/confirm"
 const val PAYMENT_CONFIRM = "https://sandbox-api-pay.line.me/v3/payments/%s/confirm"
 const val LINE_PAYMENT_URI = "/v3/payments/request"
-const val PAYMENY_CONFIRN_CALLBAK = "https://line.zipe.idv.tw/line/payment/confirm"
-const val PAYMENY_CANCEL_CALLBAK = "https://line.zipe.idv.tw/line/payment/cancel"
+const val PAYMENT_CONFIRM_CALLBACK = "https://line.zipe.idv.tw/line/payment/confirm"
+const val PAYMENT_CANCEL_CALLBACK = "https://line.zipe.idv.tw/line/payment/cancel"
 const val ORDER_PROCESS_CACHE_KEY = "process:%s"
 const val LINE_REQUEST_SUCCESS_CODE = "0000"
 
@@ -105,13 +104,6 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
                 e.message
             }
         }
-//        val sendContent = String.format(LINE_PUSH_MESSAGE_JSON_BLOCK, to, json)
-//        try {
-//            val response = sendMessage(PUSH_MESSAGE_URL, sendContent, channelInfo.accessToken)
-//            println(response)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
     }
 
     override fun paymentConfirm(transaction: Long): String {
