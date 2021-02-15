@@ -1,21 +1,18 @@
-package com.zipe.service
+package com.zipe.service.line
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.google.common.net.HttpHeaders
 import com.google.gson.Gson
-import com.linecorp.bot.model.message.ImageMessage
 import com.zipe.entity.LineChannel
-import com.zipe.enum.MessageType
 import com.zipe.model.PaymentRequest
 import com.zipe.model.PaymentResponse
 import com.zipe.repository.ILineStoreRepository
 import com.zipe.repository.IOrderProcessRepository
 import com.zipe.repository.IProductOrderRepository
-import com.zipe.service.impl.LINE_PAYMENT_URI
-import com.zipe.service.impl.LINE_REPLAY_MESSAGE_JSON_BLOCK
+import com.zipe.service.line.impl.LINE_PAYMENT_URI
+import com.zipe.service.line.impl.LINE_REPLAY_MESSAGE_JSON_BLOCK
 import com.zipe.service.impl.MessageSettingImpl
-import com.zipe.service.impl.PAYMENT_REQUEST
-import com.zipe.service.impl.REPLY_MESSAGE_URL
+import com.zipe.service.line.impl.PAYMENT_REQUEST
+import com.zipe.service.line.impl.REPLY_MESSAGE_URL
 import com.zipe.util.AUTHORIZATION
 import com.zipe.util.CHANNEL_ID
 import com.zipe.util.NONCE
@@ -24,7 +21,6 @@ import com.zipe.util.http.OkHttpUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.MediaType
-import java.net.URI
 
 abstract class BaseLineService {
 

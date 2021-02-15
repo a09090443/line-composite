@@ -11,10 +11,9 @@ import com.linecorp.bot.spring.boot.annotation.EventMapping
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler
 import com.zipe.entity.LineInfo
 import com.zipe.enum.LineType
-import com.zipe.service.ILineActionService
+import com.zipe.service.line.ILineActionService
 import com.zipe.service.IMessageSettingService
 import org.springframework.beans.factory.annotation.Autowired
-
 
 @LineMessageHandler
 class MessageHandler {
@@ -44,7 +43,7 @@ class MessageHandler {
         println("接收到的ID TYPE : $className")
         val originalMessageText = event.message.text
 
-        val message = messageService.findBykey(originalMessageText)
+        val message = messageService.findByName(originalMessageText)
 //        if (message.messageDetails.isEmpty()) {
 //            return
 //        } else {

@@ -4,7 +4,7 @@ import com.zipe.entity.Messages
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.MessageJDBC
 import com.zipe.test.base.TestBase
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class MessageJdbcRepositoryTest : TestBase() {

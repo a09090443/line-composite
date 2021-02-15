@@ -3,9 +3,7 @@ package com.zipe.controller
 import com.google.common.io.ByteStreams
 import com.linecorp.bot.model.event.CallbackRequest
 import com.zipe.base.controller.BaseController
-import com.zipe.enum.LineType
-import com.zipe.model.LineUser
-import com.zipe.service.ILineActionService
+import com.zipe.service.line.ILineActionService
 import com.zipe.service.IMessageSettingService
 import com.zipe.util.JsonUtil
 import com.zipe.util.SINGNATURE

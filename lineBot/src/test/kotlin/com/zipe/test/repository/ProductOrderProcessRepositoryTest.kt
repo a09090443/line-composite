@@ -2,10 +2,9 @@ package com.zipe.test.repository
 
 import com.google.gson.Gson
 import com.zipe.model.OrderProcessRequest
-import com.zipe.model.PaymentRequest
 import com.zipe.repository.IOrderProcessRepository
 import com.zipe.test.base.TestBase
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 

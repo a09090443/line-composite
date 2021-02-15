@@ -26,6 +26,6 @@ data class LineMappingId(
 
     val channelId: String = "",
 
-    var infoId: String = ""
+    val infoId: String = ""
 
 ) : Serializable

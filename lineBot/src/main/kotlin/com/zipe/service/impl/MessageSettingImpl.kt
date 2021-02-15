@@ -22,8 +22,8 @@ class MessageSettingImpl : IMessageSettingService {
     @Autowired
     private lateinit var messageJDBC: BaseJDBC
 
-    override fun findBykey(key: String): MessageSetting {
-        return messageSettingRepository.findAllByKey(key) ?: MessageSetting()
+    override fun findByName(name: String): MessageSetting {
+        return messageSettingRepository.findAllByName(name) ?: MessageSetting()
     }
 
     override fun findMessagesByMessageKey(key: String): List<Messages> {

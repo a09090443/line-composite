@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository
 @Repository
 interface IMessageSettingRepository : JpaRepository<MessageSetting, Long> {
 
-    fun findAllByKey(key: String): MessageSetting?
+    fun findAllByName(name: String): MessageSetting?
 
-    fun findTopByOrderByMessageIdDesc(): MessageSetting?
+    fun findTopByOrderByNameDesc(): MessageSetting?
 
 }

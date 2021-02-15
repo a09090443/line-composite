@@ -8,8 +8,7 @@ import com.zipe.util.NONCE
 import com.zipe.util.crypto.HmacEncryptUtil
 import com.zipe.util.http.OkHttpUtil
 import okhttp3.Response
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import java.io.IOException
@@ -57,7 +56,6 @@ class HmacEncryptTest : TestBase() {
 
     }
 
-    @Ignore
     @Test
     fun `test to send message to line message api`() {
 

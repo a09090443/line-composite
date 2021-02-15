@@ -1,4 +1,4 @@
-package com.zipe.service
+package com.zipe.service.system
 
 import com.zipe.entity.MessageSetting
 import com.zipe.model.output.SysMenuOutput

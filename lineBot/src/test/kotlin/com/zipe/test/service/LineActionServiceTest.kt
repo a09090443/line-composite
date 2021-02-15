@@ -3,12 +3,9 @@ package com.zipe.test.service
 import com.linecorp.bot.model.event.CallbackRequest
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper
 import com.zipe.enum.EventType
-import com.zipe.service.ILineActionService
-import com.zipe.service.ILineEventService
-import com.zipe.service.impl.LineUnfollowEventServiceImpl
+import com.zipe.service.line.ILineActionService
 import com.zipe.test.base.TestBase
-import com.zipe.util.SpringUtil
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class LineActionServiceTest : TestBase() {

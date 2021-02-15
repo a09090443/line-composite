@@ -22,7 +22,7 @@
 //        deepLevel = jobMap["deepLevel"].toString().toInt()
 //    }
 //
-//    var currentPage = getDoc(String.format(com.zipe.job.PTT_BOARD_URL, board))
+//    var currentPage = getDoc(String.format(PTT_BOARD_URL, board))
 //
 //    var previous: String
 //
@@ -67,7 +67,7 @@
 //    val title: String
 //
 //    if (goodStars.isNotBlank() and !goodStars.startsWith("X")) {
-//        if (goodStars.toInt() > minimalStars) {
+//        if (goodStars== "爆" || goodStars.toInt() > minimalStars) {
 //            title = element.select("div[class=title] > a[href]").text()
 //            if (title.contains(keyWord)) {
 //                return element.select("div[class=title] > a[href]").attr("href")

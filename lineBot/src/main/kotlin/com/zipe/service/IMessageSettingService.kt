@@ -5,7 +5,7 @@ import com.zipe.entity.Messages
 
 interface IMessageSettingService {
 
-    fun findBykey(key: String): MessageSetting
+    fun findByName(name: String): MessageSetting
 
     fun findMessagesByMessageKey(key: String): List<Messages>
 }

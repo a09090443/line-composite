@@ -1,9 +1,7 @@
-package com.zipe.service.impl
+package com.zipe.service.line.impl
 
 import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event
-import com.linecorp.bot.model.event.source.GroupSource
-import com.linecorp.bot.model.group.GroupSummaryResponse
 import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 import com.zipe.entity.LineInfo
@@ -11,14 +9,15 @@ import com.zipe.entity.LineMapping
 import com.zipe.enum.LineType
 import com.zipe.repository.ILineInfoRepository
 import com.zipe.repository.ILineMappingRepository
-import com.zipe.service.ILineEventService
+import com.zipe.service.line.ILineEventService
 import com.zipe.util.SpringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class LineJoinEventServiceImpl : ILineEventService {
+class LineFollowEventServiceImpl : ILineEventService {
+
     @Autowired
     private lateinit var lineInfoRepository: ILineInfoRepository
 
@@ -31,11 +30,10 @@ class LineJoinEventServiceImpl : ILineEventService {
         event: Event,
         profile: UserProfileResponse?
     ) {
-        val source = event.source as GroupSource
-        source.groupId.let {
-            client.getGroupSummary(it)?.whenComplete { summary: GroupSummaryResponse, _: Throwable? ->
+        event.source.userId?.let {
+            client.getProfile(it)?.whenComplete { profile: UserProfileResponse, _: Throwable? ->
                 val serviceProxy = SpringUtil.getBean(this::class.java)
-                serviceProxy.saveProcess(channel.channelId, summary)
+                serviceProxy.saveProcess(channel.channelId, profile)
             }
         }
     }
@@ -43,12 +41,12 @@ class LineJoinEventServiceImpl : ILineEventService {
     @Transactional(rollbackFor = [Exception::class])
     fun saveProcess(
         channelId: String,
-        summary: GroupSummaryResponse
+        profile: UserProfileResponse
     ) {
-        var lineInfo = lineInfoRepository.findByLineIdAndType(summary.groupId, LineType.GROUP.name)
+        var lineInfo = lineInfoRepository.findByLineIdAndType(profile.userId, LineType.USER.name)
         lineInfo ?: run {
-            lineInfo = lineInfoRepository.save(LineInfo(lineId = summary.groupId, name = summary.groupName, type = LineType.GROUP.name))
+            lineInfo = lineInfoRepository.save(LineInfo(lineId = profile.userId, type = LineType.USER.name))
         }
-        lineMappingRepository.save(LineMapping(channelId = channelId, infoId = summary.groupId))
+        lineMappingRepository.save(LineMapping(channelId = channelId, infoId = profile.userId))
     }
 }

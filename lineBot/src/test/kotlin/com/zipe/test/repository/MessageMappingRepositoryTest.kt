@@ -4,7 +4,7 @@ import com.zipe.entity.MessageMapping
 import com.zipe.repository.IMessageDetailRepository
 import com.zipe.repository.IMessageMappingRepository
 import com.zipe.test.base.TestBase
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class MessageMappingRepositoryTest : TestBase() {

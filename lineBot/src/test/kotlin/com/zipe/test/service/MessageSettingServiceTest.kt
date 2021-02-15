@@ -1,9 +1,8 @@
 package com.zipe.test.service
 
-import com.zipe.repository.IMessageSettingRepository
 import com.zipe.service.IMessageSettingService
 import com.zipe.test.base.TestBase
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
@@ -14,8 +13,8 @@ class MessageSettingServiceTest : TestBase() {
     lateinit var messageSettingService: IMessageSettingService
 
     @Test
-    fun findBykey() {
-        val productList = messageSettingService.findBykey("抽")
+    fun findByName() {
+        val productList = messageSettingService.findByName("抽")
         println(productList)
     }
 

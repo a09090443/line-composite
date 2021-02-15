@@ -1,8 +1,8 @@
 package com.zipe.test.service
 
-import com.zipe.service.ISysMenuService
+import com.zipe.service.system.ISysMenuService
 import com.zipe.test.base.TestBase
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class SysMenuServiceTest : TestBase() {

@@ -1,4 +1,4 @@
-package com.zipe.service.impl
+package com.zipe.service.line.impl
 
 import com.google.gson.Gson
 import com.linecorp.bot.client.LineMessagingClient
@@ -18,8 +18,8 @@ import com.zipe.model.PaymentConfirmRequest
 import com.zipe.model.PaymentRequest
 import com.zipe.repository.ILineChannelRepository
 import com.zipe.repository.ILineInfoRepository
-import com.zipe.service.BaseLineService
-import com.zipe.service.ILineActionService
+import com.zipe.service.line.BaseLineService
+import com.zipe.service.line.ILineActionService
 import com.zipe.util.log.logger
 import org.apache.commons.codec.digest.HmacAlgorithms
 import org.springframework.beans.factory.annotation.Autowired

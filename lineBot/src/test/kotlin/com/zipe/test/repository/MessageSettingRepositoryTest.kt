@@ -8,8 +8,7 @@ import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.LineChannelJDBC
 import com.zipe.repository.IMessageSettingRepository
 import com.zipe.test.base.TestBase
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.awt.TrayIcon
@@ -27,11 +26,10 @@ class MessageSettingRepositoryTest : TestBase() {
     @Test
     fun `jdbc test`(){
 
-        val messageSetting = messageSettingRepository.findAllByKey("抽")
+        val messageSetting = messageSettingRepository.findAllByName("抽")
         println(messageSetting)
     }
 
-    @Ignore
     @Test
     fun `insert new detail in exist key`() {
 

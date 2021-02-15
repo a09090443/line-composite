@@ -1,4 +1,4 @@
-package com.zipe.service
+package com.zipe.service.line
 
 import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event

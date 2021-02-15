@@ -1,10 +1,9 @@
-package com.zipe.service.impl
+package com.zipe.service.system.impl
 
-import com.google.gson.Gson
 import com.zipe.entity.SysMenu
 import com.zipe.model.output.SysMenuOutput
 import com.zipe.repository.ISysMenuRepository
-import com.zipe.service.ISysMenuService
+import com.zipe.service.system.ISysMenuService
 import org.springframework.beans.BeanUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

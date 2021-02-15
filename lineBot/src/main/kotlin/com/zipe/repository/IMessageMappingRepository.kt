@@ -12,6 +12,6 @@ interface IMessageMappingRepository : JpaRepository<MessageMapping, Long> {
     @Query("SELECT mm.detailId FROM MessageMapping mm WHERE mm.messageId = :messageId")
     fun findDetailIdsByMessageId(@Param("messageId") messageId: String): List<String>?
 
-    fun deleteMessageMappingByMessageId(messageId: String)
+    fun deleteByMessageId(messageId: String)
 
 }

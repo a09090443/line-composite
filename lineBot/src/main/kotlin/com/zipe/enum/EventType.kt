@@ -1,14 +1,14 @@
 package com.zipe.enum
 
-import com.zipe.service.ILineEventService
-import com.zipe.service.impl.LineFollowEventServiceImpl
-import com.zipe.service.impl.LineJoinEventServiceImpl
-import com.zipe.service.impl.LineLeaveEventServiceImpl
-import com.zipe.service.impl.LineMemberJoinedEventServiceImpl
-import com.zipe.service.impl.LineMemberLeftEventImpl
-import com.zipe.service.impl.LineMessageEventServiceImpl
-import com.zipe.service.impl.LinePostBackEventServiceImpl
-import com.zipe.service.impl.LineUnfollowEventServiceImpl
+import com.zipe.service.line.ILineEventService
+import com.zipe.service.line.impl.LineFollowEventServiceImpl
+import com.zipe.service.line.impl.LineJoinEventServiceImpl
+import com.zipe.service.line.impl.LineLeaveEventServiceImpl
+import com.zipe.service.line.impl.LineMemberJoinedEventServiceImpl
+import com.zipe.service.line.impl.LineMemberLeftEventImpl
+import com.zipe.service.line.impl.LineMessageEventServiceImpl
+import com.zipe.service.line.impl.LinePostBackEventServiceImpl
+import com.zipe.service.line.impl.LineUnfollowEventServiceImpl
 import com.zipe.util.SpringUtil
 
 enum class EventType(var clazz: Class<*>) {

@@ -5,8 +5,7 @@ import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.LineChannelJDBC
 import com.zipe.repository.ILineChannelRepository
 import com.zipe.test.base.TestBase
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
@@ -22,7 +21,6 @@ class LineChannelRepositoryTest : TestBase() {
     @Autowired
     lateinit var jdbcTemplate: JdbcTemplate
 
-    @Ignore
     @Test
     fun `test to get channel by channel secret`() {
 //        val channel = lineChannelRepository.findLineInfoInChannelByLineId("703c0f44af4957ab84b0e59b344dc26e", "U21d2289790fe0d2e5d01e20a314a8caa")
@@ -41,14 +39,12 @@ class LineChannelRepositoryTest : TestBase() {
         println(channel)
     }
 
-    @Ignore
     @Test
     fun `test find by line id`(){
         val test = lineChannelRepository.findById(4)
         println(test)
     }
 
-    @Ignore
     @Test
     fun `test insert channel`() {
 

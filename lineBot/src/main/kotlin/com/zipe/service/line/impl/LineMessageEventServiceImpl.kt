@@ -1,4 +1,4 @@
-package com.zipe.service.impl
+package com.zipe.service.line.impl
 
 import com.google.gson.Gson
 import com.linecorp.bot.client.LineMessagingClient
@@ -8,8 +8,8 @@ import com.linecorp.bot.model.event.message.TextMessageContent
 import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 import com.zipe.entity.OrderProcess
-import com.zipe.service.BaseLineService
-import com.zipe.service.ILineEventService
+import com.zipe.service.line.BaseLineService
+import com.zipe.service.line.ILineEventService
 import com.zipe.util.CANCEL
 import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Service
