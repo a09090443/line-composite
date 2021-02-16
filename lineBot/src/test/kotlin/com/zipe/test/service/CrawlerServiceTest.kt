@@ -11,8 +11,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 class CrawlerServiceTest(val crawlerServiceImpl: ICrawlerService) : FunSpec({
 
-    test("foo should return Bar")
+    test("crawler ptt Beauty board")
     {
-        crawlerServiceImpl.crawlerPttBeautyBoard("Beauty", listOf(), 3)
+        crawlerServiceImpl.crawlerPttBeautyBoard("Beauty", listOf("正妹"), 3)
     }
 })

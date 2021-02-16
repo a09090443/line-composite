@@ -7,5 +7,5 @@ interface IMessageSettingService {
 
     fun findByName(name: String): MessageSetting
 
-    fun findMessagesByMessageKey(key: String): List<Messages>
+    fun findMessagesByMessageKey(name: String): List<Messages>
 }

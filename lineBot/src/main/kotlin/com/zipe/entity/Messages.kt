@@ -4,7 +4,7 @@ import java.io.Serializable
 
 data class Messages(
 
-    var key: String = "",
+    var name: String = "",
 
     var value: String = "",
 

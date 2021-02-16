@@ -1,5 +1,5 @@
 SELECT
-    ms.`Key` AS `key`,
+    ms.Name AS name,
     md.Value AS value,
 	md.`Type` AS `type`,
 	md.ChannelId AS channelId
@@ -10,4 +10,4 @@ FROM
     INNER JOIN MessageDetail md ON
     mm.DetailId = md.Id
 WHERE
-    ms.`Key` = :key
+    ms.Name = :name

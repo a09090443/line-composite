@@ -8,11 +8,9 @@ import com.zipe.repository.IMessageSettingRepository
 import com.zipe.service.IMessageSettingService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import java.net.URI
 
-@Transactional
 @Service
 class MessageSettingImpl : IMessageSettingService {
 
@@ -26,9 +24,9 @@ class MessageSettingImpl : IMessageSettingService {
         return messageSettingRepository.findAllByName(name) ?: MessageSetting()
     }
 
-    override fun findMessagesByMessageKey(key: String): List<Messages> {
+    override fun findMessagesByMessageKey(name: String): List<Messages> {
         val resource: ResourceEnum = ResourceEnum.SQL_LINE.getResource("FIND_MESSAGES")
-        val argMap = mapOf("key" to key)
+        val argMap = mapOf("name" to name)
         return messageJDBC.queryForList(resource, null, argMap, Messages::class.java)
     }
 

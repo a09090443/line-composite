@@ -3,7 +3,6 @@ package com.zipe.service.impl
 import com.zipe.entity.MessageDetail
 import com.zipe.entity.MessageMapping
 import com.zipe.entity.MessageSetting
-import com.zipe.entity.asObject
 import com.zipe.repository.IMessageDetailRepository
 import com.zipe.repository.IMessageMappingRepository
 import com.zipe.repository.IMessageSettingRepository
@@ -31,7 +30,6 @@ const val IMAGE_JSON = """{
   "previewImageUrl" : "%s"
 }"""
 
-//@Transactional
 @Service
 class CrawlerServiceImpl : ICrawlerService {
 
@@ -58,23 +56,26 @@ class CrawlerServiceImpl : ICrawlerService {
                 this.add("$PTT_DOMAIN$previous")
             }
         }
+        keyWords.forEach { keyWord ->
 
-        // 根據關鍵字和讚數取得符合的網頁連結
-        val links = pages.run {
-            this.map { page ->
-                getDoc(page)
-                    .select("div[class=r-ent]")
-                    .map { element -> getSubjectPages("[正妹]", 30, element) }
-            }.flatten().toList()
+            // 根據關鍵字和讚數取得符合的網頁連結
+            val links = pages.run {
+                this.map { page ->
+                    getDoc(page)
+                        .select("div[class=r-ent]")
+                        .map { element -> getSubjectPages("[$keyWord]", 30, element) }
+                }.flatten().toList()
+            }
+
+            val images = links.asSequence().filter { it.isNotBlank() }
+                .map { link ->
+                    getDoc("$PTT_DOMAIN$link").select("a[rel]").map { it.attr("href") }
+                        .filter { it.endsWith(IMAGE_JPG) }
+                }.flatten().map { image -> String.format(IMAGE_JSON, image, image) }.toList()
+
+            saveImageUrlFromPtt(keyWord, images)
         }
 
-        val images = links.asSequence().filter { it.isNotBlank() }
-            .map { link ->
-                getDoc("$PTT_DOMAIN$link").select("a[rel]").map { it.attr("href") }
-                    .filter { it.endsWith(IMAGE_JPG) }
-            }.flatten().map { image -> String.format(IMAGE_JSON, image, image) }.toList()
-
-        saveImageUrlFromPtt("抽", images)
     }
 
     @Throws(Exception::class)
@@ -86,14 +87,8 @@ class CrawlerServiceImpl : ICrawlerService {
                 comment = StringUtils.EMPTY
             )
         )
-//        messageSettingRepository.save(MessageSetting().asObject(key, StringUtils.EMPTY))
-//        messageMappingRepository.deleteByMessageId(messageSetting.id)
 
-//        messageMappingRepository.findDetailIdsByMessageId(messageSetting.id)?.map { messageDetailRepository.deleteById(it) }
-
-//        var messageDetail: MessageDetail
         images.forEach {
-//            val messageDetail = MessageDetail().asObject(it, IMAGE, StringUtils.EMPTY)
             val messageDetail =
                 messageDetailRepository.save(MessageDetail(value = it, type = IMAGE, channelId = StringUtils.EMPTY))
             try {
@@ -127,6 +122,7 @@ class CrawlerServiceImpl : ICrawlerService {
         val goodStars = element.select("div[class=nrec]").text()
         val title: String
 
+        // 當該文章被噓爆則排除該文章
         if (goodStars.isNotBlank() and !goodStars.startsWith("X")) {
             if (goodStars == "爆" || goodStars.toInt() > minimalStars) {
                 title = element.select("div[class=title] > a[href]").text()

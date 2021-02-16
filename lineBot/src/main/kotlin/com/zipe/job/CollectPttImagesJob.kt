@@ -1,27 +1,19 @@
 package com.zipe.job
 
 import com.zipe.service.ICrawlerService
-import com.zipe.util.common.DOT
+import com.zipe.util.common.COMMA
 import org.quartz.JobExecutionContext
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
-const val PTT_DOMAIN = "https://www.ptt.cc"
-const val PTT_18_ACCESS_URL = "$PTT_DOMAIN/ask/over18"
-const val PTT_BOARD_URL = "$PTT_DOMAIN/bbs/%s/index.html"
-const val PTT_18_COOKIE_NAME = "over18"
-const val USER_AGENT = "Mozilla"
-const val IMAGE_JSON = """{
-  "type": "image",
-  "originalContentUrl": "%s",
-  "previewImageUrl" : "%s"
-}"""
-
+@Component
 class CollectPttImagesJob : QuartzJobFactory() {
-    @Autowired
-    lateinit var crawlerService: ICrawlerService
 
-    override fun executeJob(jobExecutionContext: JobExecutionContext?) {
-        val jobMap = jobExecutionContext?.jobDetail?.jobDataMap ?: mapOf<String, Any>()
+    @Autowired
+    lateinit var crawlerServiceImpl: ICrawlerService
+
+    override fun executeJob(jobExecutionContext: JobExecutionContext) {
+        val jobMap = jobExecutionContext.jobDetail?.jobDataMap ?: mapOf<String, Any>()
         var board = ""
         var keyWords = ""
         var deepLevel = 1
@@ -30,6 +22,6 @@ class CollectPttImagesJob : QuartzJobFactory() {
             keyWords = jobMap["keyWords"].toString()
             deepLevel = jobMap["deepLevel"].toString().toInt()
         }
-        crawlerService.crawlerPttBeautyBoard(board, keyWords.split(DOT).toList(), deepLevel)
+        crawlerServiceImpl.crawlerPttBeautyBoard(board, keyWords.split(COMMA).toList(), deepLevel)
     }
 }
