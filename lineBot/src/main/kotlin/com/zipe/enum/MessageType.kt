@@ -1,7 +1,12 @@
 package com.zipe.enum
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.linecorp.bot.model.message.*
+import com.linecorp.bot.model.message.ImageMessage
+import com.linecorp.bot.model.message.ImagemapMessage
+import com.linecorp.bot.model.message.LocationMessage
+import com.linecorp.bot.model.message.Message
+import com.linecorp.bot.model.message.TemplateMessage
+import com.linecorp.bot.model.message.TextMessage
 import com.linecorp.bot.model.message.template.ButtonsTemplate
 import com.linecorp.bot.model.message.template.CarouselTemplate
 import com.linecorp.bot.model.message.template.ConfirmTemplate
@@ -43,6 +48,26 @@ enum class MessageType {
         override fun message(json: String): Message {
             val confirmTemplate = jacksonObjectMapper().readValue(json, ConfirmTemplate::class.java)
             return TemplateMessage("Carousel alt text", confirmTemplate)
+        }
+    },
+    STICKER {
+        override fun message(json: String): Message {
+            TODO("Not yet implemented")
+        }
+    },
+    VIDEO {
+        override fun message(json: String): Message {
+            TODO("Not yet implemented")
+        }
+    },
+    AUDIO {
+        override fun message(json: String): Message {
+            TODO("Not yet implemented")
+        }
+    },
+    TEMPLATE {
+        override fun message(json: String): Message {
+            TODO("Not yet implemented")
         }
     };
 
