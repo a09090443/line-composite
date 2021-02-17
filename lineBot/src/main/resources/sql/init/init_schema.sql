@@ -247,41 +247,39 @@ CREATE TABLE `product_order`
     PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- line.ScheduleJob definition
 
--- line.schedule_job definition
-
-CREATE TABLE `schedule_job`
+CREATE TABLE `ScheduleJob`
 (
-    `id`              int(4) NOT NULL AUTO_INCREMENT,
-    `job_name`        varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-    `job_group`       varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-    `job_description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-    `job_class`       varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-    `status`          varchar(10) COLLATE utf8_unicode_ci  NOT NULL,
-    `time_unit`       varchar(6) COLLATE utf8_unicode_ci   NOT NULL,
-    `repeat_interval` int(10) NOT NULL,
-    `repeat_times`    int(10) NOT NULL,
-    `start_time`      datetime DEFAULT NULL,
-    `end_time`        datetime DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `job_name` (`job_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+    `Id`             int(4) NOT NULL AUTO_INCREMENT,
+    `JobName`        varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+    `JobGroup`       varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+    `JobDescription` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+    `JobClass`       varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+    `Status`         varchar(10) COLLATE utf8_unicode_ci  NOT NULL,
+    `TimeUnit`       varchar(6) COLLATE utf8_unicode_ci   NOT NULL,
+    `RepeatInterval` int(5) NOT NULL,
+    `RepeatTimes`    int(5) NOT NULL,
+    `StartTime`      datetime DEFAULT NULL,
+    `EndTime`        datetime DEFAULT NULL,
+    PRIMARY KEY (`Id`),
+    UNIQUE KEY `JobName` (`JobName`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
--- line.schedule_job_log definition
+-- line.ScheduleJobLog definition
 
-CREATE TABLE `schedule_job_log`
+CREATE TABLE `ScheduleJobLog`
 (
-    `id`              int(4) NOT NULL AUTO_INCREMENT,
-    `job_name`        varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-    `job_description` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-    `status`          varchar(10) COLLATE utf8_unicode_ci  NOT NULL,
-    `start_time`      datetime                     DEFAULT NULL,
-    `end_time`        datetime                     DEFAULT NULL,
-    `message`         text COLLATE utf8_unicode_ci DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+    `Id`             int(4) NOT NULL AUTO_INCREMENT,
+    `JobName`        varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+    `JobDescription` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+    `Status`         varchar(10) COLLATE utf8_unicode_ci  NOT NULL,
+    `StartTime`      datetime                     DEFAULT NULL,
+    `EndTime`        datetime                     DEFAULT NULL,
+    `Message`        text COLLATE utf8_unicode_ci DEFAULT NULL,
+    PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- line.sys_menu definition
 

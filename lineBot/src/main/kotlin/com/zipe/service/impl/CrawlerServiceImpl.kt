@@ -1,8 +1,11 @@
 package com.zipe.service.impl
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.zipe.entity.MessageDetail
 import com.zipe.entity.MessageMapping
 import com.zipe.entity.MessageSetting
+import com.zipe.model.message.ImageMessage
 import com.zipe.repository.IMessageDetailRepository
 import com.zipe.repository.IMessageMappingRepository
 import com.zipe.repository.IMessageSettingRepository
@@ -24,11 +27,6 @@ const val PTT_18_ACCESS_URL = "$PTT_DOMAIN/ask/over18"
 const val PTT_BOARD_URL = "$PTT_DOMAIN/bbs/%s/index.html"
 const val PTT_18_COOKIE_NAME = "over18"
 const val USER_AGENT = "Mozilla"
-const val IMAGE_JSON = """{
-  "type": "image",
-  "originalContentUrl": "%s",
-  "previewImageUrl" : "%s"
-}"""
 
 @Service
 class CrawlerServiceImpl : ICrawlerService {
@@ -66,16 +64,15 @@ class CrawlerServiceImpl : ICrawlerService {
                         .map { element -> getSubjectPages("[$keyWord]", 30, element) }
                 }.flatten().toList()
             }
-
+            val gson: Gson = GsonBuilder().setPrettyPrinting().create()
             val images = links.asSequence().filter { it.isNotBlank() }
                 .map { link ->
                     getDoc("$PTT_DOMAIN$link").select("a[rel]").map { it.attr("href") }
                         .filter { it.endsWith(IMAGE_JPG) }
-                }.flatten().map { image -> String.format(IMAGE_JSON, image, image) }.toList()
+                }.flatten().map { image -> gson.toJson(ImageMessage(originalContentUrl = image, previewImageUrl = image)) }.toList()
 
             saveImageUrlFromPtt(keyWord, images)
         }
-
     }
 
     @Throws(Exception::class)
