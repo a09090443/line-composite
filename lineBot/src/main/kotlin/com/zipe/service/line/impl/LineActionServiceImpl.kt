@@ -25,7 +25,7 @@ import org.apache.commons.codec.digest.HmacAlgorithms
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.security.MessageDigest
-import java.util.Base64
+import java.util.*
 import java.util.concurrent.ExecutionException
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
@@ -101,6 +101,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
                 val sendContent = String.format(LINE_PUSH_MESSAGE_JSON_BLOCK, user, json)
                 sendMessage(PUSH_MESSAGE_URL, sendContent, channelInfo.accessToken)
             } catch (e: Exception) {
+                logger.error("發送訊息失敗，對象:$user, 內容:$json")
                 e.message
             }
         }
@@ -122,6 +123,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
             channelId = store.channelId
         )
         val response = encryptPaymentContent(paymentRequest)
+        // Line Api 驗證成功則回傳 0000 代碼
         if (response.returnCode == LINE_REQUEST_SUCCESS_CODE) {
             with(productOrder) {
                 this.status = OrderStatus.SUCCESS.name
@@ -130,7 +132,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
             val success = orderProcessRepository.findByName("pay_success")
             this.pushFromJson(listOf(productOrder.lineId), success.content, channel.name, false)
         } else {
-            println(response.returnCode)
+            logger.warn("Line Pay 驗證失敗， return code :${response.returnCode}")
             return ""
         }
         return channel.botId
@@ -138,17 +140,18 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
 
     override fun isSignatureValid(channelSecret: String, signature: String, body: ByteArray): Boolean {
         return try {
+            logger.info("驗證簽名字串...")
             val sha256HMAC = Mac.getInstance(HmacAlgorithms.HMAC_SHA_256.toString())
             val secretKey =
                 SecretKeySpec(channelSecret.toByteArray(Charsets.UTF_8), HmacAlgorithms.HMAC_SHA_256.toString())
             sha256HMAC.init(secretKey)
             val headerSignature = Base64.getDecoder().decode(signature)
             val bodySignature = sha256HMAC.doFinal(body)
-            logger().info("headerSignature = $headerSignature")
-            logger().info("bodySignature = $bodySignature")
+            logger.info("headerSignature = $headerSignature")
+            logger.info("bodySignature = $bodySignature")
             MessageDigest.isEqual(headerSignature, bodySignature)
         } catch (e: Exception) {
-            logger().error(e.message)
+            logger.error(e.message)
             false
         }
     }

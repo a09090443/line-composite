@@ -40,7 +40,7 @@ class CrawlerServiceImpl : ICrawlerService {
     @Autowired
     lateinit var messageMappingRepository: IMessageMappingRepository
 
-    override fun crawlerPttBeautyBoard(board: String, keyWords: List<String>, deepLevel: Int) {
+    override fun crawlerPttBoard(board: String, keyWords: List<String>, deepLevel: Int) {
 
         var currentPage = getDoc(String.format(PTT_BOARD_URL, board))
 
@@ -119,7 +119,7 @@ class CrawlerServiceImpl : ICrawlerService {
         val goodStars = element.select("div[class=nrec]").text()
         val title: String
 
-        // 當該文章被噓爆則排除該文章
+        // 當該文章被噓爆則排除該文章，並指接受讚爆及超過指定讚數的文章
         if (goodStars.isNotBlank() and !goodStars.startsWith("X")) {
             if (goodStars == "爆" || goodStars.toInt() > minimalStars) {
                 title = element.select("div[class=title] > a[href]").text()

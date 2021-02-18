@@ -18,11 +18,13 @@ import com.zipe.util.CHANNEL_ID
 import com.zipe.util.NONCE
 import com.zipe.util.crypto.HmacEncryptUtil
 import com.zipe.util.http.OkHttpUtil
+import com.zipe.util.log.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.MediaType
 
 abstract class BaseLineService {
+    val logger = logger()
 
     @Autowired
     protected lateinit var okHttpUtil: OkHttpUtil
@@ -81,6 +83,9 @@ abstract class BaseLineService {
         return encryptPaymentContent(paymentRequest)
     }
 
+    /**
+     * 將付款資訊透過 Line Api 驗證是否正確
+     */
     protected fun encryptPaymentContent(paymentRequest: PaymentRequest): PaymentResponse {
         val signature = HmacEncryptUtil.encrypt(paymentRequest.channelSecret, paymentRequest.data())
         val headerMap = mapOf(

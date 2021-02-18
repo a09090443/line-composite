@@ -9,6 +9,9 @@ interface ILineActionService {
 
     fun getLineIdByNameExcludeChannelType(name: String): String
 
+    /**
+     * 取得頻道所對應的 Line 使用者
+     */
     fun getUserId(channelId: String, users: List<String>, types: List<String>): List<LineUser>
 
     fun getLineIdByUserId(userId: String, type: String): LineInfo?
@@ -22,6 +25,9 @@ interface ILineActionService {
      */
     fun reply(replyToken: String, messages: List<Message>, notificationDisabled: Boolean)
 
+    /**
+     * 根據輸入之關鍵字，主動傳送給指定使用者
+     */
     fun push(to: String, messages: List<Message>, notificationDisabled: Boolean)
 
     /**
@@ -33,6 +39,9 @@ interface ILineActionService {
 
 //    fun paymentProcess(json: String, channel: LineChannel): PaymentResponse
 
+    /**
+     * Line pay 驗證流程
+     */
     fun paymentConfirm(transaction: Long): String
 
     /**

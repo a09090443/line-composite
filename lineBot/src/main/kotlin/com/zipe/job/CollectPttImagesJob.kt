@@ -6,6 +6,9 @@ import org.quartz.JobExecutionContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+/**
+ * PTT 爬蟲排程
+ */
 @Component
 class CollectPttImagesJob : QuartzJobFactory() {
 
@@ -22,6 +25,6 @@ class CollectPttImagesJob : QuartzJobFactory() {
             keyWords = jobMap["keyWords"].toString()
             deepLevel = jobMap["deepLevel"].toString().toInt()
         }
-        crawlerServiceImpl.crawlerPttBeautyBoard(board, keyWords.split(COMMA).toList(), deepLevel)
+        crawlerServiceImpl.crawlerPttBoard(board, keyWords.split(COMMA).toList(), deepLevel)
     }
 }

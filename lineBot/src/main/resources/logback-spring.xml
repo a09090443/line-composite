@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property resource="resources.properties"/>
+    <!-- 盡量別用絕對路徑，如果帶參數不同容器路徑解釋可能不同,以下配置參數在resources.properties裡 -->
+    <property name="log.root.level" value="${log.root.level}"/> <!-- 日誌級別 -->
+    <property name="log.other.level" value="${log.other.level}"/> <!-- 其他日誌級別 -->
+    <property name="log.base" value="${log.base}"/> <!-- 日誌路徑，這裡是相對路徑，web項目eclipse下會輸出到eclipse的安裝目錄下，如果部署到linux上的tomcat下，會輸出到tomcat/bin目錄下 -->
+    <property name="log.moduleName" value="${log.moduleName}"/>  <!-- 模塊名稱， 影響日誌配置名，日誌文件名 -->
+    <property name="log.max.size" value="${log.max.size}"/> <!-- 日誌文件大小,超過這個大小將被壓縮 -->
+    <property name="log.max.history" value="${log.max.history}"/> <!-- 日誌檔案所存放天數 -->
+
+    <!--控制台輸出 -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}[%p][%thread][%F:%L] %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 用來保存輸出所有級別的日誌 -->
+    <appender name="file.all" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.base}/${log.moduleName}.log</File><!-- 設置日誌不超過${log.max.size}時的保存路徑，注意如果是web項目會保存到Tomcat的bin目錄下 -->
+        <!-- 滾動記錄文件，先將日誌記錄到指定文件，當符合某個條件時，將日誌記錄到其他文件。 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${log.base}/archive/${log.moduleName}_all_%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <!-- 文件輸出日誌 (文件大小策略進行文件輸出，超過指定大小對文件備份) -->
+            <maxFileSize>${log.max.size}</maxFileSize>
+            <maxHistory>${log.max.history}</maxHistory>
+        </rollingPolicy>
+        <!-- 日誌輸出的文件的格式 -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}[%p][%thread][%C:%L] %m%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- 只用保存輸出error級別的日誌 -->
+    <appender name="file.error"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.base}/${log.moduleName}_err.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${log.base}/archive/${log.moduleName}_err_%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <maxFileSize>${log.max.size}</maxFileSize>
+            <maxHistory>${log.max.history}</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}[%p][%thread][%C:%L] %m%n</pattern>
+        </layout>
+        <!-- 下面為配置只輸出error級別的日誌 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--  -->
+    <appender name="file.print"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.base}/${log.moduleName}_print.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${log.base}/archive/${log.moduleName}_print_%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <maxFileSize>${log.max.size}</maxFileSize>
+            <maxHistory>${log.max.history}</maxHistory>
+        </rollingPolicy>
+        <!-- 日誌輸出的文件的格式 -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}[%p][%thread][%C:%L] %m%n</pattern>
+        </layout>
+    </appender>
+    <!-- 不丟失日誌.默認的,如果隊列的80%已滿,則會丟棄TRACT、DEBUG、INFO級別的日誌 -->
+    <!-- 更改默認的隊列的深度,該值會影響性能.默認值為256 -->
+    <!-- 添加附加的appender,最多只能添加一個 -->
+    <appender name="file.async" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>256</queueSize>
+        <includeCallerData>true</includeCallerData>
+        <appender-ref ref="file.all"/>
+    </appender>
+
+    <logger name="org.hibernate" level="WARN" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file.error"/>
+    </logger>
+
+    <logger name="o.s.w.s.m.m.a" level="WARN" additivity="false">
+        <appender-ref ref="file.error"/>
+    </logger>
+
+    <logger name="net.sf.ehcache.statistics.extended" level="WARN" additivity="false">
+        <appender-ref ref="file.error"/>
+    </logger>
+
+    <logger name="ch.qos.logback.core" level="WARN" additivity="false">
+        <appender-ref ref="file.error"/>
+    </logger>
+
+    <logger name="org.quartz.core.QuartzSchedulerThread" level="WARN" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file.error"/>
+    </logger>
+
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="WARN" additivity="false">
+        <appender-ref ref="file.error"/>
+    </logger>
+
+    <logger name="com.fglife.invoice.service.impl.InvoicePrintServiceImpl" level="${log.root.level}" additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file.print"/>
+    </logger>
+
+    <logger name="com.fglife.invoice.service.impl.DiscountPrintServiceImpl" level="${log.root.level}"
+            additivity="false">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file.print"/>
+    </logger>
+
+    <!-- Log級別請參考 : https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm -->
+    <root level="${log.root.level}">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="file.async"/>
+        <appender-ref ref="file.error"/>
+    </root>
+</configuration>

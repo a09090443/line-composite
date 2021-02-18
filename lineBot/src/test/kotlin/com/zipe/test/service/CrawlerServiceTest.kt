@@ -13,6 +13,6 @@ class CrawlerServiceTest(val crawlerServiceImpl: ICrawlerService) : FunSpec({
 
     test("crawler ptt Beauty board")
     {
-        crawlerServiceImpl.crawlerPttBeautyBoard("Beauty", listOf("正妹"), 1)
+        crawlerServiceImpl.crawlerPttBoard("Beauty", listOf("正妹"), 1)
     }
 })
