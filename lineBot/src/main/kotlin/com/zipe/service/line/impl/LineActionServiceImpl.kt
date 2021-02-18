@@ -139,6 +139,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
     }
 
     override fun isSignatureValid(channelSecret: String, signature: String, body: ByteArray): Boolean {
+        println(lineProperties)
         return try {
             logger.info("驗證簽名字串...")
             val sha256HMAC = Mac.getInstance(HmacAlgorithms.HMAC_SHA_256.toString())

@@ -3,6 +3,7 @@ package com.zipe.service.line
 import com.google.common.net.HttpHeaders
 import com.google.gson.Gson
 import com.zipe.entity.LineChannel
+import com.zipe.model.LineProperties
 import com.zipe.model.PaymentRequest
 import com.zipe.model.PaymentResponse
 import com.zipe.repository.ILineStoreRepository
@@ -43,6 +44,9 @@ abstract class BaseLineService {
 
     @Autowired
     protected lateinit var orderProcessRepository: IOrderProcessRepository
+
+    @Autowired
+    protected lateinit var lineProperties: LineProperties
 
     protected fun replyFromJson(replyToken: String, json: String, accessToken: String, notificationDisabled: Boolean) {
         val sendContent = String.format(LINE_REPLAY_MESSAGE_JSON_BLOCK, replyToken, json)
