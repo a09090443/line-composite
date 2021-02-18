@@ -1,15 +1,14 @@
 package com.zipe.service.impl
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import com.linecorp.bot.model.message.ImageMessage
 import com.zipe.entity.MessageDetail
 import com.zipe.entity.MessageMapping
 import com.zipe.entity.MessageSetting
-import com.zipe.model.message.ImageMessage
 import com.zipe.repository.IMessageDetailRepository
 import com.zipe.repository.IMessageMappingRepository
 import com.zipe.repository.IMessageSettingRepository
 import com.zipe.service.ICrawlerService
+import com.zipe.util.JsonUtil
 import com.zipe.util.common.IMAGE
 import com.zipe.util.common.IMAGE_JPG
 import com.zipe.util.common.YES
@@ -21,6 +20,7 @@ import org.jsoup.nodes.Element
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.net.URI
 
 const val PTT_DOMAIN = "https://www.ptt.cc"
 const val PTT_18_ACCESS_URL = "$PTT_DOMAIN/ask/over18"
@@ -64,12 +64,11 @@ class CrawlerServiceImpl : ICrawlerService {
                         .map { element -> getSubjectPages("[$keyWord]", 30, element) }
                 }.flatten().toList()
             }
-            val gson: Gson = GsonBuilder().setPrettyPrinting().create()
             val images = links.asSequence().filter { it.isNotBlank() }
                 .map { link ->
                     getDoc("$PTT_DOMAIN$link").select("a[rel]").map { it.attr("href") }
                         .filter { it.endsWith(IMAGE_JPG) }
-                }.flatten().map { image -> gson.toJson(ImageMessage(originalContentUrl = image, previewImageUrl = image)) }.toList()
+                }.flatten().map { image -> JsonUtil.lineJsonMapper().writeValueAsString(ImageMessage(URI.create(image), URI.create(image))) }.toList()
 
             saveImageUrlFromPtt(keyWord, images)
         }
