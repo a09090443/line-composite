@@ -15,5 +15,8 @@ data class LineProperties(
     var paymentRequestUrl: String = "",
     var paymentConfirmUri: String = "",
     var paymentConfirmUrl: String = "",
-    var paymentUri: String = ""
+    var paymentUri: String = "",
+    var paymentCallbackUrl: String = "",
+    var paymentCancelUrl: String = "",
+    var responseSuccessCode: String = ""
 )
