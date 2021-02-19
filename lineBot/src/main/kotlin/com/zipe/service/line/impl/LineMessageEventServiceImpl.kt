@@ -48,9 +48,31 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
                             }
                         }
                     }
+                    // FIXME json 內容如何使用 String.format 來更自由的不限長度取代 %s
+                    //{
+                    //  "type": "template",
+                    //  "altText": "確認付款",
+                    //  "template": {
+                    //    "type": "confirm",
+                    //    "actions": [
+                    //      {
+                    //        "type": "postback",
+                    //        "label": "是",
+                    //        "data": "{\"isToPay\":true,\"productId\":\"americano\",\"count\":\"%s\",\"quantityUnit\":\"price\"}"
+                    //      },
+                    //      {
+                    //        "type": "postback",
+                    //        "label": "否",
+                    //        "data": "{\"isCancel\":true}"
+                    //      }
+                    //    ],
+                    //    "text": "您所輸入的數量為%s杯，總金額為%s元，是否確認購買?"
+                    //  }
+                    //}
                     this.replyFromJson(
                         event.replyToken, String.format(
                             process.content, originalMessageText,
+                            originalMessageText,
                             originalMessageText
                         ), channel.accessToken
                     )

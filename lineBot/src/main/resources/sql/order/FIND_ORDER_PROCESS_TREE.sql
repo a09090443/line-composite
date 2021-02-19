@@ -1,11 +1,19 @@
 SELECT
-    DISTINCT op2.*
+    DISTINCT op2.Id AS id,
+             op2.Name AS name,
+             op2.Content AS content,
+             op2.`Type` AS `type`,
+             op2.Enabled AS enabled,
+             op2.`Sequence` AS `sequence`,
+             op2.ParentId AS parentId,
+             op2.ChannelId AS channelId
 FROM
-    order_process op
-        INNER JOIN order_process op2 ON
-                op.process_id = op2.parent_id
-            OR op.process_id = op2.process_id
+    OrderProcess op
+        INNER JOIN OrderProcess op2 ON
+                op.Id = op2.ParentId
+            OR op.Id = op2.Id
 WHERE
-        op.process_name = :name AND op.line_id = :channelId
+        op.Name = :name
+  AND op.ChannelId = :channelId
 ORDER BY
-    op2.`sequence`
+    op2.`Sequence` ;

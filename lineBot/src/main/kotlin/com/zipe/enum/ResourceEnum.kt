@@ -16,7 +16,12 @@ enum class ResourceEnum(private val dir: String, private val extension: String) 
     /**
      * Line相關資料
      */
-    SQL_LINE("/sql/line", ".sql");
+    SQL_LINE("/sql/line", ".sql"),
+
+    /**
+     * ORDER相關資料
+     */
+    SQL_ORDER("/sql/order", ".sql");
 
     private var file: String? = null
     fun getResource(name: String): ResourceEnum {

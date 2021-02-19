@@ -9,6 +9,6 @@ interface IProductRepository : JpaRepository<Product, Long> {
 
     fun findByName(name: String): Product
 
-    fun findByProductIdAndChannelId(productId: String, channelId: String): Product
+    fun findByProductIdAndChannelId(productId: String, channelId: String): Product?
 
 }

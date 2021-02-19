@@ -5,13 +5,13 @@ import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.event.PostbackEvent
 import com.zipe.entity.LineChannel
-import com.zipe.entity.OrderProcess
 import com.zipe.entity.ProductOrder
 import com.zipe.enum.Currency
 import com.zipe.enum.OrderStatus
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.BaseJDBC
 import com.zipe.model.CheckoutPaymentRequestForm
+import com.zipe.model.OrderProcess
 import com.zipe.model.OrderProcessRequest
 import com.zipe.model.PaymentProduct
 import com.zipe.model.ProductPackageForm
@@ -67,6 +67,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
             if (processRequest.isOrderProcess) {
                 val product =
                     productRepository.findByProductIdAndChannelId(processRequest.productId, channel.channelId)
+                        ?: throw Exception("找不到該產品")
                 val firstProcess = startOrderProcess(event.source.userId, product.name, channel.channelId)
                 replyFromJson(event.replyToken, firstProcess.content, channel.accessToken)
                 redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
@@ -82,6 +83,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
 
             val product =
                 productRepository.findByProductIdAndChannelId(processRequest.productId, channel.channelId)
+                    ?: throw Exception("找不到該產品")
             //Step1 確認輸入值為"數目"或"金額"，如輸入為"金額"數量預設為"1"
             val paymentProduct = PaymentProduct(
                 id = product.productId, name = product.name,
@@ -147,7 +149,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
      * 初始訂單流程，並儲存於 redis server 中，每一訂單流程預設皆只有 5 分鐘
      */
     private fun startOrderProcess(userId: String, name: String, channelId: String): OrderProcess {
-        val resource: ResourceEnum = ResourceEnum.SQL_LINE.getResource("FIND_ORDER_PROCESS_TREE")
+        val resource: ResourceEnum = ResourceEnum.SQL_ORDER.getResource("FIND_ORDER_PROCESS_TREE")
         val argMap = mapOf("name" to name, "channelId" to channelId)
         val orderProcess = orderJDBC.queryForList(resource, null, argMap, OrderProcess::class.java)
         orderProcess.forEach {
