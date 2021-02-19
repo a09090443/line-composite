@@ -7,6 +7,24 @@
 
 Line Bot Project
 ======================
+## 事前準備
+至 Line developer 註冊帳號並建立聊天機器人
+* [Line documentation](https://developers.line.biz/zh-hant/docs/messaging-api/building-bot/, "Line 官方文件")
 
-* [x] [Spring Boot](http://#)
+## 開發環境
+* OpenJDK 1.8
+* Kotlin 1.4
+* Spring boot 2.4
+* Redis latest
+* Gradle latest
+* Postman latest
 
+## 所依賴的 projects
+* [Core](https://github.com/a09090443/core "核心專案")
+
+## 啟動方式
+1. `#cd lineBot`
+2. `#gradle bootRun`
+
+### 備註
+* [Line 官方文件](https://developers.line.biz/zh-hant/docs/messaging-api/)
