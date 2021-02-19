@@ -3,7 +3,6 @@ package com.zipe.service.line.impl
 import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.event.source.GroupSource
-import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 import com.zipe.enum.LineType
 import com.zipe.repository.ILineInfoRepository
@@ -26,8 +25,7 @@ class LineLeaveEventServiceImpl : ILineEventService {
     override fun process(
         channel: LineChannel,
         client: LineMessagingClient,
-        event: Event,
-        profile: UserProfileResponse?
+        event: Event
     ) {
         (event.source as GroupSource).groupId.let {
             lineInfoRepository.findByLineIdAndType(it, LineType.GROUP.name)?.let { lineInfo ->

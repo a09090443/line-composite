@@ -4,7 +4,6 @@ import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.event.source.GroupSource
 import com.linecorp.bot.model.group.GroupSummaryResponse
-import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 import com.zipe.entity.LineInfo
 import com.zipe.entity.LineMapping
@@ -28,8 +27,7 @@ class LineJoinEventServiceImpl : ILineEventService {
     override fun process(
         channel: LineChannel,
         client: LineMessagingClient,
-        event: Event,
-        profile: UserProfileResponse?
+        event: Event
     ) {
         val source = event.source as GroupSource
         source.groupId.let {
@@ -47,7 +45,13 @@ class LineJoinEventServiceImpl : ILineEventService {
     ) {
         var lineInfo = lineInfoRepository.findByLineIdAndType(summary.groupId, LineType.GROUP.name)
         lineInfo ?: run {
-            lineInfo = lineInfoRepository.save(LineInfo(lineId = summary.groupId, name = summary.groupName, type = LineType.GROUP.name))
+            lineInfo = lineInfoRepository.save(
+                LineInfo(
+                    lineId = summary.groupId,
+                    name = summary.groupName,
+                    type = LineType.GROUP.name
+                )
+            )
         }
         lineMappingRepository.save(LineMapping(channelId = channelId, infoId = summary.groupId))
     }

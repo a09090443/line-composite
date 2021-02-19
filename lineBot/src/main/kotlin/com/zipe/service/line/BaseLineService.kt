@@ -9,17 +9,15 @@ import com.zipe.model.PaymentResponse
 import com.zipe.repository.ILineStoreRepository
 import com.zipe.repository.IOrderProcessRepository
 import com.zipe.repository.IProductOrderRepository
-import com.zipe.service.line.impl.LINE_PAYMENT_URI
-import com.zipe.service.line.impl.LINE_REPLAY_MESSAGE_JSON_BLOCK
 import com.zipe.service.impl.MessageSettingImpl
-import com.zipe.service.line.impl.PAYMENT_REQUEST
-import com.zipe.service.line.impl.REPLY_MESSAGE_URL
+import com.zipe.service.line.impl.LINE_REPLAY_MESSAGE_JSON_BLOCK
 import com.zipe.util.AUTHORIZATION
 import com.zipe.util.CHANNEL_ID
 import com.zipe.util.NONCE
 import com.zipe.util.crypto.HmacEncryptUtil
 import com.zipe.util.http.OkHttpUtil
 import com.zipe.util.log.logger
+import org.apache.commons.lang.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.MediaType
@@ -48,15 +46,22 @@ abstract class BaseLineService {
     @Autowired
     protected lateinit var lineProperties: LineProperties
 
-    protected fun replyFromJson(replyToken: String, json: String, accessToken: String, notificationDisabled: Boolean) {
+    /**
+     * 回覆 Line 訊息
+     */
+    protected fun replyFromJson(replyToken: String, json: String, accessToken: String): String {
         val sendContent = String.format(LINE_REPLAY_MESSAGE_JSON_BLOCK, replyToken, json)
         try {
-            val response = sendMessage(REPLY_MESSAGE_URL, sendContent, accessToken)
+            return sendMessage(lineProperties.replayMessageUrl, sendContent, accessToken)
         } catch (e: Exception) {
             e.message
         }
+        return StringUtils.EMPTY
     }
 
+    /**
+     * 推送 Line 訊息
+     */
     protected fun sendMessage(url: String, content: String, accessToken: String): String {
         val headerMap = mapOf(
             HttpHeaders.CONTENT_TYPE to MediaType.APPLICATION_JSON_VALUE,
@@ -67,7 +72,7 @@ abstract class BaseLineService {
 
     protected fun getDataByMessage(message: String): String {
         val messages = messageSettingImpl.findMessagesByMessageKey(message)
-        var json = ""
+        var json = StringUtils.EMPTY
         if (messages.isNotEmpty()) {
             json = messages.random().value
         }
@@ -79,9 +84,9 @@ abstract class BaseLineService {
         val store = lineStoreRepository.findByChannelId(channel.channelId)
         val paymentRequest = PaymentRequest(
             channelSecret = store.channelSecret,
-            requestUri = LINE_PAYMENT_URI,
+            requestUri = lineProperties.paymentUri,
             requestBody = json,
-            sendUrl = PAYMENT_REQUEST,
+            sendUrl = lineProperties.paymentRequestUrl,
             channelId = store.channelId
         )
         return encryptPaymentContent(paymentRequest)

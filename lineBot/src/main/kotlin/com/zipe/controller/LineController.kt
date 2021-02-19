@@ -66,7 +66,7 @@ class LineController(
                 it.forEach { username -> logger().warn("Can not find username : $username in database") }
             }
             val ids = users.map { user -> user.lineId }.toList()
-            lineActionServiceImpl.pushFromJson(ids, messageData.random().value, channelId, false)
+            lineActionServiceImpl.pushFromJson(ids, messageData.random().value, channelId)
         }
         return "send message success"
     }

@@ -33,7 +33,7 @@ interface ILineActionService {
     /**
      * 頻道主動推送訊息至使用者或群組
      */
-    fun pushFromJson(toUsers: List<String>, json: String, channelId: String, notificationDisabled: Boolean)
+    fun pushFromJson(toUsers: List<String>, json: String, channelId: String)
 
 //    fun replyFromJson(replyToken: String, json: String, accessToken: String, notificationDisabled: Boolean)
 

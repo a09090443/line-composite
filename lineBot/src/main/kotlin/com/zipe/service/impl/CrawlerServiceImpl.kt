@@ -107,6 +107,9 @@ class CrawlerServiceImpl : ICrawlerService {
     private fun getDoc(url: String) =
         Jsoup.connect(url).userAgent(USER_AGENT).cookie(PTT_18_COOKIE_NAME, getPttAdultCookie()).get()
 
+    /**
+     * 將 Ptt 18 歲同意視窗，自動點選為同意
+     */
     private fun getPttAdultCookie(): String {
         val response =
             Jsoup.connect(PTT_18_ACCESS_URL).data(YES.toLowerCase(), YES.toLowerCase()).method(Connection.Method.POST)

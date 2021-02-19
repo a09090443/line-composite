@@ -27,8 +27,7 @@ class LineFollowEventServiceImpl : ILineEventService {
     override fun process(
         channel: LineChannel,
         client: LineMessagingClient,
-        event: Event,
-        profile: UserProfileResponse?
+        event: Event
     ) {
         event.source.userId?.let {
             client.getProfile(it)?.whenComplete { profile: UserProfileResponse, _: Throwable? ->

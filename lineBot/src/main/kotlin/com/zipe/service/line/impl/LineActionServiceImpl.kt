@@ -25,23 +25,14 @@ import org.apache.commons.codec.digest.HmacAlgorithms
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.security.MessageDigest
-import java.util.*
+import java.util.Base64
 import java.util.concurrent.ExecutionException
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 const val LINE_PUSH_MESSAGE_JSON_BLOCK = """{"to":"%s","messages":[%s]}"""
 const val LINE_REPLAY_MESSAGE_JSON_BLOCK = """{"replyToken":"%s","messages":[%s]}"""
-const val PUSH_MESSAGE_URL = "https://api.line.me/v2/bot/message/push"
-const val REPLY_MESSAGE_URL = "https://api.line.me/v2/bot/message/reply"
-const val PAYMENT_REQUEST = "https://sandbox-api-pay.line.me/v3/payments/request"
-const val PAYMENT_CONFIRM_URI = "/v3/payments/%s/confirm"
-const val PAYMENT_CONFIRM = "https://sandbox-api-pay.line.me/v3/payments/%s/confirm"
-const val LINE_PAYMENT_URI = "/v3/payments/request"
-const val PAYMENT_CONFIRM_CALLBACK = "https://line.zipe.idv.tw/line/payment/confirm"
-const val PAYMENT_CANCEL_CALLBACK = "https://line.zipe.idv.tw/line/payment/cancel"
 const val ORDER_PROCESS_CACHE_KEY = "process:%s"
-const val LINE_REQUEST_SUCCESS_CODE = "0000"
 
 @Service
 class LineActionServiceImpl : BaseLineService(), ILineActionService {
@@ -94,12 +85,12 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
         }
     }
 
-    override fun pushFromJson(toUsers: List<String>, json: String, channelId: String, notificationDisabled: Boolean) {
+    override fun pushFromJson(toUsers: List<String>, json: String, channelId: String) {
         val channelInfo = lineChannelRepository.findByChannelId(channelId)
         toUsers.forEach { user ->
             try {
                 val sendContent = String.format(LINE_PUSH_MESSAGE_JSON_BLOCK, user, json)
-                sendMessage(PUSH_MESSAGE_URL, sendContent, channelInfo.accessToken)
+                sendMessage(lineProperties.pushMessageUrl, sendContent, channelInfo.accessToken)
             } catch (e: Exception) {
                 logger.error("發送訊息失敗，對象:$user, 內容:$json")
                 e.message
@@ -112,25 +103,25 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
         val channel = lineChannelRepository.findByChannelId(productOrder.channelId)
         val store = lineStoreRepository.findByChannelId(productOrder.channelId)
 
-        val conformUri = String.format(PAYMENT_CONFIRM_URI, transaction)
+        val conformUri = String.format(lineProperties.paymentConfirmUri, transaction)
         val requestBody = Gson().toJson(PaymentConfirmRequest(amount = productOrder.amount, currency = "TWD"))
 
         val paymentRequest = PaymentRequest(
             channelSecret = store.channelSecret,
             requestUri = conformUri,
             requestBody = requestBody,
-            sendUrl = String.format(PAYMENT_CONFIRM, transaction),
+            sendUrl = String.format(lineProperties.paymentConfirmUrl, transaction),
             channelId = store.channelId
         )
         val response = encryptPaymentContent(paymentRequest)
         // Line Api 驗證成功則回傳 0000 代碼
-        if (response.returnCode == LINE_REQUEST_SUCCESS_CODE) {
+        if (response.returnCode == lineProperties.responseSuccessCode) {
             with(productOrder) {
                 this.status = OrderStatus.SUCCESS.name
             }
             productOrderRepository.save(productOrder)
             val success = orderProcessRepository.findByName("pay_success")
-            this.pushFromJson(listOf(productOrder.lineId), success.content, channel.name, false)
+            this.pushFromJson(listOf(productOrder.lineId), success.content, channel.name)
         } else {
             logger.warn("Line Pay 驗證失敗， return code :${response.returnCode}")
             return ""
@@ -161,7 +152,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
         val channel = lineChannelRepository.findByChannelSecret(channelSecret)
         val client = LineMessagingClient.builder(channel.accessToken).build()
         val service = EventType.getService(className.toUpperCase())
-        service.process(channel, client, event, null)
+        service.process(channel, client, event)
     }
 
 }

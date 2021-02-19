@@ -6,5 +6,5 @@ import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 
 interface ILineEventService {
-    fun process(channel: LineChannel, client: LineMessagingClient, event: Event, profile: UserProfileResponse?)
+    fun process(channel: LineChannel, client: LineMessagingClient, event: Event)
 }

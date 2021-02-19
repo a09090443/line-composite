@@ -71,7 +71,7 @@ class Conditions {
      * @return
      */
     fun leftPT(): Conditions {
-        condition!!.append(" (")
+        condition.append(" (")
         return this
     }
 
@@ -154,13 +154,13 @@ class Conditions {
         return done
     }
 
-    private fun appendPairTypes(pair: Pair) {
-        var pair: Pair? = pair
-        val column: String? = pair?.column
-        val value: String? = pair?.value
-        val type: SQL? = pair?.matchType
-        val operator: String? = type?.operator()
-        val values: List<String>? = pair?.values
+    private fun appendPairTypes(sqlPair: Pair) {
+        val pair: Pair = sqlPair
+        val column: String = pair.column
+        val value: String? = pair.value
+        val type: SQL = pair.matchType
+        val operator: String = type.operator()
+        val values: List<String>? = pair.values
         when (type) {
             SQL.IN -> {
                 val sqlText: StringBuilder = StringBuilder()
@@ -175,7 +175,6 @@ class Conditions {
             SQL.ISNULL, SQL.NOTNULL -> condition.append("$column $operator")
             else -> condition.append("$column $operator '$value'")
         }
-        pair = null
     }
 
 }

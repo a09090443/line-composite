@@ -5,7 +5,6 @@ import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.event.MessageEvent
 import com.linecorp.bot.model.event.message.TextMessageContent
-import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 import com.zipe.entity.OrderProcess
 import com.zipe.service.line.BaseLineService
@@ -19,8 +18,7 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
     override fun process(
         channel: LineChannel,
         client: LineMessagingClient,
-        event: Event,
-        profile: UserProfileResponse?
+        event: Event
     ) {
         event as MessageEvent<*>
         when (event.message::class.simpleName) {
@@ -34,7 +32,7 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
 
                 if (result.isNullOrEmpty()) {
                     val json = getDataByMessage(originalMessageText)
-                    this.replyFromJson(replyToken, json, channel.accessToken, false)
+                    this.replyFromJson(replyToken, json, channel.accessToken)
                 } else {
                     val json =
                         redisTemplate.opsForList().index(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId), 0)
@@ -45,7 +43,7 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
                         "number" -> StringUtils.isNumeric(originalMessageText).takeIf { !it }?.let {
                             orderProcessRepository.findByName(CANCEL).run {
 
-                                replyFromJson(replyToken, this.content, channel.accessToken, false)
+                                replyFromJson(replyToken, this.content, channel.accessToken)
                                 throw Exception("Input type error.")
                             }
                         }
@@ -54,7 +52,7 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
                         event.replyToken, String.format(
                             process.content, originalMessageText,
                             originalMessageText
-                        ), channel.accessToken, false
+                        ), channel.accessToken
                     )
                     redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
                 }

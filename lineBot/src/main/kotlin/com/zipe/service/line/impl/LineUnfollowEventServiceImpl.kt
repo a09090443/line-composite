@@ -2,7 +2,6 @@ package com.zipe.service.line.impl
 
 import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event
-import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 import com.zipe.enum.LineType
 import com.zipe.repository.ILineInfoRepository
@@ -25,8 +24,7 @@ class LineUnfollowEventServiceImpl : ILineEventService {
     override fun process(
         channel: LineChannel,
         client: LineMessagingClient,
-        event: Event,
-        profile: UserProfileResponse?
+        event: Event
     ) {
         lineInfoRepository.findByLineIdAndType(event.source.userId, LineType.USER.name).let {
             try {

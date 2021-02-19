@@ -12,7 +12,7 @@
     <!--控制台輸出 -->
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}[%p][%thread][%F:%L] %m%n</Pattern>
+            <Pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%10thread] %cyan(%-40logger{36}) - %msg%n</Pattern>
         </encoder>
     </appender>
 
@@ -81,10 +81,6 @@
         <appender-ref ref="file.error"/>
     </logger>
 
-    <logger name="o.s.w.s.m.m.a" level="WARN" additivity="false">
-        <appender-ref ref="file.error"/>
-    </logger>
-
     <logger name="net.sf.ehcache.statistics.extended" level="WARN" additivity="false">
         <appender-ref ref="file.error"/>
     </logger>
@@ -100,17 +96,6 @@
 
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="WARN" additivity="false">
         <appender-ref ref="file.error"/>
-    </logger>
-
-    <logger name="com.fglife.invoice.service.impl.InvoicePrintServiceImpl" level="${log.root.level}" additivity="false">
-        <appender-ref ref="stdout"/>
-        <appender-ref ref="file.print"/>
-    </logger>
-
-    <logger name="com.fglife.invoice.service.impl.DiscountPrintServiceImpl" level="${log.root.level}"
-            additivity="false">
-        <appender-ref ref="stdout"/>
-        <appender-ref ref="file.print"/>
     </logger>
 
     <!-- Log級別請參考 : https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm -->

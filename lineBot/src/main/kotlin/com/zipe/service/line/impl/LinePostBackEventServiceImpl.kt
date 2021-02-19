@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.linecorp.bot.client.LineMessagingClient
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.event.PostbackEvent
-import com.linecorp.bot.model.profile.UserProfileResponse
 import com.zipe.entity.LineChannel
 import com.zipe.entity.OrderProcess
 import com.zipe.entity.ProductOrder
@@ -38,11 +37,11 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
     override fun process(
         channel: LineChannel,
         client: LineMessagingClient,
-        event: Event,
-        profile: UserProfileResponse?
+        event: Event
     ) {
         val processCache =
-            redisTemplate.opsForList().range(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId), 0, -1) ?: listOf()
+            redisTemplate.opsForList().range(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId), 0, -1)
+                ?: listOf()
 
         event as PostbackEvent
         val data = event.postbackContent.data
@@ -55,11 +54,11 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                 val product =
                     productRepository.findByProductIdAndChannelId(processRequest.productId, channel.channelId)
                 val firstProcess = startOrderProcess(event.source.userId, product.name, channel.channelId)
-                replyFromJson(event.replyToken, firstProcess.content, channel.accessToken, false)
+                replyFromJson(event.replyToken, firstProcess.content, channel.accessToken)
                 redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
             } else {
                 val json = getDataByMessage(data)
-                this.replyFromJson(event.replyToken, json, channel.accessToken, false)
+                this.replyFromJson(event.replyToken, json, channel.accessToken)
                 redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
             }
         } else {
@@ -70,7 +69,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                     .isNullOrEmpty().takeIf { it }?.let { return }
                 redisTemplate.delete(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
                 val cancelOK = orderProcessRepository.findByName(CANCEL_SUCCESS)
-                replyFromJson(event.replyToken, cancelOK.content, channel.accessToken, false)
+                replyFromJson(event.replyToken, cancelOK.content, channel.accessToken)
                 return
             }
 
@@ -118,22 +117,25 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
             )
 
             val redirectUrls =
-                RedirectUrls(confirmUrl = PAYMENT_CONFIRM_CALLBACK, cancelUrl = PAYMENT_CANCEL_CALLBACK)
+                RedirectUrls(
+                    confirmUrl = lineProperties.paymentCallbackUrl,
+                    cancelUrl = lineProperties.paymentCancelUrl
+                )
             form.redirectUrls = redirectUrls
 
             val paymentResponse = this.paymentProcess(Gson().toJson(form), channel)
-            if (paymentResponse.returnCode == LINE_REQUEST_SUCCESS_CODE) {
+            if (paymentResponse.returnCode == lineProperties.responseSuccessCode) {
                 order.transactionId = paymentResponse.info.transactionId
                 productOrderRepository.save(order)
                 val pay = orderProcessRepository.findByName(PAY)
                 val convert =
                     String.format(pay.content, paymentResponse.info.paymentUrl.web, product.image, product.name)
-                replyFromJson(event.replyToken, convert, channel.accessToken, false)
+                replyFromJson(event.replyToken, convert, channel.accessToken)
 //                        redisTemplate.delete(String.format(ORDER_PROCESS_CACHE_KEY, userId))
             } else {
                 println(paymentResponse.returnCode)
                 val error = orderProcessRepository.findByName(ERROR)
-                replyFromJson(event.replyToken, error.content, channel.accessToken, false)
+                replyFromJson(event.replyToken, error.content, channel.accessToken)
             }
             redisTemplate.delete(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
         }
