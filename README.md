@@ -22,6 +22,9 @@ Line Bot Project
 ## 所依賴的 projects
 * [Core](https://github.com/a09090443/core "核心專案")
 
+## 專案目錄結構圖
+<img src="./images/projects.png" style="zoom:70%" />
+
 ## 各專案說明
 * core - 為核心專案，提供各種基本設定
 * lineBot - 為 Line bot 後端程式
