@@ -9,7 +9,7 @@ Line Bot Project
 ======================
 ## 事前準備
 至 Line developer 註冊帳號並建立聊天機器人
-* [Line documentation](https://developers.line.biz/zh-hant/docs/messaging-api/building-bot/, "Line 官方文件")
+* [Line documentation](https://developers.line.biz/zh-hant/docs/messaging-api/building-bot/ "Line 官方文件")
 
 ## 開發環境
 * OpenJDK 1.8
