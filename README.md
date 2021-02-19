@@ -31,5 +31,5 @@ Line Bot Project
 1. `#cd lineBot`
 2. `#gradle bootRun`
 
-### 備註
+## 備註
 * [Line 官方文件](https://developers.line.biz/zh-hant/docs/messaging-api/)
