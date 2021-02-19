@@ -1,20 +1,24 @@
 package com.zipe.line.handler
 
 import com.linecorp.bot.client.LineMessagingClient
-import com.linecorp.bot.model.event.*
+import com.linecorp.bot.model.event.Event
+import com.linecorp.bot.model.event.FollowEvent
+import com.linecorp.bot.model.event.JoinEvent
+import com.linecorp.bot.model.event.MessageEvent
+import com.linecorp.bot.model.event.PostbackEvent
 import com.linecorp.bot.model.event.message.LocationMessageContent
 import com.linecorp.bot.model.event.message.TextMessageContent
 import com.linecorp.bot.model.event.source.GroupSource
 import com.linecorp.bot.model.profile.UserProfileResponse
-import com.linecorp.bot.spring.boot.LineBotProperties
 import com.linecorp.bot.spring.boot.annotation.EventMapping
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler
 import com.zipe.entity.LineInfo
 import com.zipe.enum.LineType
-import com.zipe.service.line.ILineActionService
 import com.zipe.service.IMessageSettingService
+import com.zipe.service.line.ILineActionService
 import org.springframework.beans.factory.annotation.Autowired
 
+@Deprecated("已客製化 Line bot 程式，棄用官方程式")
 @LineMessageHandler
 class MessageHandler {
     @Autowired
@@ -25,9 +29,6 @@ class MessageHandler {
 
     @Autowired
     lateinit var lineActionService: ILineActionService
-
-    @Autowired
-    lateinit var lineBotProperties: LineBotProperties
 
     @EventMapping
     fun handleTextMessageEvent(event: MessageEvent<TextMessageContent>) {
@@ -73,8 +74,12 @@ class MessageHandler {
     fun handleFollowEvent(event: FollowEvent) {
         event.source.userId?.let {
             lineMessagingClient.getProfile(it)?.whenComplete { profile: UserProfileResponse, throwable: Throwable? ->
-                lineActionService.saveLineInfo(LineInfo(lineId = event.source.userId, name = profile.displayName,
-                        statusMessage = profile.statusMessage, type = LineType.USER.name))
+                lineActionService.saveLineInfo(
+                    LineInfo(
+                        lineId = event.source.userId, name = profile.displayName,
+                        statusMessage = profile.statusMessage, type = LineType.USER.name
+                    )
+                )
             }
         }
     }

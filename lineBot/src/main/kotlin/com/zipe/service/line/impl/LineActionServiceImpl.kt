@@ -7,9 +7,9 @@ import com.linecorp.bot.model.ReplyMessage
 import com.linecorp.bot.model.event.Event
 import com.linecorp.bot.model.message.Message
 import com.zipe.entity.LineInfo
+import com.zipe.enum.Currency
 import com.zipe.enum.EventType
 import com.zipe.enum.LineType
-import com.zipe.enum.MessageType
 import com.zipe.enum.OrderStatus
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.LineChannelJDBC
@@ -22,6 +22,7 @@ import com.zipe.service.line.BaseLineService
 import com.zipe.service.line.ILineActionService
 import com.zipe.util.log.logger
 import org.apache.commons.codec.digest.HmacAlgorithms
+import org.apache.commons.lang.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.security.MessageDigest
@@ -62,8 +63,6 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
 
     override fun saveLineInfo(lineInfo: LineInfo) = lineInfoRepository.save(lineInfo)
 
-    override fun convertMessageType(json: String, type: String) = MessageType.valueOf(type.toUpperCase()).message(json)
-
     override fun reply(replyToken: String, messages: List<Message>, notificationDisabled: Boolean) {
         try {
             lineMessagingClient.replyMessage(ReplyMessage(replyToken, messages, notificationDisabled))?.get()
@@ -77,7 +76,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
     override fun push(to: String, messages: List<Message>, notificationDisabled: Boolean) {
         try {
             val apiResponse = lineMessagingClient.pushMessage(PushMessage(to, messages, notificationDisabled))?.get()
-            logger().info("Sent messages: {}", apiResponse)
+            logger().info("Sent messages: $apiResponse")
         } catch (e: InterruptedException) {
             throw RuntimeException(e)
         } catch (e: ExecutionException) {
@@ -104,7 +103,8 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
         val store = lineStoreRepository.findByChannelId(productOrder.channelId)
 
         val conformUri = String.format(lineProperties.paymentConfirmUri, transaction)
-        val requestBody = Gson().toJson(PaymentConfirmRequest(amount = productOrder.amount, currency = "TWD"))
+        val requestBody =
+            Gson().toJson(PaymentConfirmRequest(amount = productOrder.amount, currency = Currency.TWD.name))
 
         val paymentRequest = PaymentRequest(
             channelSecret = store.channelSecret,
@@ -124,7 +124,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
             this.pushFromJson(listOf(productOrder.lineId), success.content, channel.name)
         } else {
             logger.warn("Line Pay 驗證失敗， return code :${response.returnCode}")
-            return ""
+            return StringUtils.EMPTY
         }
         return channel.botId
     }

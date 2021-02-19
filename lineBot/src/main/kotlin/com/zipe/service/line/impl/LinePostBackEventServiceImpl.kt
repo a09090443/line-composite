@@ -7,6 +7,7 @@ import com.linecorp.bot.model.event.PostbackEvent
 import com.zipe.entity.LineChannel
 import com.zipe.entity.OrderProcess
 import com.zipe.entity.ProductOrder
+import com.zipe.enum.Currency
 import com.zipe.enum.OrderStatus
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.BaseJDBC
@@ -39,6 +40,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
         client: LineMessagingClient,
         event: Event
     ) {
+        // 從 redis 取得該使用者最新的流程進度
         val processCache =
             redisTemplate.opsForList().range(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId), 0, -1)
                 ?: listOf()
@@ -47,7 +49,19 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
         val data = event.postbackContent.data
         val processRequest = Gson().fromJson(data, OrderProcessRequest::class.java)
 
-        if (processCache.isNullOrEmpty()) {
+        // 取消訂單流程
+        if (processRequest.isCancel) {
+            logger.info("使用者 ${event.source.userId} 取消訂單")
+            redisTemplate.opsForList()
+                .index(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId), 0)
+                .isNullOrEmpty().takeIf { it }?.let { return }
+            redisTemplate.delete(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
+            val cancelOK = orderProcessRepository.findByName(CANCEL_SUCCESS)
+            replyFromJson(event.replyToken, cancelOK.content, channel.accessToken).let { return }
+        }
+
+        // 如該使用者目前無購買流程 cache 則啟新購買流程
+        if (processCache.isEmpty()) {
 
             // 初始訂單流程
             if (processRequest.isOrderProcess) {
@@ -61,18 +75,6 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                 this.replyFromJson(event.replyToken, json, channel.accessToken)
                 redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
             }
-        } else {
-            // 取消訂單流程
-            if (processRequest.isCancel) {
-                redisTemplate.opsForList()
-                    .index(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId), 0)
-                    .isNullOrEmpty().takeIf { it }?.let { return }
-                redisTemplate.delete(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
-                val cancelOK = orderProcessRepository.findByName(CANCEL_SUCCESS)
-                replyFromJson(event.replyToken, cancelOK.content, channel.accessToken)
-                return
-            }
-
         }
 
         // 完成訂單流程並產出 line pay
@@ -94,7 +96,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                 }
             }
 
-            //Step2
+            //Step2 計算總金額
             val productPackageForm = ProductPackageForm(
                 name = channel.name,
                 amount = paymentProduct.price.times(paymentProduct.quantity.toBigDecimal()).setScale(0)
@@ -112,7 +114,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
             }
 
             val form = CheckoutPaymentRequestForm(
-                amount = productPackageForm.amount, currency = "TWD",
+                amount = productPackageForm.amount, currency = Currency.TWD.name,
                 orderId = order.orderId, packages = listOf(productPackageForm)
             )
 
@@ -141,6 +143,9 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
         }
     }
 
+    /**
+     * 初始訂單流程，並儲存於 redis server 中，每一訂單流程預設皆只有 5 分鐘
+     */
     private fun startOrderProcess(userId: String, name: String, channelId: String): OrderProcess {
         val resource: ResourceEnum = ResourceEnum.SQL_LINE.getResource("FIND_ORDER_PROCESS_TREE")
         val argMap = mapOf("name" to name, "channelId" to channelId)

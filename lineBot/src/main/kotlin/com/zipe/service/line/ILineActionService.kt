@@ -18,8 +18,6 @@ interface ILineActionService {
 
     fun saveLineInfo(lineInfo: LineInfo): LineInfo
 
-    fun convertMessageType(json: String, type: String): Message
-
     /**
      * 根據使用者所輸入之關鍵字，回應相關訊息
      */
@@ -35,10 +33,6 @@ interface ILineActionService {
      */
     fun pushFromJson(toUsers: List<String>, json: String, channelId: String)
 
-//    fun replyFromJson(replyToken: String, json: String, accessToken: String, notificationDisabled: Boolean)
-
-//    fun paymentProcess(json: String, channel: LineChannel): PaymentResponse
-
     /**
      * Line pay 驗證流程
      */
@@ -50,7 +44,7 @@ interface ILineActionService {
     fun isSignatureValid(channelSecret: String, signature: String, body: ByteArray): Boolean
 
     /**
-     * 處理從 Line 伺服器回傳之不同型態之物件
+     * 處理從 Line 伺服器回傳之不同事件之物件
      */
     fun eventHandler(event: Event, channelSecret: String)
 

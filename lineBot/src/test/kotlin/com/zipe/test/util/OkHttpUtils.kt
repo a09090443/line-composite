@@ -18,20 +18,19 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-
 fun main() {
-    val sss = MessageType.getTypeName("IMAGE")
-    println(sss)
-    val str = jacksonObjectMapper().writeValueAsString(ImageMessage(URI("https://yukiblogtw.achangpro.com/img/a22978399d27_11F4E/DSCF2839.jpg"), URI("https://yukiblogtw.achangpro.com/img/a22978399d27_11F4E/DSCF2839.jpg")))
-    println(str)
-    val headerMap = mapOf<String, String>("Content-Type" to "application/json", "Authorization" to "Bearer D7YFymbHjichf2vTlzSCoTdcJtQjA/BeqmaphMKr+1VJs0y6OEDl3BILKtegGjlwWIuy8Xe9OonY6eq3+j+XlB7Pum5VMVqXpEsyz9W2JEpNvGKERTkXkZgoSYF5YmWbNaBytbFHJtdTswbYGrk6VQdB04t89/1O/w1cDnyilFU=")
-
-    val actions = listOf(PostbackAction("www", "{\"isToPay\":true,\"productId\":\"fafawfagva\",\"count\":\"%s\",\"quantityUnit\":\"price\"}", "測試1", "測試1"),
-            PostbackAction("www", "{\"isToPay\":true,\"productId\":\"fafawfagva\",\"count\":\"%s\",\"quantityUnit\":\"price\"}", "測試2", "測試2"),
-            PostbackAction("www", "{\"isToPay\":true,\"productId\":\"fafawfagva\",\"count\":\"%s\",\"quantityUnit\":\"price\"}", "測試3", "測試3"))
-
-    val test = jacksonObjectMapper().writeValueAsString(ButtonsTemplate(URI("http://www.google.com"), "test", "tset", actions))
-    println(test)
+//    val sss = MessageType.getTypeName("IMAGE")
+//    println(sss)
+//    val str = jacksonObjectMapper().writeValueAsString(ImageMessage(URI("https://yukiblogtw.achangpro.com/img/a22978399d27_11F4E/DSCF2839.jpg"), URI("https://yukiblogtw.achangpro.com/img/a22978399d27_11F4E/DSCF2839.jpg")))
+//    println(str)
+//    val headerMap = mapOf<String, String>("Content-Type" to "application/json", "Authorization" to "Bearer D7YFymbHjichf2vTlzSCoTdcJtQjA/BeqmaphMKr+1VJs0y6OEDl3BILKtegGjlwWIuy8Xe9OonY6eq3+j+XlB7Pum5VMVqXpEsyz9W2JEpNvGKERTkXkZgoSYF5YmWbNaBytbFHJtdTswbYGrk6VQdB04t89/1O/w1cDnyilFU=")
+//
+//    val actions = listOf(PostbackAction("www", "{\"isToPay\":true,\"productId\":\"fafawfagva\",\"count\":\"%s\",\"quantityUnit\":\"price\"}", "測試1", "測試1"),
+//            PostbackAction("www", "{\"isToPay\":true,\"productId\":\"fafawfagva\",\"count\":\"%s\",\"quantityUnit\":\"price\"}", "測試2", "測試2"),
+//            PostbackAction("www", "{\"isToPay\":true,\"productId\":\"fafawfagva\",\"count\":\"%s\",\"quantityUnit\":\"price\"}", "測試3", "測試3"))
+//
+//    val test = jacksonObjectMapper().writeValueAsString(ButtonsTemplate(URI("http://www.google.com"), "test", "tset", actions))
+//    println(test)
 //    okHttp.postSyncJSON("https://api.line.me/v2/bot/message/push", body, headerMap)
 //    OkHttpUtil().postAsyncJSON("https://api.line.me/v2/bot/message/push", body, headerMap, Callback())
 
