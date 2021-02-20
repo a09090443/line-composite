@@ -9,6 +9,7 @@ import com.zipe.entity.LineChannel
 import com.zipe.entity.OrderProcess
 import com.zipe.service.line.BaseLineService
 import com.zipe.service.line.ILineEventService
+import com.zipe.service.line.ORDER_PROCESS_CACHE_KEY
 import com.zipe.util.CANCEL
 import org.apache.commons.lang3.StringUtils
 import org.springframework.stereotype.Service

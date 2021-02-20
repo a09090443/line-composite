@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.MediaType
 
+const val ORDER_PROCESS_CACHE_KEY = "process:%s"
+
 abstract class BaseLineService {
     val logger = logger()
 

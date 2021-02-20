@@ -33,7 +33,6 @@ import javax.crypto.spec.SecretKeySpec
 
 const val LINE_PUSH_MESSAGE_JSON_BLOCK = """{"to":"%s","messages":[%s]}"""
 const val LINE_REPLAY_MESSAGE_JSON_BLOCK = """{"replyToken":"%s","messages":[%s]}"""
-const val ORDER_PROCESS_CACHE_KEY = "process:%s"
 
 @Service
 class LineActionServiceImpl : BaseLineService(), ILineActionService {

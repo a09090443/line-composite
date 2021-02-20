@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
-@Service("sysMenuService")
+@Service
 class SysMenuImpl : ISysMenuService {
 
     @Autowired
