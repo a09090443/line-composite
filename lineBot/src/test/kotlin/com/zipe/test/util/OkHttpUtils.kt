@@ -1,22 +1,7 @@
 package com.zipe.test.util
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.linecorp.bot.model.action.*
-import com.linecorp.bot.model.message.ImageMessage
-import com.linecorp.bot.model.message.Message
-import com.linecorp.bot.model.message.TextMessage
-import com.linecorp.bot.model.message.template.ButtonsTemplate
-import com.linecorp.bot.model.message.template.CarouselColumn
-import com.linecorp.bot.model.message.template.CarouselTemplate
-import com.zipe.enum.MessageType
-import okhttp3.*
-import org.apache.commons.lang3.StringUtils
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import java.io.IOException
 import java.net.URI
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 
 fun main() {
 //    val sss = MessageType.getTypeName("IMAGE")
@@ -34,13 +19,36 @@ fun main() {
 //    okHttp.postSyncJSON("https://api.line.me/v2/bot/message/push", body, headerMap)
 //    OkHttpUtil().postAsyncJSON("https://api.line.me/v2/bot/message/push", body, headerMap, Callback())
 
+    val s = 5
+    val str = """{
+      "type": "template",
+      "altText": "確認付款",
+      "template": {
+        "type": "confirm",
+        "actions": [
+          {
+            "type": "postback",
+            "label": "是",
+            "data": "{\"isToPay\":true,\"productId\":\"americano\",\"count\":\"${s}\",\"quantityUnit\":\"price\"}"
+          },
+          {
+            "type": "postback",
+            "label": "否",
+            "data": "{\"isCancel\":true}"
+          }
+        ],
+        "text": "您所輸入的數量為${s}杯，總金額為${s * 20}元，是否確認購買?"
+      }
+    }"""
+
+    println(str)
 }
 
 private fun testUr(): URI {
     return ServletUriComponentsBuilder.fromHttpUrl("https://pic.52112.com/180324/180324_90")
-            .scheme("https")
-            .path("/XXe6cXhwQA_small.jpg").build()
-            .toUri()
+        .scheme("https")
+        .path("/XXe6cXhwQA_small.jpg").build()
+        .toUri()
 }
 
 
