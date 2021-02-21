@@ -20,26 +20,16 @@ class HmacEncryptTest(val okHttpUtil: OkHttpUtil) : TestBase() {
 
     @Test
     fun `test to send order to line pay api`() {
-//        val form = CheckoutPaymentRequestForm(amount = BigDecimal("100"), currency = "TWD", orderId = UUID.randomUUID().toString())
-//
-//        val productPackageForm = ProductPackageForm(id = "44433234dsa", name = "shop_name", amount = BigDecimal("100"))
-//
-//        val productForm = PaymentProduct(id = "product_id", name = "product_name", quantity = 10, price = BigDecimal("10"))
-//
-//        productPackageForm.products = listOf(productForm)
-//        form.packages = listOf(productPackageForm)
-//        val redirectUrls = RedirectUrls(confirmUrl = "http://localhost/confirm", cancelUrl = "http://localhost/cencel")
-//        form.redirectUrls = redirectUrls
         val json = """
 {"amount":3,"currency":"TWD","orderId":"374342cf-48af-47d5-99b4-0e18d5421df3","packages":[{"id":"c8ee1fb3-0027-40fd-91cc-1f6e15699154","name":"Kotlin咖啡廳","amount":3,"userFee":0,"products":[{"id":"americano","name":"美式咖啡","imageUrl":"","quantity":1,"price":3,"originalPrice":0}]}],"redirectUrls":{"confirmUrl":"https://8614d5373d99.ngrok.io/line/payment/confirm","cancelUrl":"https://8614d5373d99.ngrok.io/line/payment/cancel"}}""".trimIndent()
-        val ChannelSecret = "3dc8c4282cf38fb050110542f973d5a7"
+        val channelSecret = ""
         val requestUri = "/v3/payments/request"
         val nonce = UUID.randomUUID().toString()
         println("nonce : $nonce")
-        val signature: String = HmacEncryptUtil.encrypt(ChannelSecret, ChannelSecret + requestUri + json + nonce)
+        val signature: String = HmacEncryptUtil.encrypt(channelSecret, channelSecret + requestUri + json + nonce)
         println("signature : $signature")
         val headerMap = mapOf("Content-Type" to "application/json",
-            "X-LINE-ChannelId" to "1654394737",
+            "X-LINE-ChannelId" to "",
             "X-LINE-Authorization-Nonce" to nonce,
             "X-LINE-Authorization" to signature)
 //        val result = okHttpUtil.postSyncJSON("https://sandbox-api-pay.line.me/v3/payments/request", json, headerMap)
