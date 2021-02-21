@@ -16,18 +16,6 @@ hibernate:
   use_minimal_puts: true
   hbm2ddl_auto: none
 
-#logging:
-#  file: /tmp/logs/${properties.project}-${properties.env}.log
-#  pattern:
-#    console: "%d %-5level %logger : %msg%n"
-#    file: "%d %-5level [%thread] %logger : %msg%n"
-#  level:
-#    root: ${properties.log-level}
-#    org.springframework.security: ${properties.log-level}
-#    org.springframework.web: ${properties.log-level}
-#    guru.springframework.controllers: ${properties.log-level}
-#    org.hibernate: ${properties.log-level}
-
 spring:
   application:
     name: Line-Bot
