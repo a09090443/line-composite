@@ -37,10 +37,10 @@ Line Bot Project
 2. `#gradle bootRun`
 
 ## Line 聊天室操作影片
-1. ####line bot + line pay 自動購買流程
+1. line bot + line pay 自動購買流程</br>
 [![line bot + line pay 自動購買流程](http://img.youtube.com/vi/c6dJqFawIVs/0.jpg)](http://www.youtube.com/watch?v=c6dJqFawIVs "line bot + line pay 自動購買流程")
 
-2. ####line bot + line pay 自動購買流程
+2. line bot + line pay 自動購買流程</br>
 [![line bot 自動回應](http://img.youtube.com/vi/G0r3YF8Dp98/0.jpg)](http://www.youtube.com/watch?v=G0r3YF8Dp98 "line bot 自動回應")
 
 ## 備註
