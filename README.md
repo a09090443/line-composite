@@ -38,10 +38,10 @@ Line Bot Project
 
 ## Line 聊天室操作影片
 1. line bot + line pay 自動購買流程</br>
-[![line bot + line pay 自動購買流程](http://img.youtube.com/vi/c6dJqFawIVs/0.jpg)](http://www.youtube.com/watch?v=c6dJqFawIVs "line bot + line pay 自動購買流程")
+   [![line bot + line pay 自動購買流程](https://res.cloudinary.com/marcomontalbano/image/upload/v1613891666/video_to_markdown/images/youtube--c6dJqFawIVs-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=c6dJqFawIVs&ab_channel=%E8%94%A1%E4%BF%8A%E5%82%91 "line bot + line pay 自動購買流程")
 
 2. line bot + line pay 自動購買流程</br>
-[![line bot 自動回應](http://img.youtube.com/vi/G0r3YF8Dp98/0.jpg)](http://www.youtube.com/watch?v=G0r3YF8Dp98 "line bot 自動回應")
+   [![line bot 自動回應](https://res.cloudinary.com/marcomontalbano/image/upload/v1613891737/video_to_markdown/images/youtube--G0r3YF8Dp98-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=G0r3YF8Dp98&ab_channel=%E8%94%A1%E4%BF%8A%E5%82%91 "line bot 自動回應")
 
 ## 備註
 * [Line 官方文件](https://developers.line.biz/zh-hant/docs/messaging-api/)
