@@ -315,24 +315,6 @@ CREATE TABLE `Product`
     `Updater`    varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='產品資料';
--- line.product_order definition
-
-CREATE TABLE `product_order`
-(
-    `order_id`       varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-    `line_id`        varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `channel_id`     varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `product_name`   varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `amount`         decimal(13, 4)                      DEFAULT NULL,
-    `quantity`       bigint(20) DEFAULT NULL,
-    `status`         varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `transaction_id` bigint(19) DEFAULT NULL,
-    `create_time`    datetime                            DEFAULT NULL,
-    `create_user`    varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `update_time`    datetime                            DEFAULT NULL,
-    `update_user`    varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- line.ScheduleJob definition
 
