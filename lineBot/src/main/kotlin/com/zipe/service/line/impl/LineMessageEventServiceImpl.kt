@@ -41,6 +41,7 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
                         Gson().fromJson(it, OrderProcess::class.java)
                     }
                     when (process.type) {
+                        // 需確認使用者輸入為數字，否則取消這筆消費
                         "number" -> StringUtils.isNumeric(originalMessageText).takeIf { !it }?.let {
                             orderProcessRepository.findByName(CANCEL).run {
 
@@ -72,9 +73,7 @@ class LineMessageEventServiceImpl : BaseLineService(), ILineEventService {
                     //}
                     this.replyFromJson(
                         event.replyToken, String.format(
-                            process.content, originalMessageText,
-                            originalMessageText,
-                            originalMessageText
+                            process.content, originalMessageText, originalMessageText
                         ), channel.accessToken
                     )
                     redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))

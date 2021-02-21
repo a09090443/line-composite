@@ -73,8 +73,8 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                 replyFromJson(event.replyToken, firstProcess.content, channel.accessToken)
                 redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
             } else {
-                val json = getDataByMessage(data)
-                this.replyFromJson(event.replyToken, json, channel.accessToken)
+                val json = getDataByMessage(data, channel.channelId)
+                replyFromJson(event.replyToken, json, channel.accessToken)
                 redisTemplate.opsForList().leftPop(String.format(ORDER_PROCESS_CACHE_KEY, event.source.userId))
             }
         }
@@ -87,8 +87,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                     ?: throw Exception("找不到該產品")
             //Step1 確認輸入值為"數目"或"金額"，如輸入為"金額"數量預設為"1"
             val paymentProduct = PaymentProduct(
-                id = product.productId, name = product.name,
-                imageUrl = product.image
+                id = product.productId, name = product.name
             ).apply {
                 if (processRequest.quantityUnit == "price") {
                     this.price = processRequest.count
@@ -106,7 +105,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
             )
             productPackageForm.products = listOf(paymentProduct)
 
-            //Step3
+            //Step3 將付款內容根據 Line pay 傳送規則回傳至 Line pay api
             val order = ProductOrder().apply {
                 this.amount = productPackageForm.amount
                 this.channelId = channel.channelId
@@ -118,7 +117,7 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
 
             val form = CheckoutPaymentRequestForm(
                 amount = productPackageForm.amount, currency = Currency.TWD.name,
-                orderId = order.orderId, packages = listOf(productPackageForm)
+                orderId = order.id, packages = listOf(productPackageForm)
             )
 
             val redirectUrls =
@@ -128,6 +127,10 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                 )
             form.redirectUrls = redirectUrls
 
+            if(channel.lineStoreId.isBlank()){
+                throw Exception("請確認所對應的 LineStore Id")
+            }
+            // Line pay 內容加密
             val paymentResponse = this.paymentProcess(Gson().toJson(form), channel)
             if (paymentResponse.returnCode == lineProperties.responseSuccessCode) {
                 order.transactionId = paymentResponse.info.transactionId
@@ -138,7 +141,6 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
                 replyFromJson(event.replyToken, convert, channel.accessToken)
 //                        redisTemplate.delete(String.format(ORDER_PROCESS_CACHE_KEY, userId))
             } else {
-                println(paymentResponse.returnCode)
                 val error = orderProcessRepository.findByName(ERROR)
                 replyFromJson(event.replyToken, error.content, channel.accessToken)
             }
@@ -153,6 +155,10 @@ class LinePostBackEventServiceImpl : BaseLineService(), ILineEventService {
         val resource: ResourceEnum = ResourceEnum.SQL_ORDER.getResource("FIND_ORDER_PROCESS_TREE")
         val argMap = mapOf("name" to name, "channelId" to channelId)
         val orderProcess = orderJDBC.queryForList(resource, null, argMap, OrderProcess::class.java)
+        if(orderProcess.isEmpty()){
+            throw Exception("找不到任何購買流程")
+        }
+
         orderProcess.forEach {
             val json = Gson().toJson(it)
             redisTemplate.opsForList().rightPush(String.format(ORDER_PROCESS_CACHE_KEY, userId), json)

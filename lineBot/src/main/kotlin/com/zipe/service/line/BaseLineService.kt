@@ -9,7 +9,7 @@ import com.zipe.model.PaymentResponse
 import com.zipe.repository.ILineStoreRepository
 import com.zipe.repository.IOrderProcessRepository
 import com.zipe.repository.IProductOrderRepository
-import com.zipe.service.impl.MessageSettingImpl
+import com.zipe.service.IMessageSettingService
 import com.zipe.service.line.impl.LINE_REPLAY_MESSAGE_JSON_BLOCK
 import com.zipe.util.AUTHORIZATION
 import com.zipe.util.CHANNEL_ID
@@ -31,7 +31,7 @@ abstract class BaseLineService {
     protected lateinit var okHttpUtil: OkHttpUtil
 
     @Autowired
-    protected lateinit var messageSettingImpl: MessageSettingImpl
+    protected lateinit var messageSettingImpl: IMessageSettingService
 
     @Autowired
     protected lateinit var lineStoreRepository: ILineStoreRepository
@@ -72,8 +72,8 @@ abstract class BaseLineService {
         return okHttpUtil.postSyncJSON(url, content, headerMap)
     }
 
-    protected fun getDataByMessage(message: String): String {
-        val messages = messageSettingImpl.findMessagesByMessageKey(message)
+    protected fun getDataByMessage(message: String, channelId: String): String {
+        val messages = messageSettingImpl.findMessages(message, channelId)
         var json = StringUtils.EMPTY
         if (messages.isNotEmpty()) {
             json = messages.random().value
@@ -82,8 +82,12 @@ abstract class BaseLineService {
         return json
     }
 
+    protected fun getDataByMessage(message: String): String {
+        return this.getDataByMessage(message, StringUtils.EMPTY)
+    }
+
     protected fun paymentProcess(json: String, channel: LineChannel): PaymentResponse {
-        val store = lineStoreRepository.findByChannelId(channel.channelId)
+        val store = lineStoreRepository.findByChannelId(channel.lineStoreId)
         val paymentRequest = PaymentRequest(
             channelSecret = store.channelSecret,
             requestUri = lineProperties.paymentUri,

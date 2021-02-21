@@ -1,41 +1,32 @@
 package com.zipe.entity
 
 import com.zipe.entity.base.BaseEntity
+import com.zipe.util.common.DASH
+import org.apache.commons.lang.StringUtils
 import java.io.Serializable
 import java.math.BigDecimal
-import java.util.*
-import javax.persistence.Column
+import java.util.UUID
 import javax.persistence.Entity
 import javax.persistence.Id
-import javax.persistence.Table
 
 @Entity
-@Table(name = "product_order")
 data class ProductOrder(
 
-        @Id
-        @Column(name = "order_id")
-        var orderId: String = UUID.randomUUID().toString(),
+    @Id
+    var id: String = UUID.randomUUID().toString().replace(DASH, StringUtils.EMPTY),
 
-        @Column(name = "line_id")
-        var lineId: String = "",
+    var lineId: String = "",
 
-        @Column(name = "channel_id")
-        var channelId: String = "",
+    var channelId: String = "",
 
-        @Column(name = "product_name")
-        var productName: String = "",
+    var productName: String = "",
 
-        @Column(name = "amount")
-        var amount: BigDecimal = BigDecimal.ZERO,
+    var amount: BigDecimal = BigDecimal.ZERO,
 
-        @Column(name = "quantity")
-        var quantity: Long = 0,
+    var quantity: Long = 0,
 
-        @Column(name = "status")
-        var status: String = "",
+    var status: String = "",
 
-        @Column(name = "transaction_id")
-        var transactionId: Long = 0
+    var transactionId: Long = 0
 
 ) : Serializable, BaseEntity()

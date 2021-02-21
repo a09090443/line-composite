@@ -11,21 +11,21 @@ import javax.persistence.Id
 @Entity
 data class Product(
 
-        @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
-        @GeneratedValue(generator = "jpa-uuid")
-        var id: String = "",
+    @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+    @GeneratedValue(generator = "jpa-uuid")
+    var id: String = "",
 
-        var channelId: String = "",
+    var channelId: String = "",
 
-        @Id
-        val productId: String = "",
+    @Id
+    val productId: String = "",
 
-        val name: String = "",
+    val name: String = "",
 
-        val price: BigDecimal = BigDecimal.ZERO,
+    val price: BigDecimal = BigDecimal.ZERO,
 
-        val quantity: Long = 0,
+    val quantity: Long = 0,
 
-        val image: String = ""
+    val image: String = ""
 
 ) : Serializable, BaseEntity()

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ISysMenuRepository : JpaRepository<SysMenu, Long> {
-    @Query("SELECT menu FROM SysMenu menu WHERE menu.enabled = true ORDER BY menu.parentId ASC, menu.seq ASC")
+    @Query("SELECT menu FROM SysMenu menu WHERE menu.enabled = true ORDER BY menu.parentId ASC, menu.sequence ASC")
     fun findEnabled(): List<SysMenu>
-//    fun findByMenuId(menuId: Long, pageable: Pageable): List<SysMenu>
 }

@@ -4,6 +4,7 @@ import com.zipe.entity.MessageSetting
 import com.zipe.entity.Messages
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.BaseJDBC
+import com.zipe.jdbc.criteria.Conditions
 import com.zipe.repository.IMessageSettingRepository
 import com.zipe.service.IMessageSettingService
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,10 +25,14 @@ class MessageSettingImpl : IMessageSettingService {
         return messageSettingRepository.findAllByName(name) ?: MessageSetting()
     }
 
-    override fun findMessagesByMessageKey(name: String): List<Messages> {
+    override fun findMessages(name: String, channelId: String): List<Messages> {
+        val conditions = Conditions()
+        if(channelId.isNotBlank()){
+            conditions.and().equal("md.channelId", channelId)
+        }
         val resource: ResourceEnum = ResourceEnum.SQL_LINE.getResource("FIND_MESSAGES")
         val argMap = mapOf("name" to name)
-        return messageJDBC.queryForList(resource, null, argMap, Messages::class.java)
+        return messageJDBC.queryForList(resource, conditions, argMap, Messages::class.java)
     }
 
     private fun generateUrl(url: String, path: String): URI {

@@ -192,6 +192,7 @@ CREATE TABLE `LineChannel`
     `Email`         varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '頻道 Email',
     `UserId`        varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '頻道使用者 Id',
     `AccessToken`   varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '頻道 Access Token',
+    `LineStoreId`   varchar(10) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '對應 LineStore ChannelId',
     `CreateTime`    datetime                             DEFAULT NULL COMMENT '建立時間',
     `Creator`       varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '建立者',
     `UpdateTime`    datetime                             DEFAULT NULL COMMENT '更新時間',
@@ -199,22 +200,21 @@ CREATE TABLE `LineChannel`
     PRIMARY KEY (`ChannelId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Line 頻道';
 
--- line.line_info definition
+-- line.LineInfo definition
 
-CREATE TABLE `line_info`
+CREATE TABLE `LineInfo`
 (
-    `info_id`        bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-    `line_id`        varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `name`           varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `status_message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `type`           varchar(10) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `status`         varchar(10) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `create_time`    datetime                             DEFAULT NULL,
-    `create_user`    varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `update_time`    datetime                             DEFAULT NULL,
-    `update_user`    varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    PRIMARY KEY (`info_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+    `LineId`        varchar(33) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Lind Id',
+    `Name`          varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '名稱',
+    `StatusMessage` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '訊息狀態',
+    `Type`          varchar(10) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '型態',
+    `Status`        varchar(10) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '狀態',
+    `CreateTime`    datetime                             DEFAULT NULL COMMENT '建立時間',
+    `Creator`       varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '建立者',
+    `UpdateTime`    datetime                             DEFAULT NULL COMMENT '更新時間',
+    `Updater`       varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '更新者',
+    PRIMARY KEY (`LineId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Line 使用者';
 
 -- line.LineMapping definition
 
@@ -226,22 +226,21 @@ CREATE TABLE `LineMapping`
     KEY         `FK583ocypqd98o397viimidrfwb` (`ChannelId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Line 頻道對應 Line 使用者';
 
--- line.line_store definition
+-- line.LineStore definition
 
-CREATE TABLE `line_store`
+CREATE TABLE `LineStore`
 (
-    `line_id`        bigint(20) unsigned NOT NULL,
-    `channel_id`     varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `channel_secret` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `name`           varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `description`    varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `email`          varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `create_time`    datetime                             DEFAULT NULL,
-    `create_user`    varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `update_time`    datetime                             DEFAULT NULL,
-    `update_user`    varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    PRIMARY KEY (`line_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+    `ChannelId`     varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Line 頻道 Id',
+    `ChannelSecret` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT 'Line 頻道 Secret',
+    `Name`          varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '商店名稱',
+    `Description`   varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '描述',
+    `Email`         varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '聯絡人 Email',
+    `CreateTime`    datetime                             DEFAULT NULL COMMENT '建立時間',
+    `Creator`       varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '建立者',
+    `UpdateTime`    datetime                             DEFAULT NULL COMMENT '更新時間',
+    `Updater`       varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '更新者',
+    PRIMARY KEY (`ChannelId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Line 商店';
 
 -- line.MessageDetail definition
 
@@ -281,43 +280,41 @@ CREATE TABLE `MessageSetting`
     PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='訊息關鍵字設定';
 
--- line.order_process definition
+-- line.OrderProcess definition
 
-CREATE TABLE `order_process`
+CREATE TABLE `OrderProcess`
 (
-    `process_id`   bigint(11) NOT NULL,
-    `process_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-    `content`      longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`content`)),
-    `type`         varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `enabled`      varchar(5) COLLATE utf8_unicode_ci   DEFAULT NULL,
-    `sequence`     bigint(11) NOT NULL,
-    `parent_id`    bigint(11) NOT NULL,
-    `line_id`      bigint(20) DEFAULT NULL,
-    `create_time`  datetime                             DEFAULT NULL,
-    `create_user`  varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `update_time`  datetime                             DEFAULT NULL,
-    `update_user`  varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    PRIMARY KEY (`process_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+    `Id`         int(5) NOT NULL COMMENT '主流程Id',
+    `Name`       varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT '流程名稱',
+    `Content`    longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Line 回應內容',
+    `Type`       varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Line 訊息型態',
+    `Enabled`    char(1) COLLATE utf8_unicode_ci     DEFAULT NULL COMMENT '流程開關',
+    `Sequence`   int(5) NOT NULL COMMENT '流程順序',
+    `ParentId`   int(5) NOT NULL COMMENT '對應主流程Id',
+    `ChannelId`  varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'Line 頻道 Id',
+    `CreateTime` datetime                            DEFAULT NULL COMMENT '建立時間',
+    `Creator`    varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '建立者',
+    `UpdateTime` datetime                            DEFAULT NULL COMMENT '更新時間',
+    `Updater`    varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新者',
+    PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='購買流程';
+-- line.Product definition
 
--- line.product definition
-
-CREATE TABLE `product`
+CREATE TABLE `Product`
 (
-    `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-    `line_id`     bigint(20) unsigned NOT NULL,
-    `product_id`  varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `name`        varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `price`       decimal(13, 4)                      DEFAULT NULL,
-    `quantity`    bigint(20) DEFAULT NULL,
-    `image`       text COLLATE utf8_unicode_ci        DEFAULT NULL,
-    `create_time` datetime                            DEFAULT NULL,
-    `create_user` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `update_time` datetime                            DEFAULT NULL,
-    `update_user` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+    `Id`         char(32) COLLATE utf8_unicode_ci    NOT NULL COMMENT '流水號',
+    `ChannelId`  varchar(10) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Line 頻道 Id',
+    `ProductId`  varchar(50) COLLATE utf8_unicode_ci NOT NULL COMMENT '產品 Id',
+    `Name`       varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '產品名稱',
+    `Price`      decimal(13, 4)                      DEFAULT NULL COMMENT '價格',
+    `Quantity`   bigint(20) DEFAULT NULL COMMENT '數量',
+    `Image`      text COLLATE utf8_unicode_ci        DEFAULT NULL COMMENT '圖片',
+    `CreateTime` datetime                            DEFAULT NULL COMMENT '建立時間',
+    `Creator`    varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '建立者',
+    `UpdateTime` datetime                            DEFAULT NULL COMMENT '更新時間',
+    `Updater`    varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新者',
+    PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='產品資料';
 -- line.product_order definition
 
 CREATE TABLE `product_order`
@@ -370,20 +367,20 @@ CREATE TABLE `ScheduleJobLog`
     PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- line.sys_menu definition
+-- line.SysMenu definition
 
-CREATE TABLE `sys_menu`
+CREATE TABLE `SysMenu`
 (
-    `menu_id`     int(11) NOT NULL,
-    `menu_name`   varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-    `path`        varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `comment`     varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
-    `enabled`     tinyint(1) NOT NULL DEFAULT 0,
-    `seq`         int(11) NOT NULL,
-    `parent_id`   int(11) NOT NULL,
-    `create_time` datetime                             DEFAULT NULL,
-    `create_user` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    `update_time` datetime                             DEFAULT NULL,
-    `update_user` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL,
-    PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+    `MenuId`      int(5) NOT NULL COMMENT '主選單Id',
+    `MenuName`    varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT '選單名稱',
+    `Path`        varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '選單路徑',
+    `Comment`     varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '說明',
+    `IsEnabled`   char(1) COLLATE utf8_unicode_ci      NOT NULL COMMENT '選單開關',
+    `Sequence`    int(5) NOT NULL COMMENT '選單順序',
+    `ParentId`    int(5) NOT NULL COMMENT '對應主選單Id',
+    `create_time` datetime                             DEFAULT NULL COMMENT '建立時間',
+    `create_user` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '建立者',
+    `update_time` datetime                             DEFAULT NULL COMMENT '更新時間',
+    `update_user` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '更新者',
+    PRIMARY KEY (`MenuId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='系統選單';

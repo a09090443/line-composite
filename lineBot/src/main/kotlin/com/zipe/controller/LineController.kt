@@ -55,7 +55,7 @@ class LineController(
         @RequestParam(value = "type") type: String
     ): String {
 
-        messageSettingServiceImpl.findMessagesByMessageKey(key).let { messageData ->
+        messageSettingServiceImpl.findMessages(key, channelId).let { messageData ->
             if (messageData.isNullOrEmpty()) {
                 return "Can not found message."
             }

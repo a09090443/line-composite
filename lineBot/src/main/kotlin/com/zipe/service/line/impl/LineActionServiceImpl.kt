@@ -96,12 +96,12 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
         }
     }
 
-    override fun paymentConfirm(transaction: Long): String {
-        val productOrder = productOrderRepository.findByTransactionId(transaction)
+    override fun paymentConfirm(transactionId: Long): String {
+        val productOrder = productOrderRepository.findByTransactionId(transactionId)
         val channel = lineChannelRepository.findByChannelId(productOrder.channelId)
-        val store = lineStoreRepository.findByChannelId(productOrder.channelId)
+        val store = lineStoreRepository.findByChannelId(channel.lineStoreId)
 
-        val conformUri = String.format(lineProperties.paymentConfirmUri, transaction)
+        val conformUri = String.format(lineProperties.paymentConfirmUri, transactionId)
         val requestBody =
             Gson().toJson(PaymentConfirmRequest(amount = productOrder.amount, currency = Currency.TWD.name))
 
@@ -109,7 +109,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
             channelSecret = store.channelSecret,
             requestUri = conformUri,
             requestBody = requestBody,
-            sendUrl = String.format(lineProperties.paymentConfirmUrl, transaction),
+            sendUrl = String.format(lineProperties.paymentConfirmUrl, transactionId),
             channelId = store.channelId
         )
         val response = encryptPaymentContent(paymentRequest)
@@ -120,7 +120,7 @@ class LineActionServiceImpl : BaseLineService(), ILineActionService {
             }
             productOrderRepository.save(productOrder)
             val success = orderProcessRepository.findByName("pay_success")
-            this.pushFromJson(listOf(productOrder.lineId), success.content, channel.name)
+            this.pushFromJson(listOf(productOrder.lineId), success.content, channel.channelId)
         } else {
             logger.warn("Line Pay 驗證失敗， return code :${response.returnCode}")
             return StringUtils.EMPTY

@@ -11,3 +11,4 @@ FROM
     mm.DetailId = md.Id
 WHERE
     ms.Name = :name
+    ${CONDITIONS}

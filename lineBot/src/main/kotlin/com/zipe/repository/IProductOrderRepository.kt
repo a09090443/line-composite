@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface IProductOrderRepository : JpaRepository<ProductOrder, Long> {
-
-    fun findByOrderId(orderId: String): ProductOrder
+interface IProductOrderRepository : JpaRepository<ProductOrder, String> {
 
     fun findByLineIdAndStatus(lineId: String, status: String): List<ProductOrder>
 

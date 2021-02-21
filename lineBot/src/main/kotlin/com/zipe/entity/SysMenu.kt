@@ -8,29 +8,21 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "sys_menu")
 data class SysMenu(
 
-        @Id
-        @Column(name = "menu_id")
-        var menuId: Long = 0,
+    @Id
+    var menuId: Long = 0,
 
-        @Column(name = "menu_name")
-        val menuName: String = "",
+    val menuName: String = "",
 
-        @Column(name = "path")
-        val path: String = "",
+    val path: String = "",
 
-        @Column(name = "comment")
-        val comment: String? = "",
+    val comment: String? = "",
 
-        @Column(name = "enabled")
-        val enabled: Boolean = false,
+    val enabled: Boolean = false,
 
-        @Column(name = "seq")
-        val seq: String = "",
+    val sequence: String = "",
 
-        @Column(name = "parent_id")
-        val parentId: Long = 0
+    val parentId: Long = 0
 
 ) : Serializable, BaseEntity()

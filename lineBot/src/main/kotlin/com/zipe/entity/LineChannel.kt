@@ -15,5 +15,6 @@ data class LineChannel(
     val description: String = "",
     val email: String = "",
     val userId: String = "",
-    val accessToken: String = ""
+    val accessToken: String = "",
+    val lineStoreId: String = ""
 ) : Serializable, BaseEntity()

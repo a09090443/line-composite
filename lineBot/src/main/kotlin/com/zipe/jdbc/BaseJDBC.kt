@@ -389,7 +389,7 @@ abstract class BaseJDBC {
                 sqlText = conditions.done(sqlText ?: "")
             }
             logger.info("Use SQL : " + resource.file())
-            return sqlText ?: ""
+            return sqlText ?: StringUtils.EMPTY
         }
 
         private fun getSqlText(resource: ResourceEnum, conditions: Conditions?, paging: Paging): String {

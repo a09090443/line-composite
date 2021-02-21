@@ -36,7 +36,7 @@ interface ILineActionService {
     /**
      * Line pay 驗證流程
      */
-    fun paymentConfirm(transaction: Long): String
+    fun paymentConfirm(transactionId: Long): String
 
     /**
      * 驗證從 Line 所傳送之 Channel secret 是否正確
