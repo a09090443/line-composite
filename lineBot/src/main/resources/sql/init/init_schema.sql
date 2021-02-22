@@ -353,16 +353,16 @@ CREATE TABLE `ScheduleJobLog`
 
 CREATE TABLE `SysMenu`
 (
-    `MenuId`      int(5) NOT NULL COMMENT '主選單Id',
-    `MenuName`    varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT '選單名稱',
-    `Path`        varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '選單路徑',
-    `Comment`     varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '說明',
-    `IsEnabled`   char(1) COLLATE utf8_unicode_ci      NOT NULL COMMENT '選單開關',
-    `Sequence`    int(5) NOT NULL COMMENT '選單順序',
-    `ParentId`    int(5) NOT NULL COMMENT '對應主選單Id',
-    `create_time` datetime                             DEFAULT NULL COMMENT '建立時間',
-    `create_user` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '建立者',
-    `update_time` datetime                             DEFAULT NULL COMMENT '更新時間',
-    `update_user` varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '更新者',
+    `MenuId`     int(5) NOT NULL COMMENT '主選單Id',
+    `MenuName`   varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT '選單名稱',
+    `Path`       varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '選單路徑',
+    `Comment`    varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '說明',
+    `Enabled`    char(1) COLLATE utf8_unicode_ci      NOT NULL COMMENT '選單開關',
+    `Sequence`   int(5) NOT NULL COMMENT '選單順序',
+    `ParentId`   int(5) NOT NULL COMMENT '對應主選單Id',
+    `CreateTime` datetime                             DEFAULT NULL COMMENT '建立時間',
+    `Creator`    varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '建立者',
+    `UpdateTime` datetime                             DEFAULT NULL COMMENT '更新時間',
+    `Updater`    varchar(50) COLLATE utf8_unicode_ci  DEFAULT NULL COMMENT '更新者',
     PRIMARY KEY (`MenuId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='系統選單';

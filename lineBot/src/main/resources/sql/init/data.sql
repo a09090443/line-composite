@@ -221,3 +221,20 @@ INSERT INTO Product (Id, ChannelId, ProductId, Name, Price, Quantity, Image, Cre
 INSERT INTO Product (Id, ChannelId, ProductId, Name, Price, Quantity, Image, CreateTime, Creator, UpdateTime, Updater) VALUES('fwde925d5410113wad5a0242ac1d04d2', '1655687092', 'mocha', '義式摩卡', 80.0000, 100, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO Product (Id, ChannelId, ProductId, Name, Price, Quantity, Image, CreateTime, Creator, UpdateTime, Updater) VALUES('fwdeb25d5410113wad5a0242ac1d04d2', '1655687092', 'steamer', '牛奶', 50.0000, 100, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO Product (Id, ChannelId, ProductId, Name, Price, Quantity, Image, CreateTime, Creator, UpdateTime, Updater) VALUES('qwde925d5410113wad5a0242ac1d04d2', '1655687092', 'lemonade', '檸檬水', 5.0000, 100, NULL, NULL, NULL, NULL, NULL);
+
+-- 系統選單
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(1, '3C', '', '3C', '1', 1, 0, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(2, 'APPLE', '', 'APPLE', '1', 2, 1, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(3, 'HTC', '', 'HTC', '1', 1, 1, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(4, 'IPOD', '', 'IPOD', '1', 1, 2, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(5, 'Electronic', '', 'Electronic', '1', 2, 0, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(6, 'VR', 'test1-2-1', 'VR', '1', 2, 3, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(7, 'Sound', 'test2-1', 'Sound', '1', 1, 5, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(8, 'Furniture', '', 'Furniture', '1', 3, 0, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(9, 'TV', 'test2-2', 'TV', '1', 2, 5, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(10, 'Lamp', 'test2-3', 'Lamp', '1', 3, 5, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(11, 'HP', 'test1-3', 'HP', '1', 3, 1, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(12, 'Transportation', 'test4', 'Transportation', '1', 4, 0, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(13, 'Sofa', 'test3-1', 'Sofa', '1', 2, 8, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(14, 'Table', 'test3-2', 'Table', '1', 1, 8, NULL, NULL, NULL, NULL);
+INSERT INTO SysMenu (MenuId, MenuName, `Path`, Comment, Enabled, `Sequence`, ParentId, CreateTime, Creator, UpdateTime, Updater) VALUES(15, 'Mobile phone', 'test1-2-2', 'Mobile phone', '1', 1, 3, NULL, NULL, NULL, NULL);
