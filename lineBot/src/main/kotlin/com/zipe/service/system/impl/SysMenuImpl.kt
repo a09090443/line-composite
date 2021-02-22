@@ -15,7 +15,7 @@ class SysMenuImpl : ISysMenuService {
     private lateinit var sysMenuRepository: ISysMenuRepository
 
     override fun getSysMenuTree(): List<SysMenuOutput> {
-        val sysMenus = sysMenuRepository.findEnabled()
+        val sysMenus = sysMenuRepository.findByEnabledOrderByParentIdAscSequenceAsc(enabled = true)
 
         // Find root menu and getting the children
         return sysMenus.filter { it.parentId == 0L }
