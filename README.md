@@ -45,3 +45,4 @@ Line Bot Project
 
 ## 備註
 * [Line 官方文件](https://developers.line.biz/zh-hant/docs/messaging-api/)
+* 如有有興趣想討論，或有任何想法想加入開發，可跟我聯絡，信箱:zipe.daden@gmail.com
