@@ -30,7 +30,7 @@ Line Bot Project
 ## 各專案說明
 * core - 為核心專案，提供各種基本設定
 * lineBot - 為 Line bot 後端程式
-* management - 暫定為前端程式，尚未開發
+* [lin-management](https://github.com/a09090443/line-management.git "Line bot 前端管理程式") - 為 Line bot 前端管理程式，由 Vue 為主要開發語言，尚未開始
 
 ## 啟動方式
 1. `#cd lineBot`
