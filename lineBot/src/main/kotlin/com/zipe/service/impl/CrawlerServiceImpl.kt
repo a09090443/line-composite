@@ -28,6 +28,9 @@ const val PTT_BOARD_URL = "$PTT_DOMAIN/bbs/%s/index.html"
 const val PTT_18_COOKIE_NAME = "over18"
 const val USER_AGENT = "Mozilla"
 
+/**
+ * PTT 爬蟲
+ */
 @Service
 class CrawlerServiceImpl : ICrawlerService {
 
