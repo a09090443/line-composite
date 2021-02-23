@@ -51,6 +51,7 @@ class LineController(
     /**
      * 使用頻道設定的 message 寄送給指定使用者
      */
+    @ApiOperation(value="send", notes="寄送給指定使用者")
     @PostMapping(value = ["/send"])
     fun send(
         @RequestParam(value = "key") key: String,
@@ -89,6 +90,7 @@ class LineController(
     /**
      * Line pay 付費後從 Line 官網回傳的確認網址
      */
+    @ApiOperation(value="confirm", notes="Line pay 付費後從 Line 官網回傳的確認網址")
     @GetMapping(value = ["/payment/confirm"])
     fun confirm(
         @RequestParam("orderId") orderId: String,
@@ -103,6 +105,7 @@ class LineController(
     /**
      * 取消 Line pay
      */
+    @ApiOperation(value="cancel", notes="取消 Line pay")
     @GetMapping(value = ["/payment/cancel"])
     fun cancel(@RequestParam("transactionId") transactionId: String): ModelAndView {
         return ModelAndView("redirect:line://ti/p/@020lrinf")
