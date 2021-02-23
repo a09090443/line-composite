@@ -1,9 +1,8 @@
 package com.zipe.service.system
 
-import com.zipe.entity.MessageSetting
-import com.zipe.model.output.SysMenuOutput
+import com.zipe.model.SysMenuDto
 
 interface ISysMenuService {
 
-    fun getSysMenuTree(): List<SysMenuOutput>
+    fun getSysMenuTree(): List<SysMenuDto>
 }

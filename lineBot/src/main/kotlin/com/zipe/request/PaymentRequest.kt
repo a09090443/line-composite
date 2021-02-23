@@ -1,4 +1,4 @@
-package com.zipe.model
+package com.zipe.request
 
 import java.util.*
 

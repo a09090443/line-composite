@@ -12,7 +12,7 @@ import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.BaseJDBC
 import com.zipe.model.CheckoutPaymentRequestForm
 import com.zipe.model.OrderProcess
-import com.zipe.model.OrderProcessRequest
+import com.zipe.request.OrderProcessRequest
 import com.zipe.model.PaymentProduct
 import com.zipe.model.ProductPackageForm
 import com.zipe.model.RedirectUrls

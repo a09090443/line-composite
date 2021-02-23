@@ -3,9 +3,9 @@ package com.zipe.service.line
 import com.google.common.net.HttpHeaders
 import com.google.gson.Gson
 import com.zipe.entity.LineChannel
-import com.zipe.model.LineProperties
-import com.zipe.model.PaymentRequest
-import com.zipe.model.PaymentResponse
+import com.zipe.config.properties.LineProperties
+import com.zipe.request.PaymentRequest
+import com.zipe.response.PaymentResponse
 import com.zipe.repository.ILineStoreRepository
 import com.zipe.repository.IOrderProcessRepository
 import com.zipe.repository.IProductOrderRepository

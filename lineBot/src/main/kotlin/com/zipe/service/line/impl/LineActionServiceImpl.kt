@@ -14,8 +14,8 @@ import com.zipe.enum.OrderStatus
 import com.zipe.enum.ResourceEnum
 import com.zipe.jdbc.LineChannelJDBC
 import com.zipe.model.LineUser
-import com.zipe.model.PaymentConfirmRequest
-import com.zipe.model.PaymentRequest
+import com.zipe.request.PaymentConfirmRequest
+import com.zipe.request.PaymentRequest
 import com.zipe.repository.ILineChannelRepository
 import com.zipe.repository.ILineInfoRepository
 import com.zipe.service.line.BaseLineService

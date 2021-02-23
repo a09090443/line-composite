@@ -1,6 +1,6 @@
-package com.zipe.model.output
+package com.zipe.model
 
-data class SysMenuOutput(
+data class SysMenuDto(
 
     var menuId: Long = 0,
 
@@ -16,6 +16,6 @@ data class SysMenuOutput(
 
     var parentId: Long = 0,
 
-    var children: MutableList<SysMenuOutput> = mutableListOf()
+    var children: MutableList<SysMenuDto> = mutableListOf()
 
 )

@@ -1,4 +1,4 @@
-package com.zipe.model
+package com.zipe.config.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component

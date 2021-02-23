@@ -1,4 +1,4 @@
-package com.zipe.model
+package com.zipe.response
 
 import java.math.BigDecimal
 
@@ -6,7 +6,6 @@ data class PaymentResponse(
         val returnCode: String,
         val returnMessage: String,
         val info: Info
-
 )
 
 data class Info(
@@ -16,7 +15,6 @@ data class Info(
         val authorizationExpireDate: String,
         val regKey: String,
         val payInfo: List<PayInfo>
-
 )
 
 data class PaymentUrl(

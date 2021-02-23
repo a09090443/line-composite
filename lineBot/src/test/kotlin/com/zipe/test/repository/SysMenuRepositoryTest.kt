@@ -2,7 +2,6 @@ package com.zipe.test.repository
 
 import com.zipe.repository.ISysMenuRepository
 import com.zipe.test.base.TestBase
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class SysMenuRepositoryTest : TestBase() {
@@ -12,8 +11,7 @@ class SysMenuRepositoryTest : TestBase() {
 
     @Test
     fun `find all of system menu`() {
-        val sysMenus = sysMenuRepository.findEnabled()
-        println(sysMenus)
+        val sysMenus = sysMenuRepository.findByEnabledOrderByParentIdAscSequenceAsc(true)
     }
 
 }
