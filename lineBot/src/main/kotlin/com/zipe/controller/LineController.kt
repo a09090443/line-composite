@@ -8,6 +8,8 @@ import com.zipe.service.IMessageSettingService
 import com.zipe.util.JsonUtil
 import com.zipe.util.SINGNATURE
 import com.zipe.util.log.logger
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.ModelAndView
 
+@Api(tags=["LineController"], description = "Line bot api")
 @RestController
 @RequestMapping(value = ["/line"])
 class LineController(
@@ -31,6 +34,7 @@ class LineController(
      * 需在 Line Message API 的 Webhook URL 設定 : https://domain/line/channel-secret/callback
      * Line 會依照訊息類別回傳至該 URI，需處理不同之 Events
      */
+    @ApiOperation(value="callback", notes="Line 接收訊息 Api")
     @RequestMapping(value = ["/{channelSecret}/callback"], method = [RequestMethod.GET, RequestMethod.POST])
     fun handleCallback(@PathVariable channelSecret: String): ResponseEntity<String> {
         val signature = request.getHeader(SINGNATURE)
