@@ -1,6 +1,6 @@
 package com.zipe.response
 
 data class BaseResponse(
-    var data: String = "",
+    var data: Any = "",
     var error: String = ""
 )

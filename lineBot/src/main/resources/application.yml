@@ -17,18 +17,12 @@ hibernate:
   hbm2ddl_auto: none
 
 spring:
+  profiles:
+    active: dev
   application:
     name: Line-Bot
   mvc:
     throw-exception-if-no-handler-found: true
-  datasource:
-    primary:
-      type: com.zaxxer.hikari.HikariDataSource
-      jdbc-url: jdbc:p6spy:mysql://192.168.1.150:3306/line?characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Taipei
-      username: dev
-      password: 1qaz@WSX
-      driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-
     hikari:
       minimumIdle: 5
       maximumPoolSize: 20
@@ -40,9 +34,9 @@ spring:
       connectionTestQuery: SELECT 1
 
   redis:
-    host: 192.168.1.150
-    port: 6379
-    database: 0
+    host:
+    port:
+    database:
     password:
     lettuce:
       pool:
@@ -63,3 +57,72 @@ application:
     key:
       demoCache: PT5M
       userCache: PT5M
+
+log:
+  moduleName: LineBot
+  base: /home/zipe/tmp/logs
+  max:
+    history: 100
+    size: 100MB
+
+---
+spring.config.activate.on-profile: dev
+env: dev
+spring:
+  config:
+    import: datasource-dev.properties
+  redis:
+    host: 192.168.1.150
+    port: 6379
+    database: 0
+    password:
+
+#System config
+system:
+  job-using-database: true
+
+#Line Info
+line:
+  push-message-url: https://api.line.me/v2/bot/message/push
+  replay-message-url: https://api.line.me/v2/bot/message/reply
+  payment-request-url: https://sandbox-api-pay.line.me/v3/payments/request
+  payment-confirm-url: https://sandbox-api-pay.line.me/v3/payments/%s/confirm
+  payment-confirm-uri: /v3/payments/request
+  payment-callback-url: https://line.zipe.idv.tw/line/payment/confirm
+  payment-cancel-url: https://line.zipe.idv.tw/line/payment/cancel
+  response-success-code: 0000
+
+log:
+  root:
+    level: DEBUG
+---
+spring.config.activate.on-profile: sit
+env: sit
+spring:
+  config:
+    import: datasource-sit.properties
+  redis:
+    host: 192.168.1.150
+    port: 6379
+    database: 0
+    password:
+
+#System config
+system:
+  job-using-database: true
+
+#Line Info
+line:
+  push-message-url: https://api.line.me/v2/bot/message/push
+  replay-message-url: https://api.line.me/v2/bot/message/reply
+  payment-request-url: https://sandbox-api-pay.line.me/v3/payments/request
+  payment-confirm-url: https://sandbox-api-pay.line.me/v3/payments/%s/confirm
+  payment-confirm-uri: /v3/payments/request
+  payment-callback-url: https://line.zipe.idv.tw/line/payment/confirm
+  payment-cancel-url: https://line.zipe.idv.tw/line/payment/cancel
+  response-success-code: 0000
+
+log:
+  root:
+    level: INFO
+---

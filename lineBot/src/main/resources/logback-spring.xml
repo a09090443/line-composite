@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property resource="resources.properties"/>
     <!-- 盡量別用絕對路徑，如果帶參數不同容器路徑解釋可能不同,以下配置參數在resources.properties裡 -->
-    <property name="log.root.level" value="${log.root.level}"/> <!-- 日誌級別 -->
-    <property name="log.other.level" value="${log.other.level}"/> <!-- 其他日誌級別 -->
-    <property name="log.base" value="${log.base}"/> <!-- 日誌路徑，這裡是相對路徑，web項目eclipse下會輸出到eclipse的安裝目錄下，如果部署到linux上的tomcat下，會輸出到tomcat/bin目錄下 -->
-    <property name="log.moduleName" value="${log.moduleName}"/>  <!-- 模塊名稱， 影響日誌配置名，日誌文件名 -->
-    <property name="log.max.size" value="${log.max.size}"/> <!-- 日誌文件大小,超過這個大小將被壓縮 -->
-    <property name="log.max.history" value="${log.max.history}"/> <!-- 日誌檔案所存放天數 -->
+    <springProperty scope="context" name="log.root.level" source="log.root.level"/> <!-- 日誌級別 -->
+    <springProperty scope="context" name="log.other.level" source="log.other.level"/> <!-- 其他日誌級別 -->
+    <springProperty scope="context" name="log.base" source="log.base"/> <!-- 日誌路徑，這裡是相對路徑，web項目eclipse下會輸出到eclipse的安裝目錄下，如果部署到linux上的tomcat下，會輸出到tomcat/bin目錄下 -->
+    <springProperty scope="context" name="log.moduleName" source="log.moduleName"/> <!-- 模塊名稱， 影響日誌配置名，日誌文件名 -->
+    <springProperty scope="context" name="log.max.size" source="log.max.size"/> <!-- 日誌文件大小,超過這個大小將被壓縮 -->
+    <springProperty scope="context" name="log.max.history" source="log.max.history"/> <!-- 日誌檔案所存放天數 -->
 
     <!--控制台輸出 -->
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
